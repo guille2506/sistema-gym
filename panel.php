@@ -1,8 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header("Location: index.php");
-    exit;
+     header("Location: index.php");
+     exit;
 }
 ?>
 
@@ -35,7 +35,7 @@ if (!isset($_SESSION['admin'])) {
      <script src="assets/js/config.js"></script>
 
      <!--bwip-js-->
-<script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
 </head>
 
@@ -1355,149 +1355,197 @@ if (!isset($_SESSION['admin'])) {
                          </div> <!-- end col -->
 
 
+             
 
-                         
-                    <div class="col-xxl-7">
-                         <div class="card p-4 mb-4">
-                              <h5 class="mb-4">Gestión de Usuarios</h5>
+                         <div class="col-xxl-7">
+                              <div class="card p-4 mb-4">
+                                   <h5 class="mb-4">Gestión de Usuarios</h5>
 
-                              <!-- Buscar / Escanear -->
+                                   <div class="mb-3">
+                                        <label for="buscar-usuario" class="form-label">Buscar / Escanear Usuario</label>
+                                        <input type="text" id="buscar-usuario" class="form-control" placeholder="DNI, nombre o escanear código...">
+                                   </div>
+
+                                   <div class="mb-3 d-flex gap-2">
+                                        <button type="button" id="btn-escanear" class="btn btn-success">
+                                             <i class="bi bi-qr-code-scan"></i> Escanear
+                                        </button>
+                                        <div id="resultado-lector" class="mt-2 fw-bold"></div>
+
+                                   </div>
+
+
+
+                                   <hr>
+                              </div> <!-- end card body -->
+                         </div> <!-- end card -->
+                    </div> <!-- end col -->
+               </div> <!-- end row -->
+
+               <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                         const inputBuscar = document.getElementById("buscar-usuario");
+                         const botonEscanear = document.getElementById("btn-escanear");
+                         const resultadoDiv = document.getElementById("resultado-lector");
+
+                         inputBuscar.focus();
+
+                         const validarCodigo = async (codigo) => {
+                              try {
+                                   const respuesta = await fetch('componentes/lector.php', {
+                                        method: 'POST',
+                                        headers: {
+                                             'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'codigo=' + encodeURIComponent(codigo)
+                                   });
+
+                                   const datos = await respuesta.json();
+                                   resultadoDiv.textContent = datos.mensaje;
+                                   resultadoDiv.style.color = datos.status === "ok" ? "green" : "red";
+
+                              } catch (error) {
+                                   resultadoDiv.textContent = "❌ Error de conexión con el servidor.";
+                                   resultadoDiv.style.color = "red";
+                              }
+                         };
+
+                         inputBuscar.addEventListener("input", () => {
+                              const valor = inputBuscar.value.trim();
+                              if (valor.length >= 6) { 
+                                   validarCodigo(valor);
+                              }
+                         });
+
+                         inputBuscar.addEventListener("keydown", e => {
+                              if (e.key === "Enter") {
+                                   e.preventDefault();
+                                   const valor = inputBuscar.value.trim();
+                                   validarCodigo(valor);
+                              }
+                         });
+
+                         botonEscanear.addEventListener("click", () => {
+                              inputBuscar.focus();
+                         });
+                    });
+               </script>
+
+
+
+               <div class="col-xxl-5">
+                    <div class="card p-3 mb-4">
+                         <h6 class="mb-3">Agregar Nuevo Usuario</h6>
+
+
+                         <form method="POST" onsubmit="return manejarFormulario(event);">
                               <div class="mb-3">
-                                   <label for="buscar-usuario" class="form-label">Buscar / Escanear Usuario</label>
-                                   <input type="text" id="buscar-usuario" class="form-control" placeholder="DNI, nombre o escanear código...">
+                                   <label for="nombre" class="form-label">Nombre completo</label>
+                                   <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej. Juan Pablo" required>
+                              </div>
+
+                              <div class="mb-3">
+                                   <label for="apellido" class="form-label">Apellido completo</label>
+                                   <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ej. Aracena Domingues" required>
+                              </div>
+
+                              <div class="mb-3">
+                                   <label for="telefono" class="form-label">Número de teléfono</label>
+                                   <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ej. 1123456789">
+                              </div>
+
+                              <div class="mb-3">
+                                   <label for="telefono_emergencia" class="form-label">Número de teléfono emergencia</label>
+                                   <input type="text" id="telefono_emergencia" name="telefono_emergencia" class="form-control" placeholder="Opcional">
+                              </div>
+
+                              <div class="mb-3">
+                                   <label for="email" class="form-label">Email</label>
+                                   <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
+                              </div>
+
+                              <div class="mb-3">
+                                   <label for="dni" class="form-label">DNI (para código PDF417)</label>
+                                   <input type="text" id="dni" name="dni" class="form-control" placeholder="Ej. 12345678" required>
                               </div>
 
                               <div class="mb-3 d-flex gap-2">
-                                   <button type="button" class="btn btn-success ">
-                                        <i class="bi bi-qr-code-scan"></i> Escanear
+                                   <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save"></i> Generar Código
                                    </button>
-                                   <button type="button" class="btn btn-info ">
-                                        <i class="bi bi-search"></i> Buscar
-                                   </button>
+                                   <button type="reset" class="btn btn-secondary">Limpiar</button>
                               </div>
+                         </form>
+                    </div>
+               </div>
 
-                              <hr>
-          
-                                   </div> <!-- end card body -->
-                              </div> <!-- end card -->
-                         </div> <!-- end col -->
-                    </div> <!-- end row -->
+               <div class="mb-3">
+                    <label class="form-label">Código PDF417 generado:</label><br>
+                    <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
+               </div>
 
+               <script>
+                    async function manejarFormulario(e) {
+                         e.preventDefault();
 
+                         const nombre = document.getElementById('nombre').value;
+                         const apellido = document.getElementById('apellido').value;
+                         const telefono = document.getElementById('telefono').value;
+                         const telEmergencia = document.getElementById('telefono_emergencia').value;
+                         const email = document.getElementById('email').value;
+                         const dni = document.getElementById('dni').value;
 
-<div class="col-xxl-5">
-    <div class="card p-3 mb-4">
-        <h6 class="mb-3">Agregar Nuevo Usuario</h6>
+                         const contenido = `${apellido}@${nombre}@${telefono}@${email}`;
 
+                         if (!dni) {
+                              alert('Por favor, ingresa un DNI.');
+                              return;
+                         }
 
-<form method="POST" onsubmit="return manejarFormulario(event);">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre completo</label>
-                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej. Juan Pablo" required>
-            </div>
+                         try {
+                              const canvas = document.getElementById('codigoPdf417');
 
-            <div class="mb-3">
-                <label for="apellido" class="form-label">Apellido completo</label>
-                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ej. Aracena Domingues" required>
-            </div>
+                              bwipjs.toCanvas(canvas, {
+                                   bcid: 'pdf417',
+                                   text: contenido,
+                                   scale: 4,
+                                   height: 12,
+                                   columns: 3,
+                                   rows: 12,
+                                   includetext: false,
+                                   compact: false,
+                                   paddingwidth: 10,
+                                   paddingheight: 10
+                              });
 
-            <div class="mb-3">
-                <label for="telefono" class="form-label">Número de teléfono</label>
-                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ej. 1123456789">
-            </div>
+                              const formData = new FormData();
+                              formData.append("nombre", nombre);
+                              formData.append("apellido", apellido);
+                              formData.append("dni", dni);
+                              formData.append("telefono", telefono);
+                              formData.append("telefono_emergencia", telEmergencia);
+                              formData.append("email", email);
 
-            <div class="mb-3">
-                <label for="telefono_emergencia" class="form-label">Número de teléfono emergencia</label>
-                <input type="text" id="telefono_emergencia" name="telefono_emergencia" class="form-control" placeholder="Opcional">
-            </div>
+                              const res = await fetch("/admin-gym/componentes/envio_de_datos.php", {
+                                   method: "POST",
+                                   body: formData
+                              });
 
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
-            </div>
+                              const json = await res.json();
+                              if (json.ok) {
+                                   alert("Usuario guardado correctamente.");
+                              } else {
+                                   alert("Error: " + (json.error || "No se pudo guardar."));
+                              }
 
-            <div class="mb-3">
-                <label for="dni" class="form-label">DNI (para código PDF417)</label>
-                <input type="text" id="dni" name="dni" class="form-control" placeholder="Ej. 12345678" required>
-            </div>
-
-            <div class="mb-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Generar Código
-                </button>
-                <button type="reset" class="btn btn-secondary">Limpiar</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="mb-3">
-    <label class="form-label">Código PDF417 generado:</label><br>
-    <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
-</div>
-
-<script>
-async function manejarFormulario(e) {
-    e.preventDefault();
-
-    const nombre = document.getElementById('nombre').value;
-    const apellido = document.getElementById('apellido').value;
-    const telefono = document.getElementById('telefono').value;
-    const telEmergencia = document.getElementById('telefono_emergencia').value;
-    const email = document.getElementById('email').value;
-    const dni = document.getElementById('dni').value;
-
-    const contenido = `${apellido}@${nombre}@${telefono}@${email}`;
-
-    if (!dni) {
-        alert('Por favor, ingresa un DNI.');
-        return;
-    }
-
-    try {
-        const canvas = document.getElementById('codigoPdf417');
-
-        bwipjs.toCanvas(canvas, {
-            bcid:        'pdf417',
-            text:        contenido,
-            scale:       4,
-            height:      12,
-            columns:     3,
-            rows:        12,
-            includetext: false,
-            compact:     false,
-            paddingwidth: 10,
-            paddingheight: 10
-        });
-
-        const formData = new FormData();
-        formData.append("nombre", nombre);
-        formData.append("apellido", apellido);
-        formData.append("dni", dni);
-        formData.append("telefono", telefono);
-        formData.append("telefono_emergencia", telEmergencia);
-        formData.append("email", email);
-
-        const res = await fetch("/admin-gym/componentes/envio_de_datos.php", {
-            method: "POST",
-            body: formData
-        });
-
-        const json = await res.json();
-        if (json.ok) {
-            alert("Usuario guardado correctamente.");
-        } else {
-            alert("Error: " + (json.error || "No se pudo guardar."));
-        }
-
-    } catch (err) {
-        alert("Error generando el código de barras o guardando: " + err);
-    }
-}
-</script>
+                         } catch (err) {
+                              alert("Error generando el código de barras o guardando: " + err);
+                         }
+                    }
+               </script>
 
 
-               
+
                <!-- 
                     <div class="row">
                          <div class="col-lg-8">
