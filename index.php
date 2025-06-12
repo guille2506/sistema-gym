@@ -20,7 +20,7 @@ $contrasena = $_POST['contrasena'] ?? '';
 
         if ($contrasena === $contrasena_db) {
             $_SESSION['admin'] = $id;
-            header("Location: index.html");
+            header("Location: panel.php");
             exit;
         } else {
             $error = "Contraseña incorrecta.";
@@ -84,7 +84,7 @@ $contrasena = $_POST['contrasena'] ?? '';
                                         <p class="text-muted mt-1 mb-4">ingrese su usuario y contraseña para acceder</p>
 
                                         <div class="mb-3">
-                                             <form action="login.php" class="authentication-form" method="POST">
+                                                  <form action="index.php" class="authentication-form" method="POST">
                                                   <div class="mb-3">
                                                        <label class="form-label visually-hidden"
                                                             for="example-password">Password</label>

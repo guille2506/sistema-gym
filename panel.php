@@ -1,8 +1,15 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin'])) {
+    header("Location: index.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+<!-- Mirrored from techzaa.in/venton/panel.php by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:42:38 GMT -->
 
-
-<!-- Mirrored from techzaa.in/venton/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:42:38 GMT -->
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
@@ -26,6 +33,10 @@
 
      <!-- Theme Config js (Require in all Page) -->
      <script src="assets/js/config.js"></script>
+
+     <!--bwip-js-->
+<script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+
 </head>
 
 <body>
@@ -66,7 +77,7 @@
                               <!-- Notification -->
                               <div class="dropdown topbar-item">
                                    <button type="button" class="topbar-button position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class='bx bx-bell fs-24 align-middle' ></i>
+                                        <i class='bx bx-bell fs-24 align-middle'></i>
                                         <span class="position-absolute topbar-badge fs-10 translate-middle badge bg-danger rounded-pill">3<span class="visually-hidden">unread messages</span></span>
                                    </button>
                                    <div class="dropdown-menu py-0 dropdown-lg dropdown-menu-end" aria-labelledby="page-header-notifications-dropdown">
@@ -94,6 +105,7 @@
                                                        </div>
                                                   </div>
                                              </a>
+
                                              <!-- Item -->
                                              <a href="javascript:void(0);" class="dropdown-item p-2 border-bottom">
                                                   <div class="d-flex">
@@ -164,7 +176,7 @@
                               <!-- Theme Setting -->
                               <div class="topbar-item d-none d-md-flex">
                                    <button type="button" class="topbar-button" id="theme-settings-btn" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-                                        <i class='bx bx-cog fs-24 align-middle' ></i>
+                                        <i class='bx bx-cog fs-24 align-middle'></i>
                                    </button>
                               </div>
 
@@ -204,7 +216,7 @@
 
                                         <div class="dropdown-divider my-1"></div>
 
-                                        <a class="dropdown-item text-danger" href="auth-signin.html">
+                                        <a class="dropdown-item text-danger" href="logout.php"><!-- auth-signin.html -->
                                              <i class="bx bx-log-out fs-18 align-middle me-1"></i><span class="align-middle">Logout</span>
                                         </a>
                                    </div>
@@ -333,7 +345,7 @@
                                         </div>
                                    </div>
                               </div>
-                              <a href="#!" class="btn btn-outline-dark w-100">View All</a>
+                              <a href="#!" class="btn btn-outline-dark ">View All</a>
                          </div>
                     </div>
                </div>
@@ -442,7 +454,7 @@
                     <div class="offcanvas-footer border-top p-3 text-center">
                          <div class="row">
                               <div class="col">
-                                   <button type="button" class="btn btn-danger w-100" id="reset-layout">Reset</button>
+                                   <button type="button" class="btn btn-danger " id="reset-layout">Reset</button>
                               </div>
                          </div>
                     </div>
@@ -454,12 +466,12 @@
           <div class="main-nav">
                <!-- Sidebar Logo -->
                <div class="logo-box">
-                    <a href="index.html" class="logo-dark">
+                    <a href="panel.php" class="logo-dark">
                          <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
                          <img src="assets/images/logo-dark.png" class="logo-lg" alt="logo dark">
                     </a>
 
-                    <a href="index.html" class="logo-light">
+                    <a href="panel.php" class="logo-light">
                          <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
                          <img src="assets/images/logo-light.png" class="logo-lg" alt="logo light">
                     </a>
@@ -476,7 +488,7 @@
                          <li class="menu-title">General</li>
 
                          <li class="nav-item">
-                              <a class="nav-link" href="index.html">
+                              <a class="nav-link" href="panel.php">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:widget-5-broken"></iconify-icon>
                                    </span>
@@ -523,7 +535,7 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-list.html">List</a>
-                                        </li>                         
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-edit.html">Edit</a>
                                         </li>
@@ -638,7 +650,7 @@
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-details.html">Details</a>
-                                        </li>                            
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-add.html">Create</a>
                                         </li>
@@ -888,16 +900,16 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signin.html">Sign In</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signup.html">Sign Up</a>
-                                        </li>                           
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-password.html">Reset Password</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-lock-screen.html">Lock Screen</a>
-                                        </li>                          
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -1236,15 +1248,15 @@
 
                     <!-- ========== Page Title Start ========== -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <h4 class="mb-0 fw-semibold">Dashboard</h4>
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Venton</a></li>
-                                    <li class="breadcrumb-item active">Dashboard</li>
-                                </ol>
-                            </div>
-                        </div>
+                         <div class="col-12">
+                              <div class="page-title-box">
+                                   <h4 class="mb-0 fw-semibold">Dashboard</h4>
+                                   <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Venton</a></li>
+                                        <li class="breadcrumb-item active">Dashboard</li>
+                                   </ol>
+                              </div>
+                         </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
 
@@ -1254,190 +1266,239 @@
                               <div class="row">
 
                                    <div class="col-md-6">
-                                       <div class="card overflow-hidden">
-                                           <div class="card-body">
-                                               <div class="row">
-                                                   <div class="col-6">
-                                                       <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
-                                                           <iconify-icon icon="solar:cart-5-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
-                                                       </div>
-                                                   </div> <!-- end col -->
-                                                   <div class="col-6 text-end">
-                                                       <p class="text-muted mb-0 text-truncate">Total Orders</p>
-                                                       <h3 class="text-dark mt-1 mb-0">15,432</h3>
-                                                   </div> <!-- end col -->
-                                               </div> <!-- end row-->
-                               
-                                               <div dir="ltr" class="mt-4">
-                                                   <div id="orders-chart" class="apex-charts"></div>
-                                               </div>
-                                           </div> <!-- end card body -->
-                                       </div> <!-- end card -->
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <div class="row">
+                                                       <div class="col-6">
+                                                            <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
+                                                                 <iconify-icon icon="solar:cart-5-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
+                                                            </div>
+                                                       </div> <!-- end col -->
+                                                       <div class="col-6 text-end">
+                                                            <p class="text-muted mb-0 text-truncate">Total de miembros</p>
+                                                            <h3 class="text-dark mt-1 mb-0">15,432</h3>
+                                                       </div> <!-- end col -->
+                                                  </div> <!-- end row-->
+
+                                                  <div dir="ltr" class="mt-4">
+                                                       <div id="orders-chart" class="apex-charts"></div>
+                                                  </div>
+                                             </div> <!-- end card body -->
+                                        </div> <!-- end card -->
                                    </div> <!-- end col -->
-                                   
+
                                    <div class="col-md-6">
-                                       <div class="card overflow-hidden">
-                                           <div class="card-body">
-                                               <div class="row">
-                                                   <div class="col-6">
-                                                       <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
-                                                            <iconify-icon icon="solar:leaf-broken" class="avatar-title fs-32 text-success"></iconify-icon>
-                                                       </div>
-                                                   </div> <!-- end col -->
-                                                   <div class="col-6 text-end">
-                                                       <p class="text-muted mb-0 text-truncate">New Leads</p>
-                                                       <h3 class="text-dark mt-1 mb-0">12,983</h3>
-                                                   </div> <!-- end col -->
-                                               </div> <!-- end row-->
-                                               <div dir="ltr" class="mt-4">
-                                                   <div id="new-leads-chart" class="apex-charts"></div>
-                                               </div>
-                                           </div> <!-- end card body -->
-                                       </div> <!-- end card -->
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <div class="row">
+                                                       <div class="col-6">
+                                                            <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
+                                                                 <iconify-icon icon="solar:leaf-broken" class="avatar-title fs-32 text-success"></iconify-icon>
+                                                            </div>
+                                                       </div> <!-- end col -->
+                                                       <div class="col-6 text-end">
+                                                            <p class="text-muted mb-0 text-truncate">Total de caja</p>
+                                                            <h3 class="text-dark mt-1 mb-0">12,983</h3>
+                                                       </div> <!-- end col -->
+                                                  </div> <!-- end row-->
+                                                  <div dir="ltr" class="mt-4">
+                                                       <div id="new-leads-chart" class="apex-charts"></div>
+                                                  </div>
+                                             </div> <!-- end card body -->
+                                        </div> <!-- end card -->
                                    </div> <!-- end col -->
-                                   
+
                                    <div class="col-md-6">
-                                       <div class="card overflow-hidden">
-                                           <div class="card-body">
-                                               <div class="row">
-                                                   <div class="col-6">
-                                                       <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
-                                                            <iconify-icon icon="solar:hand-shake-broken" class="avatar-title fs-32 text-success"></iconify-icon>
-                                                       </div>
-                                                   </div> <!-- end col -->
-                                                   <div class="col-6 text-end">
-                                                       <p class="text-muted mb-0 text-truncate">Deals</p>
-                                                       <h3 class="text-dark mt-1 mb-0">1,283</h3>
-                                                   </div> <!-- end col -->
-                                               </div> <!-- end row-->
-                                               <div dir="ltr" class="mt-4">
-                                                   <div id="deals-chart" class="apex-charts"></div>
-                                               </div>
-                                           </div> <!-- end card body -->
-                                       </div> <!-- end card -->
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <div class="row">
+                                                       <div class="col-6">
+                                                            <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
+                                                                 <iconify-icon icon="solar:hand-shake-broken" class="avatar-title fs-32 text-success"></iconify-icon>
+                                                            </div>
+                                                       </div> <!-- end col -->
+                                                       <div class="col-6 text-end">
+                                                            <p class="text-muted mb-0 text-truncate">Miembros al dia</p>
+                                                            <h3 class="text-dark mt-1 mb-0">1,283</h3>
+                                                       </div> <!-- end col -->
+                                                  </div> <!-- end row-->
+                                                  <div dir="ltr" class="mt-4">
+                                                       <div id="deals-chart" class="apex-charts"></div>
+                                                  </div>
+                                             </div> <!-- end card body -->
+                                        </div> <!-- end card -->
                                    </div> <!-- end col -->
-                               
+
                                    <div class="col-md-6">
-                                       <div class="card overflow-hidden">
-                                           <div class="card-body">
-                                               <div class="row">
-                                                   <div class="col-6">
-                                                       <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
-                                                            <iconify-icon icon="solar:money-bag-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
-                                                       </div>
-                                                   </div> <!-- end col -->
-                                                   <div class="col-6 text-end">
-                                                       <p class="text-muted mb-0 text-truncate">Booked Revenue</p>
-                                                       <h3 class="text-dark mt-1 mb-0">$234.8k</h3>
-                                                   </div> <!-- end col -->
-                                               </div> <!-- end row-->
-                                               <div dir="ltr" class="mt-4">
-                                                   <div id="booked-revenue-chart" class="apex-charts"></div>
-                                               </div>
-                                           </div> <!-- end card body -->
-                                       </div> <!-- end card -->
+                                        <div class="card overflow-hidden">
+                                             <div class="card-body">
+                                                  <div class="row">
+                                                       <div class="col-6">
+                                                            <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
+                                                                 <iconify-icon icon="solar:money-bag-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
+                                                            </div>
+                                                       </div> <!-- end col -->
+                                                       <div class="col-6 text-end">
+                                                            <p class="text-muted mb-0 text-truncate">Deben cuota</p>
+                                                            <h3 class="text-dark mt-1 mb-0">$234.8k</h3>
+                                                       </div> <!-- end col -->
+                                                  </div> <!-- end row-->
+                                                  <div dir="ltr" class="mt-4">
+                                                       <div id="booked-revenue-chart" class="apex-charts"></div>
+                                                  </div>
+                                             </div> <!-- end card body -->
+                                        </div> <!-- end card -->
                                    </div> <!-- end col -->
-                                   
-                               </div> <!-- end row -->
-                               
+
+                              </div> <!-- end row -->
+
                          </div> <!-- end col -->
 
-                         <div class="col-xxl-7">
-                              
-                              <div class="card">
-                                   <div class="card-header d-flex align-items-center justify-content-between gap-2">
-                                        <h4 class="card-title">Performance by Country</h4>
-                                        <div>
-                                             <button type="button" class="btn btn-sm btn-outline-light">ALL</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light">1M</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light">6M</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light active">1Y</button>
-                                        </div>
-                                   </div>
-                                   <div class="card-body pt-1 px-2">
-                                        <div class="row align-items-center">
-                                             <div class="col-lg-7">
-                                                  <div id="world-map-markers" style="height: 250px">
-                                                  </div>
-                                             </div>
-                                             <div class="col-lg-5" dir="ltr">
-                                                  <div class="p-3 pb-2">
-                                                       <!-- Country Data -->
-                                                       <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1">
-                                                                 <iconify-icon icon="circle-flags:us" class="fs-16 align-middle me-1"></iconify-icon> <span class="align-middle">United States</span>
-                                                            </p>
-                                                       </div>
-                                                       <div class="row align-items-center mb-3">
-                                                            <div class="col">
-                                                                 <div class="progress progress-soft progress-sm">
-                                                                      <div class="progress-bar bg-secondary" role="progressbar" style="width: 82.05%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                 </div>
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                 <p class="mb-0 fs-13 fw-semibold">659k</p>
-                                                            </div>
-                                                       </div>
 
-                                                       <!-- Country Data -->
-                                                       <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1">
-                                                                 <iconify-icon icon="circle-flags:ru" class="fs-16 align-middle me-1"></iconify-icon> <span class="align-middle">Russia</span>
-                                                            </p>
-                                                       </div>
-                                                       <div class="row align-items-center mb-3">
-                                                            <div class="col">
-                                                                 <div class="progress progress-soft progress-sm">
-                                                                      <div class="progress-bar bg-info" role="progressbar" style="width: 70.5%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                 </div>
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                 <p class="mb-0 fs-13 fw-semibold">485k</p>
-                                                            </div>
-                                                       </div>
 
-                                                       <!-- Country Data -->
-                                                       <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1">
-                                                                 <iconify-icon icon="circle-flags:cn" class="fs-16 align-middle me-1"></iconify-icon> <span class="align-middle">China</span>
-                                                            </p>
-                                                       </div>
-                                                       <div class="row align-items-center mb-3">
-                                                            <div class="col">
-                                                                 <div class="progress progress-soft progress-sm">
-                                                                      <div class="progress-bar bg-primary" role="progressbar" style="width: 65.8%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                 </div>
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                 <p class="mb-0 fs-13 fw-semibold">355k</p>
-                                                            </div>
-                                                       </div>
+                         
+                    <div class="col-xxl-7">
+                         <div class="card p-4 mb-4">
+                              <h5 class="mb-4">Gestión de Usuarios</h5>
 
-                                                       <!-- Country Data -->
-                                                       <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-1">
-                                                                 <iconify-icon icon="circle-flags:ca" class="fs-16 align-middle me-1"></iconify-icon> <span class="align-middle">Canada</span>
-                                                            </p>
-                                                       </div>
-                                                       <div class="row align-items-center">
-                                                            <div class="col">
-                                                                 <div class="progress progress-soft progress-sm">
-                                                                      <div class="progress-bar bg-success" role="progressbar" style="width: 55.8%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                 </div>
-                                                            </div>
-                                                            <div class="col-auto">
-                                                                 <p class="mb-0 fs-13 fw-semibold">204k</p>
-                                                            </div>
-                                                       </div>
+                              <!-- Buscar / Escanear -->
+                              <div class="mb-3">
+                                   <label for="buscar-usuario" class="form-label">Buscar / Escanear Usuario</label>
+                                   <input type="text" id="buscar-usuario" class="form-control" placeholder="DNI, nombre o escanear código...">
+                              </div>
 
-                                                  </div>
-                                             </div>
-                                        </div>
+                              <div class="mb-3 d-flex gap-2">
+                                   <button type="button" class="btn btn-success ">
+                                        <i class="bi bi-qr-code-scan"></i> Escanear
+                                   </button>
+                                   <button type="button" class="btn btn-info ">
+                                        <i class="bi bi-search"></i> Buscar
+                                   </button>
+                              </div>
+
+                              <hr>
+          
                                    </div> <!-- end card body -->
                               </div> <!-- end card -->
                          </div> <!-- end col -->
                     </div> <!-- end row -->
 
+
+
+<div class="col-xxl-5">
+    <div class="card p-3 mb-4">
+        <h6 class="mb-3">Agregar Nuevo Usuario</h6>
+
+
+<form method="POST" onsubmit="return manejarFormulario(event);">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ej. Juan Pablo" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido completo</label>
+                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Ej. Aracena Domingues" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Número de teléfono</label>
+                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ej. 1123456789">
+            </div>
+
+            <div class="mb-3">
+                <label for="telefono_emergencia" class="form-label">Número de teléfono emergencia</label>
+                <input type="text" id="telefono_emergencia" name="telefono_emergencia" class="form-control" placeholder="Opcional">
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="dni" class="form-label">DNI (para código PDF417)</label>
+                <input type="text" id="dni" name="dni" class="form-control" placeholder="Ej. 12345678" required>
+            </div>
+
+            <div class="mb-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Generar Código
+                </button>
+                <button type="reset" class="btn btn-secondary">Limpiar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Código PDF417 generado:</label><br>
+    <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
+</div>
+
+<script>
+async function manejarFormulario(e) {
+    e.preventDefault();
+
+    const nombre = document.getElementById('nombre').value;
+    const apellido = document.getElementById('apellido').value;
+    const telefono = document.getElementById('telefono').value;
+    const telEmergencia = document.getElementById('telefono_emergencia').value;
+    const email = document.getElementById('email').value;
+    const dni = document.getElementById('dni').value;
+
+    const contenido = `${apellido}@${nombre}@${telefono}@${email}`;
+
+    if (!dni) {
+        alert('Por favor, ingresa un DNI.');
+        return;
+    }
+
+    try {
+        const canvas = document.getElementById('codigoPdf417');
+
+        bwipjs.toCanvas(canvas, {
+            bcid:        'pdf417',
+            text:        contenido,
+            scale:       4,
+            height:      12,
+            columns:     3,
+            rows:        12,
+            includetext: false,
+            compact:     false,
+            paddingwidth: 10,
+            paddingheight: 10
+        });
+
+        const formData = new FormData();
+        formData.append("nombre", nombre);
+        formData.append("apellido", apellido);
+        formData.append("dni", dni);
+        formData.append("telefono", telefono);
+        formData.append("telefono_emergencia", telEmergencia);
+        formData.append("email", email);
+
+        const res = await fetch("/admin-gym/componentes/envio_de_datos.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const json = await res.json();
+        if (json.ok) {
+            alert("Usuario guardado correctamente.");
+        } else {
+            alert("Error: " + (json.error || "No se pudo guardar."));
+        }
+
+    } catch (err) {
+        alert("Error generando el código de barras o guardando: " + err);
+    }
+}
+</script>
+
+
+               
+               <!-- 
                     <div class="row">
                          <div class="col-lg-8">
                               <div class="card">
@@ -1489,11 +1550,11 @@
                                         <div dir="ltr">
                                              <div id="dash-performance-chart" class="apex-charts"></div>
                                         </div>
-                                   </div>
-                              </div> <!-- end card-->
-                         </div> <!-- end col -->
+                                   </div> -->
+               <!-- </div> end card -->
+               <!-- </div> end col -->
 
-                         <div class="col-lg-4">
+               <!-- <div class="col-lg-4">
                               <div class="card card-height-100">
                                    <div class="card-header d-flex align-items-center justify-content-between gap-2">
                                         <h4 class="card-title flex-grow-1">Trending Products</h4>
@@ -1545,10 +1606,10 @@
                                         </table>
                                    </div>
                               </div>
-                         </div> <!-- end col -->
-                    </div> <!-- end row -->
+                         </div> end col -->
+               <!-- </div> end row -->
 
-                    <div class="row">
+               <!-- <div class="row">
                          <div class="col-lg-4">
                               <div class="card">
                                    <div class="d-flex card-header align-items-center justify-content-between">
@@ -1567,9 +1628,9 @@
                                         <div id="conversions" class="apex-charts mt-n2"></div>
                                    </div>
                               </div>
-                         </div> <!-- end left chart card -->
+                         </div> end left chart card -->
 
-                         <div class="col-lg-8">
+               <!-- <div class="col-lg-8">
                               <div class="card">
                                    <div class="d-flex card-header align-items-center justify-content-between">
                                         <h4 class="card-title">
@@ -1580,8 +1641,8 @@
                                              <i class="bx bx-plus me-1"></i>Create Order
                                         </a>
                                    </div>
-                                   <!-- end card body -->
-                                   <div class="table-responsive table-centered">
+                                   end card body -->
+               <!-- <div class="table-responsive table-centered">
                                         <table class="table table-hover table-sm mb-0">
                                              <thead class="bg-light bg-opacity-50">
                                                   <tr>
@@ -1611,8 +1672,8 @@
                                                        </th>
                                                   </tr>
                                              </thead>
-                                             <!-- end thead-->
-                                             <tbody>
+                                             end thead -->
+               <!-- <tbody>
                                                   <tr>
                                                        <td class="ps-3">
                                                             <a href="#!">#TZ5625</a>
@@ -1704,12 +1765,12 @@
                                                        </td>
                                                   </tr>
                                              </tbody>
-                                             <!-- end tbody -->
-                                        </table>
-                                        <!-- end table -->
-                                   </div>
-                                   <!-- table responsive -->
-
+                                             end tbody -->
+               <!-- </table> -->
+               <!-- end table -->
+               <!-- </div> -->
+               <!-- table responsive -->
+               <!-- 
                                    <div class="card-footer border-top">
                                         <div class="row align-items-center g-3">
                                              <div class="col-sm">
@@ -1744,24 +1805,26 @@
                                         </div>
                                    </div>
                               </div>
-                              <!-- end card -->
-                         </div>
-                         <!-- end col -->
-                    </div> <!-- end row -->
+                              end card
+                         </div> -->
+               <!-- end col -->
+               <!-- </div> end row -->
 
-               </div>
+               <!-- </div> -->
                <!-- End Container Fluid -->
 
                <!-- ========== Footer Start ========== -->
                <footer class="footer">
-                   <div class="container-fluid">
-                       <div class="row">
-                           <div class="col-12 text-center">
-                               <script>document.write(new Date().getFullYear())</script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                   href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
-                           </div>
-                       </div>
-                   </div>
+                    <div class="container-fluid">
+                         <div class="row">
+                              <div class="col-12 text-center">
+                                   <script>
+                                        document.write(new Date().getFullYear())
+                                   </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
+                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                              </div>
+                         </div>
+                    </div>
                </footer>
                <!-- ========== Footer End ========== -->
 
@@ -1786,9 +1849,4 @@
 
      <!-- Dashboard Js -->
      <script src="assets/js/pages/dashboard.js"></script>
-
 </body>
-
-
-<!-- Mirrored from techzaa.in/venton/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:13 GMT -->
-</html>
