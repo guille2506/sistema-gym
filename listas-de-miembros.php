@@ -3,6 +3,7 @@
 
 
 <!-- Mirrored from techzaa.in/venton/invoice-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
+
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
@@ -66,7 +67,7 @@
                               <!-- Notification -->
                               <div class="dropdown topbar-item">
                                    <button type="button" class="topbar-button position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class='bx bx-bell fs-24 align-middle' ></i>
+                                        <i class='bx bx-bell fs-24 align-middle'></i>
                                         <span class="position-absolute topbar-badge fs-10 translate-middle badge bg-danger rounded-pill">3<span class="visually-hidden">unread messages</span></span>
                                    </button>
                                    <div class="dropdown-menu py-0 dropdown-lg dropdown-menu-end" aria-labelledby="page-header-notifications-dropdown">
@@ -164,7 +165,7 @@
                               <!-- Theme Setting -->
                               <div class="topbar-item d-none d-md-flex">
                                    <button type="button" class="topbar-button" id="theme-settings-btn" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-                                        <i class='bx bx-cog fs-24 align-middle' ></i>
+                                        <i class='bx bx-cog fs-24 align-middle'></i>
                                    </button>
                               </div>
 
@@ -454,12 +455,12 @@
           <div class="main-nav">
                <!-- Sidebar Logo -->
                <div class="logo-box">
-                    <a href="index.html" class="logo-dark">
+                    <a href="panel.php" class="logo-dark">
                          <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
                          <img src="assets/images/logo-dark.png" class="logo-lg" alt="logo dark">
                     </a>
 
-                    <a href="index.html" class="logo-light">
+                    <a href="panel.php" class="logo-light">
                          <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
                          <img src="assets/images/logo-light.png" class="logo-lg" alt="logo light">
                     </a>
@@ -523,7 +524,7 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-list.html">List</a>
-                                        </li>                         
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-edit.html">Edit</a>
                                         </li>
@@ -634,11 +635,11 @@
                               <div class="collapse" id="sidebarInvoice">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="invoice-list.html">List</a>
+                                             <a class="sub-nav-link" href="invoice-list.html">Lista de miembros</a>
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-details.html">Details</a>
-                                        </li>                            
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-add.html">Create</a>
                                         </li>
@@ -888,16 +889,16 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signin.html">Sign In</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signup.html">Sign Up</a>
-                                        </li>                           
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-password.html">Reset Password</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-lock-screen.html">Lock Screen</a>
-                                        </li>                          
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -1236,15 +1237,15 @@
 
                     <!-- ========== Page Title Start ========== -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <h4 class="mb-0 fw-semibold">Invoices List</h4>
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Invoices</a></li>
-                                    <li class="breadcrumb-item active">Invoices List</li>
-                                </ol>
-                            </div>
-                        </div>
+                         <div class="col-12">
+                              <div class="page-title-box">
+                                   <h4 class="mb-0 fw-semibold">Invoices List</h4>
+                                   <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Invoices</a></li>
+                                        <li class="breadcrumb-item active">Invoices List</li>
+                                   </ol>
+                              </div>
+                         </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
 
@@ -1255,8 +1256,7 @@
                                    <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
-                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total
-                                                       Invoice</h4>
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de miembros</h4>
                                                   <p class="text-muted fw-medium fs-22 mb-0">2310</p>
                                              </div>
                                              <div>
@@ -1274,8 +1274,7 @@
                                    <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
-                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Pending
-                                                       Invoice</h4>
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Miembros al dia</h4>
                                                   <p class="text-muted fw-medium fs-22 mb-0">1000</p>
                                              </div>
                                              <div>
@@ -1293,8 +1292,7 @@
                                    <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
-                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Paid
-                                                       Invoice</h4>
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Deben cuota</h4>
                                                   <p class="text-muted fw-medium fs-22 mb-0">1310</p>
                                              </div>
                                              <div>
@@ -1364,56 +1362,164 @@
                                                                            for="customCheck1"></label>
                                                                  </div>
                                                             </th>
-                                                            <th>Invoice ID</th>
-                                                            <th>Billing Name</th>
-                                                            <th>Order Date</th>
+                                                            <th>ID</th>
+                                                            <th>Nombre y Apellido</th>
+                                                            <th>fecha de registro</th>
                                                             <th>Total</th>
-                                                            <th>Payment Method</th>
-                                                            <th>Status</th>
+                                                            <th>metodo de pago</th>
+                                                            <th>Estado de cuenta</th>
                                                             <th>Action</th>
                                                        </tr>
                                                   </thead>
                                                   <tbody>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck2">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck2">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV2540</a> </td>
-                                                            <td><img src="assets/images/users/avatar-2.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 Michael A. Miner</td>
-                                                            <td> 07 Jan, 2023</td>
-                                                            <td> $452 </td>
-                                                            <td> Mastercard </td>
-                                                            <td> <span
-                                                                      class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
+<?php
+include('conexion.php');
+$sql = "SELECT 
+    m.id,
+    m.nombre,
+    m.apellido,
+    m.fecha_registro,
+    m.sexo_id,
+    rp.monto,
+    e.nombre_estado AS estado,
+    p.nombre_metodo AS metodo_pago
+FROM miembros m
+LEFT JOIN registro_de_pagos rp ON rp.miembro_id = m.id
+LEFT JOIN estado e ON m.estado_id = e.id
+LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
+ORDER BY m.id DESC";
 
-                                                       <tr>
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0):
+    while ($miembro = $result->fetch_assoc()):
+        $estado = $miembro["estado"]; 
+        $metodoPago = $miembro["metodo_pago"] ?? 'N/A';
+        $monto = $miembro["monto"] ? '$' . $miembro["monto"] : 'Sin pago';
+
+        $avatar = ($miembro["sexo_id"] == 2)
+            ? 'assets/images/users/avatar-5.jpg' 
+            : 'assets/images/users/avatar-2.jpg'; 
+?>
+<tr>
+    <td>
+        <div class="form-check fs-16 ms-1">
+            <input type="checkbox" class="form-check-input" id="customCheck<?= $miembro['id'] ?>">
+            <label class="form-check-label" for="customCheck<?= $miembro['id'] ?>">&nbsp;</label>
+        </div>
+    </td>
+    <td><a href="javascript: void(0);" class="text-body">#<?= $miembro['id'] ?></a></td>
+    <td>
+        <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
+        <?= htmlspecialchars($miembro['nombre'] . ' ' . $miembro['apellido']) ?>
+    </td>
+    <td><?= date("d M, Y", strtotime($miembro['fecha_registro'])) ?></td>
+    <td><?= $monto ?></td>
+    <td><?= $metodoPago ?></td>
+    <td>
+        <span class="badge <?= $estado === 'Activo' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?> py-1 px-2">
+            <?= $estado ?>
+        </span>
+    </td>
+    <td>
+        <div class="d-flex gap-2">
+            <form method="post" action="ver_miembro.php">
+                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                <button type="submit" class="btn btn-light btn-sm">
+                    <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+                </button>
+            </form>
+            <form method="post" action="editar_miembro.php">
+                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                <button type="submit" class="btn btn-soft-primary btn-sm">
+                    <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                </button>
+            </form>
+            <form method="post" action="eliminar_miembro.php" onsubmit="return confirm('¿Estás seguro que querés eliminar este miembro?');">
+                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                <button type="submit" class="btn btn-soft-danger btn-sm">
+                    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                </button>
+            </form>
+        </div>
+    </td>
+</tr>
+<?php
+    endwhile;
+else:
+?>
+<tr>
+    <td colspan="8" class="text-center">No hay miembros registrados.</td>
+</tr>
+<?php endif; ?>
+</tbody>
+
+                                             </table>
+                                        </div>
+                                        <!-- end table-responsive -->
+                                   </div>
+                                   <div class="card-footer border-top">
+                                        <nav aria-label="Page navigation example">
+                                             <ul class="pagination justify-content-end mb-0">
+                                                  <li class="page-item"><a class="page-link"
+                                                            href="javascript:void(0);">Previous</a></li>
+                                                  <li class="page-item active"><a class="page-link"
+                                                            href="javascript:void(0);">1</a></li>
+                                                  <li class="page-item"><a class="page-link"
+                                                            href="javascript:void(0);">2</a></li>
+                                                  <li class="page-item"><a class="page-link"
+                                                            href="javascript:void(0);">3</a></li>
+                                                  <li class="page-item"><a class="page-link"
+                                                            href="javascript:void(0);">Next</a></li>
+                                             </ul>
+                                        </nav>
+                                   </div>
+                              </div>
+                         </div>
+
+                    </div>
+
+               </div>
+               <!-- End Container Fluid -->
+
+               <!-- ========== Footer Start ========== -->
+               <footer class="footer">
+                    <div class="container-fluid">
+                         <div class="row">
+                              <div class="col-12 text-center">
+                                   <script>
+                                        document.write(new Date().getFullYear())
+                                   </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
+                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                              </div>
+                         </div>
+                    </div>
+               </footer>
+               <!-- ========== Footer End ========== -->
+
+          </div>
+          <!-- ==================================================== -->
+          <!-- End Page Content -->
+          <!-- ==================================================== -->
+
+     </div>
+     <!-- END Wrapper -->
+
+     <!-- Vendor Javascript (Require in all Page) -->
+     <script src="assets/js/vendor.js"></script>
+
+     <!-- App Javascript (Require in all Page) -->
+     <script src="assets/js/app.js"></script>
+
+</body>
+
+
+<!-- Mirrored from techzaa.in/venton/invoice-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
+
+</html>
+
+
+                                                  <!-- <tr>
                                                             <td>
                                                                  <div class="form-check fs-16 ms-1">
                                                                       <input type="checkbox" class="form-check-input"
@@ -1432,8 +1538,8 @@
                                                             <td> Visa </td>
                                                             <td> <span
                                                                       class="badge bg-danger-subtle text-danger px-2 py-1">Cancel</span>
-                                                            </td>
-                                                            <td>
+                                                            </td> -->
+                                                  <!-- <td>
                                                                  <div class="d-flex gap-2">
                                                                       <a href="#!"
                                                                            class="btn btn-light btn-sm"><iconify-icon
@@ -1704,8 +1810,8 @@
                                                             <td> Paypal </td>
                                                             <td><span
                                                                       class="badge bg-primary-subtle text-primary py-1 px-2">Pending</span>
-                                                            </td>
-                                                            <td>
+                                                            </td> -->
+                                                  <!-- <td>
                                                                  <div class="d-flex gap-2">
                                                                       <a href="#!"
                                                                            class="btn btn-light btn-sm"><iconify-icon
@@ -1720,67 +1826,4 @@
                                                                            class="btn btn-soft-danger btn-sm"><iconify-icon
                                                                                 icon="solar:trash-bin-minimalistic-2-broken"
                                                                                 class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                  </tbody>
-                                             </table>
-                                        </div>
-                                        <!-- end table-responsive -->
-                                   </div>
-                                   <div class="card-footer border-top">
-                                        <nav aria-label="Page navigation example">
-                                             <ul class="pagination justify-content-end mb-0">
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">Previous</a></li>
-                                                  <li class="page-item active"><a class="page-link"
-                                                            href="javascript:void(0);">1</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">2</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">3</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">Next</a></li>
-                                             </ul>
-                                        </nav>
-                                   </div>
-                              </div>
-                         </div>
-
-                    </div>
-
-               </div>
-               <!-- End Container Fluid -->
-
-               <!-- ========== Footer Start ========== -->
-               <footer class="footer">
-                   <div class="container-fluid">
-                       <div class="row">
-                           <div class="col-12 text-center">
-                               <script>document.write(new Date().getFullYear())</script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                   href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
-                           </div>
-                       </div>
-                   </div>
-               </footer>
-               <!-- ========== Footer End ========== -->
-
-          </div>
-          <!-- ==================================================== -->
-          <!-- End Page Content -->
-          <!-- ==================================================== -->
-
-     </div>
-     <!-- END Wrapper -->
-
-     <!-- Vendor Javascript (Require in all Page) -->
-     <script src="assets/js/vendor.js"></script>
-
-     <!-- App Javascript (Require in all Page) -->
-     <script src="assets/js/app.js"></script>
-
-</body>
-
-
-<!-- Mirrored from techzaa.in/venton/invoice-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
-</html>
+                                                                 </div> -->

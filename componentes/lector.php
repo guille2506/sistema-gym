@@ -10,8 +10,13 @@ $response = [
 ];
 
 if ($codigo !== '') {
-    $stmt = $conn->prepare("SELECT nombre FROM miembros WHERE codigo = ? OR dni = ?");
-    $stmt->bind_param("ss", $codigo, $codigo); 
+    $stmt = $conn->prepare("
+        SELECT nombre 
+        FROM miembros 
+        WHERE (codigo = ? OR dni = ?) 
+          AND estado_id = 1
+    ");
+    $stmt->bind_param("ss", $codigo, $codigo);
     $stmt->execute();
     $stmt->store_result();
 
@@ -21,11 +26,10 @@ if ($codigo !== '') {
         $response['status'] = 'ok';
         $response['mensaje'] = "✅ Acceso permitido. Bienvenido, $nombre.";
     } else {
-        $response['mensaje'] = "❌ El código/DNI ingresado no es válido. Por favor, verifique.";
+        $response['mensaje'] = "❌ El código/DNI ingresado no es válido o el usuario está inactivo.";
     }
 
     $stmt->close();
 }
 
 echo json_encode($response);
-?>

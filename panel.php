@@ -586,7 +586,7 @@ if (!isset($_SESSION['admin'])) {
                                              <a class="sub-nav-link" href="order-cart.html">Cart</a>
                                         </li>
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="order-checkout.html">Check Out</a>
+                                             <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                    </ul>
                               </div>
@@ -646,7 +646,7 @@ if (!isset($_SESSION['admin'])) {
                               <div class="collapse" id="sidebarInvoice">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="invoice-list.html">List</a>
+                                             <a class="sub-nav-link" href="listas-de-miembros.php">Lista de miembros</a>
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-details.html">Details</a>
