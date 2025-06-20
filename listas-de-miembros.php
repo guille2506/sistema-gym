@@ -1,3 +1,23 @@
+
+<?php
+include('conexion.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $id = intval($_POST['id']);
+
+    $stmt = $conn->prepare("DELETE FROM miembros WHERE id = ?");
+    $stmt->bind_param("i", $id);
+
+    if ($stmt->execute()) {
+        echo "OK";
+    } else {
+        http_response_code(500);
+        echo "Error al eliminar";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +47,8 @@
 
      <!-- Theme Config js (Require in all Page) -->
      <script src="assets/js/config.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -477,7 +499,7 @@
                          <li class="menu-title">General</li>
 
                          <li class="nav-item">
-                              <a class="nav-link" href="index.html">
+                              <a class="nav-link" href="panel.php">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:widget-5-broken"></iconify-icon>
                                    </span>
@@ -495,733 +517,22 @@
                               <div class="collapse" id="sidebarProducts">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="product-list.html">List</a>
+                                             <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="product-grid.html">Grid</a>
+                                             <a class="sub-nav-link" href="listas-de-miembros.php">Lista de Miembos</a>
                                         </li>
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="product-details.html">Details</a>
+                                             <a class="sub-nav-link" href="caja.php">Caja</a>
                                         </li>
                                         <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="product-edit.html">Edit</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="product-add.html">Create</a>
+                                             <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
                                    </ul>
                               </div>
                          </li>
 
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarCategory" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCategory">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:clipboard-list-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Category </span>
-                              </a>
-                              <div class="collapse" id="sidebarCategory">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="category-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="category-edit.html">Edit</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="category-add.html">Create</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarInventory" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInventory">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:box-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Inventory </span>
-                              </a>
-                              <div class="collapse" id="sidebarInventory">
-                                   <ul class="nav sub-navbar-nav">
-
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="inventory-warehouse.html">Warehouse</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="inventory-received-orders.html">Received Orders</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarOrders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarOrders">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:bag-smile-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Orders </span>
-                              </a>
-                              <div class="collapse" id="sidebarOrders">
-                                   <ul class="nav sub-navbar-nav">
-
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="orders-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="order-detail.html">Details</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="order-cart.html">Cart</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="order-checkout.html">Check Out</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarPurchases" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPurchases">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:card-send-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Purchases </span>
-                              </a>
-                              <div class="collapse" id="sidebarPurchases">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="purchase-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="purchase-order.html">Order</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="purchase-returns.html">Return</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarAttributes" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAttributes">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:confetti-minimalistic-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Attributes </span>
-                              </a>
-                              <div class="collapse" id="sidebarAttributes">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="attributes-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="attributes-edit.html">Edit</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="attributes-add.html">Create</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarInvoice" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarInvoice">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:bill-list-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Invoices </span>
-                              </a>
-                              <div class="collapse" id="sidebarInvoice">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="invoice-list.html">Lista de miembros</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="invoice-details.html">Details</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="invoice-add.html">Create</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="settings.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:settings-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Settings </span>
-                              </a>
-                         </li>
-
-                         <li class="menu-title mt-2">Users</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="pages-profile.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:chat-square-like-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Profile </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarRoles" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarRoles">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:user-speak-rounded-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Roles </span>
-                              </a>
-                              <div class="collapse" id="sidebarRoles">
-                                   <ul class="nav sub-navbar-nav">
-                                        <ul class="nav sub-navbar-nav">
-                                             <li class="sub-nav-item">
-                                                  <a class="sub-nav-link" href="role-list.html">List</a>
-                                             </li>
-                                             <li class="sub-nav-item">
-                                                  <a class="sub-nav-link" href="role-edit.html">Edit</a>
-                                             </li>
-                                             <li class="sub-nav-item">
-                                                  <a class="sub-nav-link" href="role-add.html">Create</a>
-                                             </li>
-                                        </ul>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="pages-permissions.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:checklist-minimalistic-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Permissions </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarCustomers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCustomers">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:users-group-two-rounded-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Customers </span>
-                              </a>
-                              <div class="collapse" id="sidebarCustomers">
-                                   <ul class="nav sub-navbar-nav">
-
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="customer-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="customer-detail.html">Details</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarSellers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarSellers">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:shop-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Sellers </span>
-                              </a>
-                              <div class="collapse" id="sidebarSellers">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="seller-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="seller-details.html">Details</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="seller-edit.html">Edit</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="seller-add.html">Create</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="menu-title mt-2">Other</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarCoupons" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCoupons">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:leaf-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Coupons </span>
-                              </a>
-                              <div class="collapse" id="sidebarCoupons">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="coupons-list.html">List</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="coupons-add.html">Add</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="pages-review.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:chat-square-like-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Reviews </span>
-                              </a>
-                         </li>
-
-                         <li class="menu-title mt-2">Other Apps</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="apps-chat.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:chat-round-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Chat </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="apps-email.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:mailbox-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Email </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="apps-calendar.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:calendar-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Calendar </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="apps-todo.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:checklist-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Todo </span>
-                              </a>
-                         </li>
-
-                         <li class="menu-title mt-2">Support</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="help-center.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:help-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Help Center </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="pages-faqs.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:question-circle-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> FAQs </span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="privacy-policy.html">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:document-text-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Privacy Policy </span>
-                              </a>
-                         </li>
-
-                         <li class="menu-title mt-2">Custom</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarPages" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarPages">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:gift-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Pages </span>
-                              </a>
-                              <div class="collapse" id="sidebarPages">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-starter.html">Welcome</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-comingsoon.html">Coming Soon</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-timeline.html">Timeline</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-pricing.html">Pricing</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-maintenance.html">Maintenance</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-404.html">404 Error</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="pages-404-alt.html">404 Error (alt)</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarAuthentication" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarAuthentication">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:lock-keyhole-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Authentication </span>
-                              </a>
-                              <div class="collapse" id="sidebarAuthentication">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="auth-signin.html">Sign In</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="auth-signup.html">Sign Up</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="auth-password.html">Reset Password</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="auth-lock-screen.html">Lock Screen</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="menu-title mt-2">Components</li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarBaseUI" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBaseUI">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:bookmark-square-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Base UI </span>
-                              </a>
-                              <div class="collapse" id="sidebarBaseUI">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-accordion.html">Accordion</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-alerts.html">Alerts</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-avatar.html">Avatar</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-badge.html">Badge</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-breadcrumb.html">Breadcrumb</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-buttons.html">Buttons</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-card.html">Card</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-carousel.html">Carousel</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-collapse.html">Collapse</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-dropdown.html">Dropdown</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-list-group.html">List Group</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-modal.html">Modal</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-tabs.html">Tabs</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-offcanvas.html">Offcanvas</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-pagination.html">Pagination</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-placeholders.html">Placeholders</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-popovers.html">Popovers</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-progress.html">Progress</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-scrollspy.html">Scrollspy</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-spinners.html">Spinners</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-toasts.html">Toasts</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="ui-tooltips.html">Tooltips</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarExtendedUI" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarExtendedUI">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:case-round-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Advanced UI </span>
-                              </a>
-                              <div class="collapse" id="sidebarExtendedUI">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="extended-ratings.html">Ratings</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="extended-sweetalert.html">Sweet Alert</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="extended-swiper-silder.html">Swiper Slider</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="extended-scrollbar.html">Scrollbar</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="extended-toastify.html">Toastify</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarCharts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarCharts">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:pie-chart-2-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Charts </span>
-                              </a>
-                              <div class="collapse" id="sidebarCharts">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-area.html">Area</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-bar.html">Bar</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-bubble.html">Bubble</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-candlestick.html">Candlestick</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-column.html">Column</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-heatmap.html">Heatmap</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-line.html">Line</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-mixed.html">Mixed</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-timeline.html">Timeline</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-boxplot.html">Boxplot</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-treemap.html">Treemap</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-pie.html">Pie</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-radar.html">Radar</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-radialbar.html">RadialBar</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-scatter.html">Scatter</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="charts-apex-polar-area.html">Polar Area</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarForms">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:book-bookmark-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Forms </span>
-                              </a>
-                              <div class="collapse" id="sidebarForms">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-basic.html">Basic Elements</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-checkbox-radio.html">Checkbox &amp; Radio</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-choices.html">Choice Select</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-clipboard.html">Clipboard</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-flatepicker.html">Flatepicker</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-validation.html">Validation</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-wizard.html">Wizard</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-fileuploads.html">File Upload</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-editors.html">Editors</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-input-mask.html">Input Mask</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="forms-range-slider.html">Slider</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarTables" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTables">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:tuning-2-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Tables </span>
-                              </a>
-                              <div class="collapse" id="sidebarTables">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="tables-basic.html">Basic Tables</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="tables-gridjs.html">Grid Js</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarIcons" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarIcons">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:ufo-2-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Icons </span>
-                              </a>
-                              <div class="collapse" id="sidebarIcons">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="icons-boxicons.html">Boxicons</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="icons-solar.html">Solar Icons</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarMaps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMaps">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:streets-map-point-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Maps </span>
-                              </a>
-                              <div class="collapse" id="sidebarMaps">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="maps-google.html">Google Maps</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="maps-vector.html">Vector Maps</a>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link" href="javascript:void(0);">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:volleyball-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text">Badge Menu</span>
-                                   <span class="badge bg-danger badge-pill text-end">1</span>
-                              </a>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link menu-arrow" href="#sidebarMultiLevelDemo" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMultiLevelDemo">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:share-circle-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Menu Item </span>
-                              </a>
-                              <div class="collapse" id="sidebarMultiLevelDemo">
-                                   <ul class="nav sub-navbar-nav">
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link" href="javascript:void(0);">Menu Item 1</a>
-                                        </li>
-                                        <li class="sub-nav-item">
-                                             <a class="sub-nav-link  menu-arrow" href="#sidebarItemDemoSubItem" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarItemDemoSubItem">
-                                                  <span> Menu Item 2 </span>
-                                             </a>
-                                             <div class="collapse" id="sidebarItemDemoSubItem">
-                                                  <ul class="nav sub-navbar-nav">
-                                                       <li class="sub-nav-item">
-                                                            <a class="sub-nav-link" href="javascript:void(0);">Menu Sub item</a>
-                                                       </li>
-                                                  </ul>
-                                             </div>
-                                        </li>
-                                   </ul>
-                              </div>
-                         </li>
-
-                         <li class="nav-item">
-                              <a class="nav-link disabled" href="javascript:void(0);">
-                                   <span class="nav-icon">
-                                        <iconify-icon icon="solar:user-block-rounded-broken"></iconify-icon>
-                                   </span>
-                                   <span class="nav-text"> Disable Item </span>
-                              </a>
-                         </li>
+                       
                     </ul>
                </div>
           </div>
@@ -1365,7 +676,7 @@
                                                             <th>ID</th>
                                                             <th>Nombre y Apellido</th>
                                                             <th>fecha de registro</th>
-                                                            <th>Total</th>
+                                                            <th>plan</th>
                                                             <th>metodo de pago</th>
                                                             <th>Estado de cuenta</th>
                                                             <th>Action</th>
@@ -1380,13 +691,14 @@ $sql = "SELECT
     m.apellido,
     m.fecha_registro,
     m.sexo_id,
-    rp.monto,
+    m.planes_id,
     e.nombre_estado AS estado,
-    p.nombre_metodo AS metodo_pago
+    p.nombre_metodo AS metodo_pago,
+    pl.nombre AS nombre_plan
 FROM miembros m
-LEFT JOIN registro_de_pagos rp ON rp.miembro_id = m.id
 LEFT JOIN estado e ON m.estado_id = e.id
 LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
+LEFT JOIN planes pl ON m.planes_id = pl.id
 ORDER BY m.id DESC";
 
 $result = $conn->query($sql);
@@ -1395,7 +707,6 @@ if ($result->num_rows > 0):
     while ($miembro = $result->fetch_assoc()):
         $estado = $miembro["estado"]; 
         $metodoPago = $miembro["metodo_pago"] ?? 'N/A';
-        $monto = $miembro["monto"] ? '$' . $miembro["monto"] : 'Sin pago';
 
         $avatar = ($miembro["sexo_id"] == 2)
             ? 'assets/images/users/avatar-5.jpg' 
@@ -1408,13 +719,15 @@ if ($result->num_rows > 0):
             <label class="form-check-label" for="customCheck<?= $miembro['id'] ?>">&nbsp;</label>
         </div>
     </td>
+
     <td><a href="javascript: void(0);" class="text-body">#<?= $miembro['id'] ?></a></td>
     <td>
         <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
         <?= htmlspecialchars($miembro['nombre'] . ' ' . $miembro['apellido']) ?>
     </td>
+
     <td><?= date("d M, Y", strtotime($miembro['fecha_registro'])) ?></td>
-    <td><?= $monto ?></td>
+<td><?= $miembro["nombre_plan"] ?? 'Sin plan' ?></td>
     <td><?= $metodoPago ?></td>
     <td>
         <span class="badge <?= $estado === 'Activo' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?> py-1 px-2">
@@ -1423,24 +736,33 @@ if ($result->num_rows > 0):
     </td>
     <td>
         <div class="d-flex gap-2">
-            <form method="post" action="ver_miembro.php">
+            <form method="post" action="perfil.php">
                 <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
                 <button type="submit" class="btn btn-light btn-sm">
                     <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
                 </button>
             </form>
-            <form method="post" action="editar_miembro.php">
-                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
-                <button type="submit" class="btn btn-soft-primary btn-sm">
-                    <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-                </button>
-            </form>
-            <form method="post" action="eliminar_miembro.php" onsubmit="return confirm('¿Estás seguro que querés eliminar este miembro?');">
-                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
-                <button type="submit" class="btn btn-soft-danger btn-sm">
-                    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
-                </button>
-            </form>
+
+
+
+<form method="post" action="cambiar_estado.php" class="d-flex align-items-center gap-1">
+
+<button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $miembro['id'] ?>)">
+    <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+</button>
+
+</form>
+
+
+
+<form method="post" action="eliminar_miembro.php" class="form-eliminar-miembro" id="form-eliminar-<?= $miembro['id'] ?>">
+    <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+<button type="button" class="btn btn-soft-danger btn-sm btn-eliminar" data-id="<?= $miembro['id'] ?>">
+    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+</button>
+
+</form>
+
         </div>
     </td>
 </tr>
@@ -1453,6 +775,114 @@ else:
 </tr>
 <?php endif; ?>
 </tbody>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const botonesEliminar = document.querySelectorAll(".btn-eliminar");
+
+    botonesEliminar.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            const id = btn.dataset.id;
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-primary w-xs me-2 mt-2',
+                cancelButtonClass: 'btn btn-danger w-xs mt-2',
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviamos la petición a eliminar_miembro.php por fetch
+                    fetch('eliminar_miembro.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=' + encodeURIComponent(id)
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Mostramos mensaje de éxito
+                        Swal.fire({
+                            title: 'Eliminado',
+                            text: 'El miembro ha sido eliminado.',
+                            icon: 'success',
+                            confirmButtonClass: 'btn btn-primary mt-2',
+                            buttonsStyling: false
+                        }).then(() => {
+                            // Opcional: recargamos la página o eliminamos la fila del DOM
+                            location.reload(); // o eliminar la fila con JS
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hubo un problema al eliminar.',
+                            icon: 'error',
+                            confirmButtonClass: 'btn btn-primary mt-2',
+                            buttonsStyling: false
+                        });
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
+
+<script>
+function cambiarEstado(miembroId) {
+    Swal.fire({
+        title: 'Cambiar estado',
+        input: 'select',
+        inputOptions: {
+            1: 'Activo',
+            2: 'Inactivo'
+        },
+        inputPlaceholder: 'Seleccionar estado',
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: (nuevoEstado) => {
+            return fetch('cambiar_estado.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + miembroId + '&nuevo_estado=' + nuevoEstado
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al cambiar el estado');
+                }
+                return response.text();
+            })
+            .catch(error => {
+                Swal.showValidationMessage(
+                    `Error: ${error}`
+                );
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Estado actualizado',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                location.reload(); // Recarga para ver el cambio en la tabla
+            });
+        }
+    });
+}
+</script>
+
 
                                              </table>
                                         </div>
@@ -1490,7 +920,7 @@ else:
                                    <script>
                                         document.write(new Date().getFullYear())
                                    </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                                        href="https://guillermoillanes.com/" class="fw-bold footer-text" target="_blank">Moto</a>
                               </div>
                          </div>
                     </div>
@@ -1518,312 +948,3 @@ else:
 
 </html>
 
-
-                                                  <!-- <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck3">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck3">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV3924</a> </td>
-                                                            <td><img src="assets/images/users/avatar-3.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 Theresa T. Brose</td>
-                                                            <td> 03 Dec, 2023</td>
-                                                            <td> $783 </td>
-                                                            <td> Visa </td>
-                                                            <td> <span
-                                                                      class="badge bg-danger-subtle text-danger px-2 py-1">Cancel</span>
-                                                            </td> -->
-                                                  <!-- <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck4">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck4">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV5032</a> </td>
-                                                            <td><img src="assets/images/users/avatar-4.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 James L. Erickson</td>
-                                                            <td> 28 Sep, 2023 </td>
-                                                            <td> $134 </td>
-                                                            <td> Paypal </td>
-                                                            <td>
-                                                                 <span
-                                                                      class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck5">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck5">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV1695</a> </td>
-                                                            <td><img src="assets/images/users/avatar-5.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 Lily W. Wilson</td>
-                                                            <td>10 Aug, 2023</td>
-                                                            <td> $945 </td>
-                                                            <td> Mastercard</td>
-                                                            <td><span
-                                                                      class="badge bg-primary-subtle text-primary py-1 px-2">Pending</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck6">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck6">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV8473</a> </td>
-                                                            <td><img src="assets/images/users/avatar-6.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 Sarah M. Brooks</td>
-                                                            <td> 22 May, 2023 </td>
-                                                            <td> $421</td>
-                                                            <td> Visa</td>
-                                                            <td> <span
-                                                                      class="badge bg-danger-subtle text-danger px-2 py-1 ">Cancel</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck7">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck7">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV2150</a> </td>
-                                                            <td><img src="assets/images/users/avatar-7.jpg"
-                                                                      class="avatar-sm rounded-circle me-2" alt="...">
-                                                                 Joe K. Hall</td>
-                                                            <td>15 Mar, 2023
-                                                            </td>
-                                                            <td>$251 </td>
-                                                            <td> Paypal </td>
-                                                            <td> <span
-                                                                      class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck7">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck7">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV5636</a> </td>
-                                                            <td><img src="assets/images/users/avatar-8.jpg"
-                                                                      class="avatar-sm rounded-circle me-2"
-                                                                      alt="...">Ralph Hueber</td>
-                                                            <td>15 Mar, 2023
-                                                            </td>
-                                                            <td>$310 </td>
-                                                            <td> Visa </td>
-                                                            <td> <span
-                                                                      class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck7">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck7">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV2940</a> </td>
-                                                            <td><img src="assets/images/users/avatar-9.jpg"
-                                                                      class="avatar-sm rounded-circle me-2"
-                                                                      alt="...">Sarah Drescher</td>
-                                                            <td>15 Mar, 2023
-                                                            </td>
-                                                            <td>$241 </td>
-                                                            <td> Mastercard </td>
-                                                            <td> <span
-                                                                      class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                            </td>
-                                                            <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input"
-                                                                           id="customCheck7">
-                                                                      <label class="form-check-label"
-                                                                           for="customCheck7">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);"
-                                                                      class="text-body">#INV9027</a> </td>
-                                                            <td><img src="assets/images/users/avatar-10.jpg"
-                                                                      class="avatar-sm rounded-circle me-2"
-                                                                      alt="...">Leonie Meister</td>
-                                                            <td>15 Mar, 2023
-                                                            </td>
-                                                            <td>$136 </td>
-                                                            <td> Paypal </td>
-                                                            <td><span
-                                                                      class="badge bg-primary-subtle text-primary py-1 px-2">Pending</span>
-                                                            </td> -->
-                                                  <!-- <td>
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!"
-                                                                           class="btn btn-light btn-sm"><iconify-icon
-                                                                                icon="solar:eye-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#staticBackdrop"><iconify-icon
-                                                                                icon="solar:pen-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!"
-                                                                           class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                                                icon="solar:trash-bin-minimalistic-2-broken"
-                                                                                class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div> -->

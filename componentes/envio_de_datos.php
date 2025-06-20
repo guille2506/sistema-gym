@@ -10,20 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono_emergencia  = $_POST['telefono_emergencia']   ?? '';
     $email                = $_POST['email']                 ?? '';
     $sexo_id              = $_POST['sexo_id']               ?? null;
+    $planes_id            = $_POST['planes_id']             ?? null;
+    $monto = isset($_POST['monto']) && is_numeric($_POST['monto']) ? (int)$_POST['monto'] : 0;
 
 
-    $estado_id            = 1;                             
-    $metodo_de_pagos_id   = $_POST['metodo_de_pagos_id']    ?? 1; 
+
+    $estado_id            = 1;
+    $metodo_de_pagos_id   = $_POST['metodo_de_pagos_id']    ?? 1;
 
     $codigoGenerado = "$apellido@$nombre@$telefono@$email";
 
     $sql = "INSERT INTO miembros
-            (nombre, apellido, dni, telefono, telefono_emergencia, email, codigo, estado_id, metodo_de_pagos_id, sexo_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            (nombre, apellido, dni, telefono, telefono_emergencia, email, codigo, estado_id, metodo_de_pagos_id, sexo_id, planes_id, monto)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        "sssssssiii",
+        "sssssssiiiii",
         $nombre,
         $apellido,
         $dni,
@@ -33,15 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $codigoGenerado,
         $estado_id,
         $metodo_de_pagos_id,
-        $sexo_id
+        $sexo_id,
+        $planes_id,
+        $monto
     );
+
 
     if ($stmt->execute()) {
         echo json_encode(["ok" => true]);
     } else {
         echo json_encode([
             "ok"    => false,
-            "error" => $stmt->error    
+            "error" => $stmt->error
         ]);
     }
     $stmt->close();
@@ -51,7 +57,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 echo json_encode(["ok" => false, "error" => "Método no permitido"]);
 exit;
-?>
-
-
-
