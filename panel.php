@@ -505,7 +505,7 @@ if (!isset($_SESSION['admin'])) {
                               </a>
                               <div class="collapse" id="sidebarProducts">
                                    <ul class="nav sub-navbar-nav">
-                                   <li class="sub-nav-item">
+                                        <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                         <li class="sub-nav-item">
@@ -521,7 +521,7 @@ if (!isset($_SESSION['admin'])) {
                               </div>
                          </li>
 
-       
+
                     </ul>
                </div>
           </div>
@@ -551,100 +551,9 @@ if (!isset($_SESSION['admin'])) {
 
                     <!-- Start here.... -->
                     <div class="row">
-                         <div class="col-xxl-5">
-                              <div class="row">
-
-                                   <div class="col-md-6">
-                                        <div class="card overflow-hidden">
-                                             <div class="card-body">
-                                                  <div class="row">
-                                                       <div class="col-6">
-                                                            <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
-                                                                 <iconify-icon icon="solar:cart-5-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
-                                                            </div>
-                                                       </div> <!-- end col -->
-                                                       <div class="col-6 text-end">
-                                                            <p class="text-muted mb-0 text-truncate">Total de miembros</p>
-                                                            <h3 class="text-dark mt-1 mb-0">15,432</h3>
-                                                       </div> <!-- end col -->
-                                                  </div> <!-- end row-->
-
-                                                  <div dir="ltr" class="mt-4">
-                                                       <div id="orders-chart" class="apex-charts"></div>
-                                                  </div>
-                                             </div> <!-- end card body -->
-                                        </div> <!-- end card -->
-                                   </div> <!-- end col -->
-
-                                   <div class="col-md-6">
-                                        <div class="card overflow-hidden">
-                                             <div class="card-body">
-                                                  <div class="row">
-                                                       <div class="col-6">
-                                                            <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
-                                                                 <iconify-icon icon="solar:leaf-broken" class="avatar-title fs-32 text-success"></iconify-icon>
-                                                            </div>
-                                                       </div> <!-- end col -->
-                                                       <div class="col-6 text-end">
-                                                            <p class="text-muted mb-0 text-truncate">Total de caja</p>
-                                                            <h3 class="text-dark mt-1 mb-0">12,983</h3>
-                                                       </div> <!-- end col -->
-                                                  </div> <!-- end row-->
-                                                  <div dir="ltr" class="mt-4">
-                                                       <div id="new-leads-chart" class="apex-charts"></div>
-                                                  </div>
-                                             </div> <!-- end card body -->
-                                        </div> <!-- end card -->
-                                   </div> <!-- end col -->
-
-                                   <div class="col-md-6">
-                                        <div class="card overflow-hidden">
-                                             <div class="card-body">
-                                                  <div class="row">
-                                                       <div class="col-6">
-                                                            <div class="avatar-md bg-success bg-opacity-10 rounded-circle">
-                                                                 <iconify-icon icon="solar:hand-shake-broken" class="avatar-title fs-32 text-success"></iconify-icon>
-                                                            </div>
-                                                       </div> <!-- end col -->
-                                                       <div class="col-6 text-end">
-                                                            <p class="text-muted mb-0 text-truncate">Miembros al dia</p>
-                                                            <h3 class="text-dark mt-1 mb-0">1,283</h3>
-                                                       </div> <!-- end col -->
-                                                  </div> <!-- end row-->
-                                                  <div dir="ltr" class="mt-4">
-                                                       <div id="deals-chart" class="apex-charts"></div>
-                                                  </div>
-                                             </div> <!-- end card body -->
-                                        </div> <!-- end card -->
-                                   </div> <!-- end col -->
-
-                                   <div class="col-md-6">
-                                        <div class="card overflow-hidden">
-                                             <div class="card-body">
-                                                  <div class="row">
-                                                       <div class="col-6">
-                                                            <div class="avatar-md bg-primary bg-opacity-10 rounded-circle">
-                                                                 <iconify-icon icon="solar:money-bag-broken" class="avatar-title fs-32 text-primary"></iconify-icon>
-                                                            </div>
-                                                       </div> <!-- end col -->
-                                                       <div class="col-6 text-end">
-                                                            <p class="text-muted mb-0 text-truncate">Deben cuota</p>
-                                                            <h3 class="text-dark mt-1 mb-0">$234.8k</h3>
-                                                       </div> <!-- end col -->
-                                                  </div> <!-- end row-->
-                                                  <div dir="ltr" class="mt-4">
-                                                       <div id="booked-revenue-chart" class="apex-charts"></div>
-                                                  </div>
-                                             </div> <!-- end card body -->
-                                        </div> <!-- end card -->
-                                   </div> <!-- end col -->
-
-                              </div> <!-- end row -->
-
-                         </div> <!-- end col -->
 
 
-             
+
 
                          <div class="col-xxl-7">
                               <div class="card p-4 mb-4">
@@ -660,6 +569,17 @@ if (!isset($_SESSION['admin'])) {
                                              <i class="bi bi-qr-code-scan"></i> Escanear
                                         </button>
                                         <div id="resultado-lector" class="mt-2 fw-bold"></div>
+                                        <div id="detalle-miembro" class="mt-3" style="display: none;">
+                                             <div class="card p-3" style="max-width: 300px;">
+                                                  <div class="d-flex align-items-center">
+                                                       <img id="avatar-miembro" src="" alt="Avatar" class="rounded-circle me-3" width="64" height="64">
+                                                       <div>
+                                                            <h5 id="nombre-miembro" class="mb-0"></h5>
+                                                            <small id="plan-miembro" class="text-muted"></small>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </div>
 
                                    </div>
 
@@ -677,6 +597,11 @@ if (!isset($_SESSION['admin'])) {
                          const botonEscanear = document.getElementById("btn-escanear");
                          const resultadoDiv = document.getElementById("resultado-lector");
 
+                         const detalleDiv = document.getElementById("detalle-miembro");
+                         const avatarImg = document.getElementById("avatar-miembro");
+                         const nombreH5 = document.getElementById("nombre-miembro");
+                         const planSmall = document.getElementById("plan-miembro");
+
                          inputBuscar.focus();
 
                          const validarCodigo = async (codigo) => {
@@ -693,15 +618,25 @@ if (!isset($_SESSION['admin'])) {
                                    resultadoDiv.textContent = datos.mensaje;
                                    resultadoDiv.style.color = datos.status === "ok" ? "green" : "red";
 
+                                   if (datos.status === "ok") {
+                                        avatarImg.src = datos.datos.avatar;
+                                        nombreH5.textContent = `${datos.datos.nombre} ${datos.datos.apellido}`;
+                                        planSmall.textContent = `Plan: ${datos.datos.plan}`;
+                                        detalleDiv.style.display = "block";
+                                   } else {
+                                        detalleDiv.style.display = "none";
+                                   }
+
                               } catch (error) {
                                    resultadoDiv.textContent = "❌ Error de conexión con el servidor.";
                                    resultadoDiv.style.color = "red";
+                                   detalleDiv.style.display = "none";
                               }
                          };
 
                          inputBuscar.addEventListener("input", () => {
                               const valor = inputBuscar.value.trim();
-                              if (valor.length >= 6) { 
+                              if (valor.length >= 6) {
                                    validarCodigo(valor);
                               }
                          });
@@ -721,8 +656,8 @@ if (!isset($_SESSION['admin'])) {
                </script>
 
 
-
-               <div class="col-xxl-5">
+               <!-- 
+                <div class="col-xxl-5">
                     <div class="card p-3 mb-4">
                          <h6 class="mb-3">Agregar Nuevo Usuario</h6>
 
@@ -832,323 +767,9 @@ if (!isset($_SESSION['admin'])) {
                          }
                     }
                </script>
+  -->
 
 
-
-               <!-- 
-                    <div class="row">
-                         <div class="col-lg-8">
-                              <div class="card">
-                                   <div class="card-header d-flex align-items-center justify-content-between gap-2">
-                                        <h4 class="card-title">Product Performance</h4>
-                                        <div>
-                                             <button type="button" class="btn btn-sm btn-outline-light">ALL</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light">1M</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light">6M</button>
-                                             <button type="button" class="btn btn-sm btn-outline-light active">1Y</button>
-                                        </div>
-                                   </div>
-                                   <div class="card-body">
-                                        <div class="row text-center">
-                                             <div class="col-md-3 col-6">
-                                                 <div class="bg-soft-light">
-                                                       <p class="text-muted pt-3 mb-1">Total Sales</p>
-                                                       <h4 class="pb-3">
-                                                       <span>$50.4k</span>
-                                                       </h4>
-                                                 </div>
-                                             </div>
-                                             <div class="col-md-3 col-6">
-                                                  <div class="bg-soft-light">
-                                                       <p class="text-muted pt-3 mb-1">Total Refunds</p>
-                                                       <h4 class="pb-3">
-                                                            <span>$3.2k</span>
-                                                       </h4>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-3 col-6">
-                                                  <div class="bg-soft-light">
-                                                       <p class="text-muted pt-3 mb-1">Total Orders</p>
-                                                       <h4 class="pb-3">
-                                                            <span>1,200</span>
-                                                       </h4>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-3 col-6">
-                                                  <div class="bg-soft-light">
-                                                       <p class="text-muted pt-3 mb-1">Net Profit</p>
-                                                       <h4 class="pb-3">
-                                                            <span>$15.7k</span>
-                                                       </h4>
-                                                  </div>
-                                              </div>
-                                         </div>
-                                         
-                                        <div dir="ltr">
-                                             <div id="dash-performance-chart" class="apex-charts"></div>
-                                        </div>
-                                   </div> -->
-               <!-- </div> end card -->
-               <!-- </div> end col -->
-
-               <!-- <div class="col-lg-4">
-                              <div class="card card-height-100">
-                                   <div class="card-header d-flex align-items-center justify-content-between gap-2">
-                                        <h4 class="card-title flex-grow-1">Trending Products</h4>
-
-                                        <a href="#" class="btn btn-sm btn-soft-primary">View All</a>
-                                   </div>
-
-                                   <div class="card-body pt-0 pb-1">
-                                        <div dir="ltr">
-                                             <div id="basic-heatmap" class="apex-charts"></div>
-                                         </div>
-                                   </div>
-                                   <div class="table-responsive">
-                                        <table class="table table-hover table-sm table-nowrap table-centered m-0">
-                                             <thead class="bg-light bg-opacity-50">
-                                                  <tr>
-                                                       <th class="text-muted ps-3 py-1 border-0">Page Path</th>
-                                                       <th class="text-muted py-1 border-0">Page Views</th>
-                                                       <th class="text-muted py-1 border-0">Exit Rate</th>
-                                                  </tr>
-                                             </thead>
-                                             <tbody>
-                                                  <tr>
-                                                       <td class="ps-3"><a href="#" class="text-muted">venton/iphone-16.html</a></td>
-                                                       <td>465 </td>
-                                                       <td><span class="badge badge-soft-success">4.4%</span></td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3"><a href="#" class="text-muted">venton/ipad-pro.html</a></td>
-                                                       <td> 426</td>
-                                                       <td><span class="badge badge-soft-danger">20.4%</span></td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3"><a href="#" class="text-muted">venton/imac.html</a></td>
-                                                       <td>254 </td>
-                                                       <td><span class="badge badge-soft-warning">12.25%</span></td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3"><a href="#" class="text-muted">venton/macbook-pro.html</a></td>
-                                                       <td> 3369</td>
-                                                       <td><span class="badge badge-soft-success">5.2%</span></td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3"><a href="#" class="text-muted">venton/other.html</a></td>
-                                                       <td>985 </td>
-                                                       <td><span class="badge badge-soft-danger">64.2%</span></td>
-                                                  </tr>
-                                             </tbody>
-                                        </table>
-                                   </div>
-                              </div>
-                         </div> end col -->
-               <!-- </div> end row -->
-
-               <!-- <div class="row">
-                         <div class="col-lg-4">
-                              <div class="card">
-                                   <div class="d-flex card-header align-items-center justify-content-between">
-                                        <h4 class="card-title">
-                                             Conversions
-                                        </h4>
-
-                                        <a href="#!" class="btn btn-sm btn-soft-primary">
-                                             <i class="bx bx-refresh me-1"></i>Refresh
-                                        </a>
-                                   </div>
-                                   <div class="card-body">
-                                        <div class="alert alert-info mb-0" role="alert">
-                                             We regret to inform you that our server is currently experiencing technical difficulties.
-                                        </div>
-                                        <div id="conversions" class="apex-charts mt-n2"></div>
-                                   </div>
-                              </div>
-                         </div> end left chart card -->
-
-               <!-- <div class="col-lg-8">
-                              <div class="card">
-                                   <div class="d-flex card-header align-items-center justify-content-between">
-                                        <h4 class="card-title">
-                                             Recent Orders
-                                        </h4>
-
-                                        <a href="#!" class="btn btn-sm btn-soft-primary">
-                                             <i class="bx bx-plus me-1"></i>Create Order
-                                        </a>
-                                   </div>
-                                   end card body -->
-               <!-- <div class="table-responsive table-centered">
-                                        <table class="table table-hover table-sm mb-0">
-                                             <thead class="bg-light bg-opacity-50">
-                                                  <tr>
-                                                       <th class="ps-3 border-0">
-                                                            Order ID.
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Date
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Product
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Customer Name
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Phone No.
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Address
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Payment Type
-                                                       </th>
-                                                       <th class="border-0">
-                                                            Status
-                                                       </th>
-                                                  </tr>
-                                             </thead>
-                                             end thead -->
-               <!-- <tbody>
-                                                  <tr>
-                                                       <td class="ps-3">
-                                                            <a href="#!">#TZ5625</a>
-                                                       </td>
-                                                       <td>29 April 2024</td>
-                                                       <td>
-                                                            <img src="assets/images/products/product-1(1).png" alt="product-1(1)" class="img-fluid avatar-sm">
-                                                       </td>
-                                                       <td>
-                                                            <a href="#!">Anna M. Hines</a>
-                                                       </td>
-                                                       <td>(+1)-555-1564-261</td>
-                                                       <td>Burr Ridge/Illinois</td>
-                                                       <td>Credit Card</td>
-                                                       <td>
-                                                            <i class="bx bxs-circle text-success me-1"></i>Completed
-                                                       </td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3">
-                                                            <a href="#!">#TZ9652</a>
-                                                       </td>
-                                                       <td>25 April 2024</td>
-                                                       <td>
-                                                            <img src="assets/images/products/product-4.png" alt="product-4" class="img-fluid avatar-sm">
-                                                       </td>
-                                                       <td>
-                                                            <a href="#!">Judith H. Fritsche</a>
-                                                       </td>
-                                                       <td>(+57)-305-5579-759</td>
-                                                       <td>SULLIVAN/Kentucky</td>
-                                                       <td>Credit Card</td>
-                                                       <td>
-                                                            <i class="bx bxs-circle text-success me-1"></i>Completed
-                                                       </td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3">
-                                                            <a href="#!">#TZ5984</a>
-                                                       </td>
-                                                       <td>25 April 2024</td>
-                                                       <td>
-                                                            <img src="assets/images/products/product-5.png" alt="product-5" class="img-fluid avatar-sm">
-                                                       </td>
-                                                       <td>
-                                                            <a href="#!">Peter T. Smith</a>
-                                                       </td>
-                                                       <td>(+33)-655-5187-93</td>
-                                                       <td>Yreka/California</td>
-                                                       <td>Pay Pal</td>
-                                                       <td>
-                                                            <i class="bx bxs-circle text-success me-1"></i>Completed
-                                                       </td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3">
-                                                            <a href="#!">#TZ3625</a>
-                                                       </td>
-                                                       <td>21 April 2024</td>
-                                                       <td>
-                                                            <img src="assets/images/products/product-6.png" alt="product-6" class="img-fluid avatar-sm">
-                                                       </td>
-                                                       <td>
-                                                            <a href="#!">Emmanuel J. Delcid</a>
-                                                       </td>
-                                                       <td>(+30)-693-5553-637</td>
-                                                       <td>Atlanta/Georgia</td>
-                                                       <td>Pay Pal</td>
-                                                       <td>
-                                                            <i class="bx bxs-circle text-primary me-1"></i>Processing
-                                                       </td>
-                                                  </tr>
-                                                  <tr>
-                                                       <td class="ps-3">
-                                                            <a href="#!">#TZ8652</a>
-                                                       </td>
-                                                       <td>18 April 2024</td>
-                                                       <td>
-                                                            <img src="assets/images/products/product-1(2).png" alt="product-1(2)" class="img-fluid avatar-sm">
-                                                       </td>
-                                                       <td>
-                                                            <a href="#!">William J. Cook</a>
-                                                       </td>
-                                                       <td>(+91)-855-5446-150</td>
-                                                       <td>Rosenberg/Texas</td>
-                                                       <td>Credit Card</td>
-                                                       <td>
-                                                            <i class="bx bxs-circle text-primary me-1"></i>Processing
-                                                       </td>
-                                                  </tr>
-                                             </tbody>
-                                             end tbody -->
-               <!-- </table> -->
-               <!-- end table -->
-               <!-- </div> -->
-               <!-- table responsive -->
-               <!-- 
-                                   <div class="card-footer border-top">
-                                        <div class="row align-items-center g-3">
-                                             <div class="col-sm">
-                                                  <div class="text-muted">
-                                                       Showing
-                                                       <span class="fw-semibold">5</span>
-                                                       of
-                                                       <span class="fw-semibold">90,521</span>
-                                                       orders
-                                                  </div>
-                                             </div>
-
-                                             <div class="col-sm-auto">
-                                                  <ul class="pagination pagination-rounded m-0">
-                                                       <li class="page-item">
-                                                            <a href="#" class="page-link"><i class="bx bx-left-arrow-alt"></i></a>
-                                                       </li>
-                                                       <li class="page-item active">
-                                                            <a href="#" class="page-link">1</a>
-                                                       </li>
-                                                       <li class="page-item">
-                                                            <a href="#" class="page-link">2</a>
-                                                       </li>
-                                                       <li class="page-item">
-                                                            <a href="#" class="page-link">3</a>
-                                                       </li>
-                                                       <li class="page-item">
-                                                            <a href="#" class="page-link"><i class="bx bx-right-arrow-alt"></i></a>
-                                                       </li>
-                                                  </ul>
-                                             </div>
-                                        </div>
-                                   </div>
-                              </div>
-                              end card
-                         </div> -->
-               <!-- end col -->
-               <!-- </div> end row -->
-
-               <!-- </div> -->
-               <!-- End Container Fluid -->
 
                <!-- ========== Footer Start ========== -->
                <footer class="footer">

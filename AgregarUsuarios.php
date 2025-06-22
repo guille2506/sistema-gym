@@ -6,6 +6,8 @@ if (!isset($_SESSION['admin'])) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -508,7 +510,7 @@ if (!isset($_SESSION['admin'])) {
                               <div class="collapse" id="sidebarProducts">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                              <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
+                                             <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="listas-de-miembros.php">Lista de Miembos</a>
@@ -609,20 +611,21 @@ if (!isset($_SESSION['admin'])) {
                                                             <select id="planes_id" name="planes_id" class="form-control" required>
                                                                  <option value="">Seleccionar</option>
                                                                  <option value="1">dia libre</option>
-                                                                 <option value="2">1 mes</option>
-                                                                 <option value="3">2 meses</option>
-                                                                 <option value="4">3 meses</option>
+                                                                 <option value="2">Mes Pase Libre</option>
+                                                                 <option value="3">2 Meses Pase Libre</option>
+                                                                 <option value="4">3 Meses Pase Libre</option>
                                                             </select>
                                                        </div>
                                                   </div>
-                                                  
+
                                                   <div class="col-lg-6">
                                                        <div class="mb-3">
                                                             <label for="monto" class="form-label">Monto</label>
                                                             <input type="text" id="monto" name="monto" class="form-control" placeholder="$" required>
                                                        </div>
                                                   </div>
-                                             </div>
+
+
 
                                                   <div class="col-lg-6">
                                                        <div class="mb-3">
@@ -630,6 +633,14 @@ if (!isset($_SESSION['admin'])) {
                                                             <input type="text" id="dni" name="dni" class="form-control" placeholder="12345678" required>
                                                        </div>
                                                   </div>
+
+                                                  <div class="col-lg-6">
+                                                       <div class="mb-3">
+                                                            <label for="fecha_de_vencimiento" class="form-label">Fecha de vencimiento</label>
+                                                            <input type="date" id="fecha_de_vencimiento" name="fecha_de_vencimiento" class="form-control" />
+                                                       </div>
+                                                  </div>
+
                                              </div>
 
 
@@ -803,11 +814,11 @@ if (!isset($_SESSION['admin'])) {
                                                                                 <div class="d-flex align-items-center p-2 rounded gap-2 border">
                                                                                      <div class="d-flex align-items-center gap-2">
                                                                                           <div class="rounded-3 bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                                                               <iconify-icon icon="solar:box-bold-duotone" class="fs-36 text-warning"></iconify-icon>
+                                                                                               <img src="assets/images/brands/transferencia-bancaria.png" alt="" class="avatar rounded">
                                                                                           </div>
                                                                                           <div>
                                                                                                <h5 class="text-dark fw-medium">
-                                                                                                    <!-- Our Courier tr -->
+                                                                                                    Transferencia
                                                                                                </h5>
                                                                                                <!-- <p class="mb-0 text-dark">
                                                                                                Delivery -
@@ -816,7 +827,7 @@ if (!isset($_SESSION['admin'])) {
                                                                                           </div>
                                                                                      </div>
                                                                                      <div class="ms-auto">
-                                                                                          <!-- <p class="mb-2">$0.00</p> -->
+                                                                                          <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo0" value="0" required>
                                                                                      </div>
                                                                                 </div>
                                                                            </label>
@@ -827,7 +838,7 @@ if (!isset($_SESSION['admin'])) {
                                                   </div>
                                              </div>
                                         </form>
-                                        
+
 
 
                                         <div class="mt-5">
@@ -842,25 +853,11 @@ if (!isset($_SESSION['admin'])) {
                               </div>
                          </div>
 
-                         
+
 
 
                          <div class="col-lg-4">
-                              <div class="card text-center bg-primary overflow-hidden z-1">
-                                   <div class="card-body p-4">
-                                        <label class="form-label">Código PDF417 generado:</label><br>
-                                        <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
-                                   </div>
-
-                              </div>
-
-                              <div class="main-btn my-4 text-end">
-                                   <button type="button" class="btn btn-primary" id="btnEnviar">
-                                        <i class="bi bi-save"></i> Generar Código
-                                   </button>
-                              </div>
-
-                                <div class="card">
+                              <div class="card">
                                    <div class="card-header">
                                         <h4 class="card-title">Order Summary</h4>
                                    </div>
@@ -868,7 +865,7 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="table-responsive">
                                              <table class="table mb-0">
                                                   <tbody>
-                                                       <tr>
+                                                       <!-- <tr>
                                                             <td class="px-0">
                                                                  <p class="d-flex mb-0 align-items-center gap-1">
                                                                       <iconify-icon
@@ -877,8 +874,8 @@ if (!isset($_SESSION['admin'])) {
                                                                  </p>
                                                             </td>
                                                             <td class="text-end text-dark fw-medium px-0">$777.00</td>
-                                                       </tr>
-                                                       <tr>
+                                                       </tr> -->
+                                                       <!-- <tr>
                                                             <td class="px-0">
                                                                  <p class="d-flex mb-0 align-items-center gap-1">
                                                                       <iconify-icon icon="solar:ticket-broken"
@@ -908,151 +905,170 @@ if (!isset($_SESSION['admin'])) {
                                                                  </p>
                                                             </td>
                                                             <td class="text-end text-dark fw-medium px-0">$20.00</td>
-                                                       </tr>
+                                                       </tr> -->
 
                                                   </tbody>
                                              </table>
                                         </div>
                                    </div>
 
-                                            <div class="row">
-                                   <div class="col-xl-6 col-md-6">
-                                        <div class="card">
-                                             <div class="card-body">
-                                                  <div class="text-center">
-                                                       <h5 class="card-title mb-0 text-dark fw-medium">Orders</h5>
-                                                       <div class="avatar-md bg-light bg-opacity-50 rounded mx-auto my-3">
-                                                            <iconify-icon icon="solar:cart-4-broken" class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                       </div>
-                                                       <h4 class="text-dark fw-medium">458</h4>
-
-                                                       <p class="text-muted">60% Target</p>
-
-                                                       <div class="progress mt-2" style="height: 10px;">
-                                                            <div class="progress-bar progress-bar  progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 60%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="70">
+                                   <div class="row">
+                                        <div class="col-xl-6 col-md-6">
+                                             <div class="card">
+                                                  <div class="card-body">
+                                                       <div class="text-center">
+                                                            <h5 class="card-title mb-0 text-dark fw-medium">Pago</h5>
+                                                            <div class="avatar-md bg-light bg-opacity-50 rounded mx-auto my-3">
+                                                                 <iconify-icon icon="solar:cart-4-broken" class="fs-32 text-success avatar-title"></iconify-icon>
                                                             </div>
+                                                            <h4 id="pago_valor" class="text-dark fw-medium">0</h4>
 
-                                                       </div>
-                                                  </div>
-                                             </div>
-                                             <div class="card-footer border-top">
-                                                  <a href="#!" class="link-dark fw-medium">View More <i class="bx bx-right-arrow-alt"></i></a>
-                                             </div>
-                                        </div>
-                                   </div>
+                                                            <p id="pago_porcentaje" class="text-muted">0%</p>
 
-                                   <div class="col-xl-6 col-md-6">
-                                        <div class="card">
-                                             <div class="card-body">
-                                                  <div class="text-center">
-                                                       <h5 class="card-title mb-0 text-dark fw-medium">Users</h5>
-                                                       <div class="avatar-md bg-light bg-opacity-50 rounded mx-auto my-3">
-                                                            <iconify-icon icon="solar:user-plus-broken" class="fs-32 text-success avatar-title"></iconify-icon>
-                                                       </div>
-                                                       <h4 class="text-dark fw-medium">870</h4>
-
-                                                       <p class="text-muted">80% Target</p>
-
-                                                       <div class="progress mt-2" style="height: 10px;">
-                                                            <div class="progress-bar progress-bar  progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80">
+                                                            <div class="progress mt-2" style="height: 10px;">
+                                                                 <div id="barra_pago" class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                                                                      role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                 </div>
                                                             </div>
                                                        </div>
                                                   </div>
-                                             </div>
-                                             <div class="card-footer border-top">
+                                                  <!-- <div class="card-footer border-top">
                                                   <a href="#!" class="link-dark fw-medium">View More <i class="bx bx-right-arrow-alt"></i></a>
+                                             </div> -->
                                              </div>
                                         </div>
-                                   </div>
-                                   
+
+                                        <div class="col-xl-6 col-md-6">
+                                             <div class="card">
+                                                  <div class="card-body">
+                                                       <div class="text-center">
+                                                            <h5 class="card-title mb-0 text-dark fw-medium">Recargo</h5>
+                                                            <div class="avatar-md bg-light bg-opacity-50 rounded mx-auto my-3">
+                                                                 <iconify-icon icon="solar:user-plus-broken" class="fs-32 text-success avatar-title"></iconify-icon>
+                                                            </div>
+                                                            <h4 id="recargo_valor" class="text-dark fw-medium">0</h4>
+
+                                                            <p id="recargo_porcentaje" class="text-muted">0%</p>
+                                                            <input type="hidden" id="recargo" name="recargo">
+
+                                                            <div class="progress mt-2" style="height: 10px;">
+                                                                 <div id="barra_recargo" class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
+                                                                      role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                 </div>
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                                  <!-- <div class="card-footer border-top">
+                                                  <a href="#!" class="link-dark fw-medium">View More <i class="bx bx-right-arrow-alt"></i></a>
+                                             </div> -->
+                                             </div>
+                                        </div>
+
+                                        <div class="card text-center bg-primary overflow-hidden z-1">
+                                             <div class="card-body p-4">
+                                                  <label class="form-label">Código PDF417 generado:</label><br>
+                                                  <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
+                                             </div>
+
+                                        </div>
+
+                                        <div class="main-btn my-4 text-center">
+                                             <button type="button" class="btn btn-primary" id="btnEnviar">
+                                                  <i class="bi bi-save"></i> Generar Código
+                                             </button>
+                                        </div>
 
 
 
 
 
-                              <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
-                                   <div class="modal-dialog">
-                                        <div class="modal-content">
-                                             <div class="modal-body">
-                                                  <div class="card border-0 mb-0">
-                                                       <div class="card-body">
-                                                            <form class="">
-                                                                 <div class="row align-items-center">
-                                                                      <div class="col-lg-12">
-                                                                           <div class="check-icon text-center">
-                                                                                <img src="assets/images/party.png" alt="" class="img-fluid">
-                                                                                <h4 class="fw-semibold mt-3">Thank You !</h4>
-                                                                                <p class="mb-1">Your Transaction Was
-                                                                                     Successful</p>
-                                                                                <p><span class="text-dark fw-medium">Order Id</span> : #0758267/90</p>
+
+
+
+
+                                        <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+                                             <div class="modal-dialog">
+                                                  <div class="modal-content">
+                                                       <div class="modal-body">
+                                                            <div class="card border-0 mb-0">
+                                                                 <div class="card-body">
+                                                                      <form class="">
+                                                                           <div class="row align-items-center">
+                                                                                <div class="col-lg-12">
+                                                                                     <div class="check-icon text-center">
+                                                                                          <img src="assets/images/party.png" alt="" class="img-fluid">
+                                                                                          <h4 class="fw-semibold mt-3">Thank You !</h4>
+                                                                                          <p class="mb-1">Your Transaction Was
+                                                                                               Successful</p>
+                                                                                          <p><span class="text-dark fw-medium">Order Id</span> : #0758267/90</p>
+                                                                                     </div>
+                                                                                     <hr>
+                                                                                     <div class="row justify-content-between">
+                                                                                          <div class="col-lg-4 col-6">
+                                                                                               <span class="fw-semibold text-muted fs-14">Date</span>
+                                                                                               <p class="text-dark fw-medium mt-1">
+                                                                                                    23 April, 2024</p>
+                                                                                          </div>
+                                                                                          <div class="col-lg-4 col-6 text-end">
+                                                                                               <span class="fw-semibold text-muted fs-14">Time</span>
+                                                                                               <p class="text-dark fw-medium">
+                                                                                                    11:28 AM</p>
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="row justify-content-between mt-3 align-items-center">
+                                                                                          <div class="col-lg-6 col-6">
+                                                                                               <span class="fw-semibold text-muted fs-14">To</span>
+                                                                                               <p class="text-dark fw-medium mb-0 mt-1">Gaston Lapierre</p>
+                                                                                               <p class="mb-0">hello@dundermuffilin.com</p>
+                                                                                          </div>
+                                                                                          <div class="col-lg-4 col-6 text-end">
+                                                                                               <img src="assets/images/users/avatar-1.jpg" alt="" class="avatar rounded-circle">
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="row justify-content-between mt-3 align-items-center">
+                                                                                          <div class="col-lg-6 col-6">
+                                                                                               <span class="fw-semibold text-muted fs-14">Amount</span>
+                                                                                               <h5 class="fw-medium mt-1">$737.00</h5>
+                                                                                          </div>
+                                                                                          <div class="col-lg-4 col-6 text-end">
+                                                                                               <span class="text-success fw-semibold">Completed <i class="bx bx-check-circle align-middle"></i></span>
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </div>
                                                                            </div>
-                                                                           <hr>
-                                                                           <div class="row justify-content-between">
-                                                                                <div class="col-lg-4 col-6">
-                                                                                     <span class="fw-semibold text-muted fs-14">Date</span>
-                                                                                     <p class="text-dark fw-medium mt-1">
-                                                                                          23 April, 2024</p>
-                                                                                </div>
-                                                                                <div class="col-lg-4 col-6 text-end">
-                                                                                     <span class="fw-semibold text-muted fs-14">Time</span>
-                                                                                     <p class="text-dark fw-medium">
-                                                                                          11:28 AM</p>
-                                                                                </div>
+                                                                      </form>
+                                                                 </div>
+                                                                 <div data-bs-theme="dark">
+                                                                      <div class="card-footer d-flex align-items-center border-0 bg-body gap-3 rounded">
+                                                                           <div class="rounded-3 avatar bg-light d-flex align-items-center justify-content-center">
+                                                                                <img src="assets/images/card/mastercard.svg" alt="" class="avatar-sm">
                                                                            </div>
-                                                                           <div class="row justify-content-between mt-3 align-items-center">
-                                                                                <div class="col-lg-6 col-6">
-                                                                                     <span class="fw-semibold text-muted fs-14">To</span>
-                                                                                     <p class="text-dark fw-medium mb-0 mt-1">Gaston Lapierre</p>
-                                                                                     <p class="mb-0">hello@dundermuffilin.com</p>
-                                                                                </div>
-                                                                                <div class="col-lg-4 col-6 text-end">
-                                                                                     <img src="assets/images/users/avatar-1.jpg" alt="" class="avatar rounded-circle">
-                                                                                </div>
+                                                                           <div class="d-block">
+                                                                                <p class="text-white fw-semibold mb-0">
+                                                                                     Credit/Debit Card</p>
+                                                                                <p class="mb-0 text-white-50">
+                                                                                     <span>Master Card ending
+                                                                                          **** 7812</span>
+                                                                                </p>
                                                                            </div>
-                                                                           <div class="row justify-content-between mt-3 align-items-center">
-                                                                                <div class="col-lg-6 col-6">
-                                                                                     <span class="fw-semibold text-muted fs-14">Amount</span>
-                                                                                     <h5 class="fw-medium mt-1">$737.00</h5>
-                                                                                </div>
-                                                                                <div class="col-lg-4 col-6 text-end">
-                                                                                     <span class="text-success fw-semibold">Completed <i class="bx bx-check-circle align-middle"></i></span>
-                                                                                </div>
+                                                                           <div class="ms-auto">
+                                                                                <a href="#!" class="text-primary fs-30" data-bs-toggle="tooltip" data-bs-title="Download Invoice" data-bs-placement="bottom"><iconify-icon icon="solar:download-square-bold" class="align-middle"></iconify-icon></a>
                                                                            </div>
                                                                       </div>
-                                                                 </div>
-                                                            </form>
-                                                       </div>
-                                                       <div data-bs-theme="dark">
-                                                            <div class="card-footer d-flex align-items-center border-0 bg-body gap-3 rounded">
-                                                                 <div class="rounded-3 avatar bg-light d-flex align-items-center justify-content-center">
-                                                                      <img src="assets/images/card/mastercard.svg" alt="" class="avatar-sm">
-                                                                 </div>
-                                                                 <div class="d-block">
-                                                                      <p class="text-white fw-semibold mb-0">
-                                                                           Credit/Debit Card</p>
-                                                                      <p class="mb-0 text-white-50">
-                                                                           <span>Master Card ending
-                                                                                **** 7812</span>
-                                                                      </p>
-                                                                 </div>
-                                                                 <div class="ms-auto">
-                                                                      <a href="#!" class="text-primary fs-30" data-bs-toggle="tooltip" data-bs-title="Download Invoice" data-bs-placement="bottom"><iconify-icon icon="solar:download-square-bold" class="align-middle"></iconify-icon></a>
+
                                                                  </div>
                                                             </div>
-
                                                        </div>
                                                   </div>
                                              </div>
                                         </div>
                                    </div>
+
                               </div>
-                         </div>
+                              <!-- End Container Fluid -->
 
-                    </div>
-                    <!-- End Container Fluid -->
-
-                    <!-- ========== Footer Start ========== -->
-                    <footer class="footer">
+                              <!-- ========== Footer Start ========== -->
+                              <!-- <footer class="footer">
                          <div class="container-fluid">
                               <div class="row">
                                    <div class="col-12 text-center">
@@ -1063,24 +1079,24 @@ if (!isset($_SESSION['admin'])) {
                                    </div>
                               </div>
                          </div>
-                    </footer>
-                    <!-- ========== Footer End ========== -->
+                    </footer> -->
+                              <!-- ========== Footer End ========== -->
 
-               </div>
-               <!-- ==================================================== -->
-               <!-- End Page Content -->
-               <!-- ==================================================== -->
+                         </div>
+                         <!-- ==================================================== -->
+                         <!-- End Page Content -->
+                         <!-- ==================================================== -->
 
-          </div>
-          <!-- END Wrapper -->
+                    </div>
+                    <!-- END Wrapper -->
 
-          <!-- Vendor Javascript (Require in all Page) -->
-          <script src="assets/js/vendor.js"></script>
+                    <!-- Vendor Javascript (Require in all Page) -->
+                    <script src="assets/js/vendor.js"></script>
 
-          <!-- App Javascript (Require in all Page) -->
-          <script src="assets/js/app.js"></script>
+                    <!-- App Javascript (Require in all Page) -->
+                    <script src="assets/js/app.js"></script>
 
-          <script src="assets/js/pages/ecommerce-product-details.js"></script>
+                    <script src="assets/js/pages/ecommerce-product-details.js"></script>
 </body>
 
 

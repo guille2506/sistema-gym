@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sexo_id              = $_POST['sexo_id']               ?? null;
     $planes_id            = $_POST['planes_id']             ?? null;
     $monto = isset($_POST['monto']) && is_numeric($_POST['monto']) ? (int)$_POST['monto'] : 0;
+    $fecha_de_vencimiento   = $_POST['fecha_de_vencimiento']   ?? null;
+    $recargo = isset($_POST['recargo']) && is_numeric($_POST['recargo']) ? (int)$_POST['recargo'] : 0;
+
+
 
 
 
@@ -21,12 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $codigoGenerado = "$apellido@$nombre@$telefono@$email";
 
     $sql = "INSERT INTO miembros
-            (nombre, apellido, dni, telefono, telefono_emergencia, email, codigo, estado_id, metodo_de_pagos_id, sexo_id, planes_id, monto)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+(nombre, apellido, dni, telefono, telefono_emergencia, email, codigo, estado_id, metodo_de_pagos_id, sexo_id, planes_id, monto, fecha_de_vencimiento, recargo)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        "sssssssiiiii",
+        "sssssssiiiiisi",
         $nombre,
         $apellido,
         $dni,
@@ -38,8 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $metodo_de_pagos_id,
         $sexo_id,
         $planes_id,
-        $monto
+        $monto,
+        $fecha_de_vencimiento,
+        $recargo
     );
+
 
 
     if ($stmt->execute()) {

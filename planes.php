@@ -1,8 +1,23 @@
+<?php
+include('conexion.php');
+
+$sql = "SELECT id, nombre, precio FROM planes ORDER BY id ASC";
+$resultado = $conn->query($sql);
+
+$planes = [];
+
+while ($row = $resultado->fetch_assoc()) {
+     $planes[$row['id']] = $row;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 
 <!-- Mirrored from techzaa.in/venton/pages-pricing.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:18 GMT -->
+
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
@@ -66,7 +81,7 @@
                               <!-- Notification -->
                               <div class="dropdown topbar-item">
                                    <button type="button" class="topbar-button position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class='bx bx-bell fs-24 align-middle' ></i>
+                                        <i class='bx bx-bell fs-24 align-middle'></i>
                                         <span class="position-absolute topbar-badge fs-10 translate-middle badge bg-danger rounded-pill">3<span class="visually-hidden">unread messages</span></span>
                                    </button>
                                    <div class="dropdown-menu py-0 dropdown-lg dropdown-menu-end" aria-labelledby="page-header-notifications-dropdown">
@@ -164,7 +179,7 @@
                               <!-- Theme Setting -->
                               <div class="topbar-item d-none d-md-flex">
                                    <button type="button" class="topbar-button" id="theme-settings-btn" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-                                        <i class='bx bx-cog fs-24 align-middle' ></i>
+                                        <i class='bx bx-cog fs-24 align-middle'></i>
                                    </button>
                               </div>
 
@@ -520,7 +535,7 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-list.html">List</a>
-                                        </li>                         
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="category-edit.html">Edit</a>
                                         </li>
@@ -635,7 +650,7 @@
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-details.html">Details</a>
-                                        </li>                            
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="invoice-add.html">Create</a>
                                         </li>
@@ -885,16 +900,16 @@
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signin.html">Sign In</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-signup.html">Sign Up</a>
-                                        </li>                           
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-password.html">Reset Password</a>
-                                        </li>                              
+                                        </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="auth-lock-screen.html">Lock Screen</a>
-                                        </li>                          
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -1233,15 +1248,15 @@
 
                     <!-- ========== Page Title Start ========== -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <h4 class="mb-0 fw-semibold">Planes</h4>
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                                    <li class="breadcrumb-item active">Pricing</li>
-                                </ol>
-                            </div>
-                        </div>
+                         <div class="col-12">
+                              <div class="page-title-box">
+                                   <h4 class="mb-0 fw-semibold">Planes</h4>
+                                   <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                        <li class="breadcrumb-item active">Pricing</li>
+                                   </ol>
+                              </div>
+                         </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
 
@@ -1258,8 +1273,8 @@
                                    <div class="col-lg-3">
                                         <div class="card card-pricing">
                                              <div class="card-body">
-                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold">Free Pack</h5>
-                                                  <h2 class="mt-0 mb-3 fw-bold">$0 <span
+                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold"><?= htmlspecialchars($planes[1]['nombre']) ?></h5>
+                                                  <h2 class="mt-0 mb-3 fw-bold">$<?= $planes[1]['precio'] ?><span
                                                             class="fs-14 fw-medium text-muted">/ Month</span></h2>
 
                                                   <ul
@@ -1285,7 +1300,9 @@
                                                   </ul>
 
                                                   <div class="mt-4 text-center">
-<div class="mt-4 text-center"> <a href="AgregarUsuarios.php" class="btn btn-primary px-sm-4 w-100">comenzar</a> </div>
+                                                       <div class="mt-4 text-center"><a href="AgregarUsuarios.php?monto=<?= $planes[1]['precio'] ?>&plan=<?= $planes[1]['id'] ?>"
+                                                                 class="btn btn-primary px-sm-4 w-100">comenzar</a>
+                                                       </div>
 
                                                   </div>
                                              </div> <!-- end card body -->
@@ -1296,9 +1313,8 @@
                                              <div class="card-body">
                                                   <div class="pricing-ribbon pricing-ribbon-primary float-end">Popular
                                                   </div>
-                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold">Professional
-                                                       Pack</h5>
-                                                  <h2 class="mt-0 mb-3 fw-bold">$19 <span
+                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold"><?= htmlspecialchars($planes[2]['nombre']) ?></h5>
+                                                  <h2 class="mt-0 mb-3 fw-bold">$<?= $planes[2]['precio'] ?> <span
                                                             class="fs-14 fw-medium text-muted">/ Month</span></h2>
 
                                                   <ul
@@ -1324,8 +1340,9 @@
                                                   </ul>
 
                                                   <div class="mt-4 text-center">
-                                                       <button class="btn btn-primary px-sm-4 disabled w-100">Current
-                                                            Plan</button>
+                                                       <div class="mt-4 text-center"> <a href="AgregarUsuarios.php?monto=<?= $planes[2]['precio'] ?>&plan=<?= $planes[2]['id'] ?>"
+                                                                 class="btn btn-primary px-sm-4 w-100">Comenzar</a>
+                                                       </div>
                                                   </div>
                                              </div> <!-- end card body -->
                                         </div> <!-- end card -->
@@ -1333,9 +1350,9 @@
                                    <div class="col-lg-3">
                                         <div class="card card-pricing">
                                              <div class="card-body">
-                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold">Business Pack
+                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold"><?= htmlspecialchars($planes[3]['nombre']) ?>
                                                   </h5>
-                                                  <h2 class="mt-0 mb-3 fw-bold">$29 <span
+                                                  <h2 class="mt-0 mb-3 fw-bold">$<?= $planes[3]['precio'] ?><span
                                                             class="fs-14 fw-medium text-muted">/ Month</span></h2>
 
                                                   <ul
@@ -1361,7 +1378,9 @@
                                                   </ul>
 
                                                   <div class="mt-4 text-center">
-<div class="mt-4 text-center"> <a href="AgregarUsuarios.php" class="btn btn-primary px-sm-4 w-100">comenzar</a> </div>
+                                                       <div class="mt-4 text-center"> <a href="AgregarUsuarios.php?monto=<?= $planes[3]['precio'] ?>&plan=<?= $planes[3]['id'] ?>"
+                                                        class="btn btn-primary px-sm-4 w-100">Comenzar</a>
+                                                       </div>
 
                                                   </div>
                                              </div> <!-- end card body -->
@@ -1370,10 +1389,10 @@
                                    <div class="col-lg-3">
                                         <div class="card card-pricing">
                                              <div class="card-body">
-                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold">Enterprise Pack
+                                                  <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold"><?= htmlspecialchars($planes[4]['nombre']) ?>
                                                   </h5>
-                                                  <h2 class="mt-0 mb-3 fw-bold">$49 <span
-                                                            class="fs-14 fw-medium text-muted">/ Month</span></h2>
+                                                  <h2 class="mt-0 mb-3 fw-bold">$<?= $planes[4]['precio'] ?> <span><span
+                                                                 class="fs-14 fw-medium text-muted">/ Month</span></h2>
 
                                                   <ul
                                                        class="card-pricing-features text-muted border-top pt-2 mt-2 ps-0 list-unstyled">
@@ -1398,7 +1417,9 @@
                                                   </ul>
 
                                                   <div class="mt-4 text-center">
-<div class="mt-4 text-center"> <a href="AgregarUsuarios.php" class="btn btn-primary px-sm-4 w-100">comenzar</a> </div>
+                                                       <div class="mt-4 text-center"> <a href="AgregarUsuarios.php?monto=<?= $planes[4]['precio'] ?>&plan=<?= $planes[4]['id'] ?>"
+                                                        class="btn btn-primary px-sm-4 w-100">Comenzar</a>
+                                                       </div>
 
                                                   </div>
                                              </div> <!-- end card body -->
@@ -1413,14 +1434,16 @@
 
                <!-- ========== Footer Start ========== -->
                <footer class="footer">
-                   <div class="container-fluid">
-                       <div class="row">
-                           <div class="col-12 text-center">
-                               <script>document.write(new Date().getFullYear())</script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                   href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
-                           </div>
-                       </div>
-                   </div>
+                    <div class="container-fluid">
+                         <div class="row">
+                              <div class="col-12 text-center">
+                                   <script>
+                                        document.write(new Date().getFullYear())
+                                   </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
+                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                              </div>
+                         </div>
+                    </div>
                </footer>
                <!-- ========== Footer End ========== -->
 
@@ -1442,4 +1465,5 @@
 
 
 <!-- Mirrored from techzaa.in/venton/pages-pricing.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:18 GMT -->
+
 </html>

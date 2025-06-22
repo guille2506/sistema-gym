@@ -1,6 +1,90 @@
-//generacion de usuarios.AgregarUsuarios.php
-
 document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const montoUrl = urlParams.get("monto");
+  const planIdUrl = urlParams.get("plan");
+
+  const inputMonto = document.getElementById("monto");
+  const selectPlan = document.getElementById("planes_id");
+  const inputFecha = document.getElementById("fecha_de_vencimiento");
+
+  let montoOriginal = montoUrl ? parseFloat(montoUrl) : 0;
+
+  if (montoOriginal && inputMonto) {
+    inputMonto.value = `${montoOriginal}`;
+  }
+
+  if (planIdUrl && selectPlan) {
+    selectPlan.value = planIdUrl;
+  }
+
+  if (inputFecha) {
+    const hoy = new Date();
+    const en30Dias = new Date(hoy);
+    en30Dias.setDate(hoy.getDate() + 30);
+    inputFecha.value = en30Dias.toISOString().split("T")[0];
+  }
+
+  actualizarPagoYRecargo(montoOriginal);
+
+  inputMonto.addEventListener("input", () => {
+    const valor = parseFloat(inputMonto.value.replace(/\$/g, "") || 0);
+    actualizarPagoYRecargo(valor);
+  });
+
+  function actualizarPagoYRecargo(montoIngresado) {
+    const pagoValor = document.getElementById("pago_valor");
+    const pagoPorcentaje = document.getElementById("pago_porcentaje");
+    const barraPago = document.getElementById("barra_pago");
+
+    const recargoValor = document.getElementById("recargo_valor");
+    const recargoPorcentaje = document.getElementById("recargo_porcentaje");
+    const barraRecargo = document.getElementById("barra_recargo");
+
+    if (montoIngresado >= montoOriginal || montoOriginal === 0) {
+      if (pagoValor) pagoValor.textContent = montoIngresado;
+      if (pagoPorcentaje) pagoPorcentaje.textContent = "100%";
+      if (barraPago) {
+        barraPago.style.width = "100%";
+        barraPago.setAttribute("aria-valuenow", "100");
+      } else {
+        const porcentaje = Math.round((montoIngresado / montoOriginal) * 100);
+        const recargo = montoOriginal - montoIngresado;
+
+        document.getElementById("recargo").value = recargo;
+      }
+
+      if (recargoValor) recargoValor.textContent = "0";
+      if (recargoPorcentaje) recargoPorcentaje.textContent = "0%";
+      if (barraRecargo) {
+        barraRecargo.style.width = "0%";
+        barraRecargo.setAttribute("aria-valuenow", "0");
+      }
+
+      document.getElementById("recargo").value = 0;
+    } else {
+      const porcentaje = Math.round((montoIngresado / montoOriginal) * 100);
+      const recargo = montoOriginal - montoIngresado;
+
+      if (pagoValor) pagoValor.textContent = montoIngresado;
+      if (pagoPorcentaje) pagoPorcentaje.textContent = `${porcentaje}%`;
+      if (barraPago) {
+        barraPago.style.width = `${porcentaje}%`;
+        barraPago.setAttribute("aria-valuenow", porcentaje);
+      }
+
+      if (recargoValor) recargoValor.textContent = recargo;
+      if (recargoPorcentaje)
+        recargoPorcentaje.textContent = `${100 - porcentaje}%`;
+      if (barraRecargo) {
+        barraRecargo.style.width = `${100 - porcentaje}%`;
+        barraRecargo.setAttribute("aria-valuenow", 100 - porcentaje);
+
+        document.getElementById("recargo").value = recargo;
+      }
+    }
+  }
+
+  // --- Botón de envío ---
   document
     .getElementById("btnEnviar")
     .addEventListener("click", manejarFormulario);
@@ -13,78 +97,49 @@ async function manejarFormulario() {
   const telEmergencia = document.getElementById("telefono_emergencia").value;
   const email = document.getElementById("email").value;
   const dni = document.getElementById("dni").value;
-
-
   const sexoId = document.getElementById("sexo_id").value;
-  if (!sexoId) {
-    Swal.fire({
-      title: "Sexo no seleccionado",
-      text: "Por favor, seleccioná una opción en el campo sexo.",
-      icon: "warning",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-    });
-    return;
-  }
-
   const planesId = document.getElementById("planes_id").value;
-  if (!planesId) {
-    Swal.fire({
-      title: "Plan no seleccionado",
-      text: "Por favor, seleccioná una opción en el campo planes.",
-      icon: "warning",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-    });
-    return;
-  }
-
   const monto = document.getElementById("monto").value;
-    if (!monto) {
-    Swal.fire({
-      title: "Monto no seleccionado",
-      text: "Por favor, ingresa un monto.",
-      icon: "warning",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-    });
-    return;
-  }
-
-
-
+  const fecha_de_vencimiento = document.getElementById(
+    "fecha_de_vencimiento"
+  ).value;
   const metodoPago = document.querySelector(
     'input[name="metodo_de_pagos_id"]:checked'
   );
-  if (!metodoPago) {
-    Swal.fire({
-      title: "Método de pago no seleccionado",
-      text: "Por favor, seleccioná un método de pago.",
-      icon: "warning",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-    });
-    return;
-  }
+  const recargo = document.getElementById("recargo").value;
 
+
+
+  // --- Validaciones ---
+  if (!sexoId)
+    return mostrarAlerta(
+      "Sexo no seleccionado",
+      "Por favor, seleccioná una opción en el campo sexo."
+    );
+  if (!planesId)
+    return mostrarAlerta(
+      "Plan no seleccionado",
+      "Por favor, seleccioná un plan."
+    );
+  if (!monto)
+    return mostrarAlerta("Monto no ingresado", "Por favor, ingresá un monto.");
+  if (!metodoPago)
+    return mostrarAlerta(
+      "Método de pago no seleccionado",
+      "Por favor, seleccioná un método de pago."
+    );
+  if (!dni)
+    return mostrarAlerta(
+      "Oops...",
+      "No estás ingresando el DNI. Si no lo quiere dar, ingresá cualquier número!"
+    );
+
+
+
+  // --- Generación de código PDF417 ---
   const contenido = `${apellido}@${nombre}@${telefono}@${email}`;
-
-  if (!dni) {
-    Swal.fire({
-      title: "Oops...",
-      text: "no estas ingresando el dni si no lo quiere dar ingresa cualquier número!",
-      icon: "warning",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-      footer: '<a href="">Why do I have this issue?</a>',
-      showCloseButton: false,
-    });
-    return;
-  }
-
   try {
     const canvas = document.getElementById("codigoPdf417");
-
     bwipjs.toCanvas(canvas, {
       bcid: "pdf417",
       text: contenido,
@@ -102,16 +157,13 @@ async function manejarFormulario() {
     setTimeout(() => {
       const ctx = canvas.getContext("2d");
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
       const tempCanvas = document.createElement("canvas");
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
       const tempCtx = tempCanvas.getContext("2d");
-
       tempCtx.fillStyle = "#FFFFFF";
       tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
       tempCtx.putImageData(imageData, 0, 0);
-
       const dataURL = tempCanvas.toDataURL("image/jpeg", 1.0);
 
       const link = document.createElement("a");
@@ -119,7 +171,9 @@ async function manejarFormulario() {
       link.download = "codigo-barra.jpg";
       link.click();
     }, 100);
+    
 
+    // --- Envío de datos ---
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("apellido", apellido);
@@ -131,13 +185,13 @@ async function manejarFormulario() {
     formData.append("sexo_id", sexoId);
     formData.append("planes_id", planesId);
     formData.append("monto", monto);
+    formData.append("fecha_de_vencimiento", fecha_de_vencimiento);
+    formData.append("recargo", recargo);
 
     const res = await fetch("/admin-gym/componentes/envio_de_datos.php", {
       method: "POST",
       body: formData,
     });
-
-    //sweet alerts
 
     const json = await res.json();
     if (json.ok) {
@@ -150,29 +204,20 @@ async function manejarFormulario() {
         buttonsStyling: false,
       });
     } else {
-      Swal.fire({
-        title: "Oops...",
-        text: "error a la hora de enviar datos!",
-        icon: "warning",
-        confirmButtonClass: "btn btn-primary w-xs mt-2",
-        buttonsStyling: false,
-        footer: '<a href="">Why do I have this issue?</a>',
-        showCloseButton: false,
-      });
+      mostrarAlerta("Oops...", "Error al enviar los datos.");
     }
   } catch (err) {
-    Swal.fire({
-      title: "Oops...",
-      text: "Estas ingresando DNI o Gmail ya registrados!",
-      icon: "error",
-      confirmButtonClass: "btn btn-primary w-xs mt-2",
-      buttonsStyling: false,
-      footer: '<a href="">Why do I have this issue?</a>',
-      showCloseButton: false,
-    });
+    mostrarAlerta("Oops...", "¡DNI o Email ya registrados!");
   }
 }
 
-
-
-
+// --- Función reutilizable para alertas ---
+function mostrarAlerta(titulo, mensaje) {
+  Swal.fire({
+    title: titulo,
+    text: mensaje,
+    icon: "warning",
+    confirmButtonClass: "btn btn-primary w-xs mt-2",
+    buttonsStyling: false,
+  });
+}
