@@ -565,9 +565,9 @@ if (!isset($_SESSION['admin'])) {
                                    </div>
 
                                    <div class="mb-3 d-flex gap-2">
-                                        <button type="button" id="btn-escanear" class="btn btn-success">
+                                        <!-- <button type="button" id="btn-escanear" class="btn btn-success">
                                              <i class="bi bi-qr-code-scan"></i> Escanear
-                                        </button>
+                                        </button> -->
                                         <div id="resultado-lector" class="mt-2 fw-bold"></div>
                                         <div id="detalle-miembro" class="mt-3" style="display: none;">
                                              <div class="card p-3" style="max-width: 300px;">
@@ -576,6 +576,10 @@ if (!isset($_SESSION['admin'])) {
                                                        <div>
                                                             <h5 id="nombre-miembro" class="mb-0"></h5>
                                                             <small id="plan-miembro" class="text-muted"></small>
+                                                            <!-- dentro de #detalle-miembro, debajo del <small id="plan-miembro"> -->
+                                                            <small id="cuota-miembro" class="d-block mt-1"></small>
+                                                            <small id="vto-miembro" class="text-muted"></small>
+
                                                        </div>
                                                   </div>
                                              </div>
@@ -601,6 +605,8 @@ if (!isset($_SESSION['admin'])) {
                          const avatarImg = document.getElementById("avatar-miembro");
                          const nombreH5 = document.getElementById("nombre-miembro");
                          const planSmall = document.getElementById("plan-miembro");
+                         const cuotaSmall = document.getElementById("cuota-miembro");
+                         const vtoSmall = document.getElementById("vto-miembro");
 
                          inputBuscar.focus();
 
@@ -623,6 +629,8 @@ if (!isset($_SESSION['admin'])) {
                                         nombreH5.textContent = `${datos.datos.nombre} ${datos.datos.apellido}`;
                                         planSmall.textContent = `Plan: ${datos.datos.plan}`;
                                         detalleDiv.style.display = "block";
+                                        cuotaSmall.textContent = datos.datos.estadoCuota;
+                                        vtoSmall.textContent = `Vence: ${datos.datos.vencimiento}`;
                                    } else {
                                         detalleDiv.style.display = "none";
                                    }
@@ -636,10 +644,27 @@ if (!isset($_SESSION['admin'])) {
 
                          inputBuscar.addEventListener("input", () => {
                               const valor = inputBuscar.value.trim();
-                              if (valor.length >= 6) {
+
+                              if (valor.includes("@")) {
                                    validarCodigo(valor);
+
+                                   setTimeout(() => (inputBuscar.value = ""), 100);
                               }
                          });
+
+                         inputBuscar.addEventListener("keydown", (e) => {
+                              if (e.key === "Enter") {
+                                   e.preventDefault();
+                                   const valor = inputBuscar.value.trim();
+                                   if (valor.length >= 6) {
+                                        validarCodigo(valor);
+                                        inputBuscar.value = "";
+                                   }
+                              }
+                         });
+
+
+
 
                          inputBuscar.addEventListener("keydown", e => {
                               if (e.key === "Enter") {
@@ -656,7 +681,7 @@ if (!isset($_SESSION['admin'])) {
                </script>
 
 
-               <!-- 
+               <!--                
                 <div class="col-xxl-5">
                     <div class="card p-3 mb-4">
                          <h6 class="mb-3">Agregar Nuevo Usuario</h6>
@@ -766,8 +791,8 @@ if (!isset($_SESSION['admin'])) {
                               alert("Error generando el código de barras o guardando: " + err);
                          }
                     }
-               </script>
-  -->
+               </script> -->
+
 
 
 

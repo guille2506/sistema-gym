@@ -984,8 +984,6 @@ if (!isset($_SESSION['admin'])) {
 
 
 
-
-
                                         <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
                                              <div class="modal-dialog">
                                                   <div class="modal-content">
