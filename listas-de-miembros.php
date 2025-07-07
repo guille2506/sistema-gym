@@ -1,19 +1,18 @@
-
 <?php
 include('conexion.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $id = intval($_POST['id']);
+     $id = intval($_POST['id']);
 
-    $stmt = $conn->prepare("DELETE FROM miembros WHERE id = ?");
-    $stmt->bind_param("i", $id);
+     $stmt = $conn->prepare("DELETE FROM miembros WHERE id = ?");
+     $stmt->bind_param("i", $id);
 
-    if ($stmt->execute()) {
-        echo "OK";
-    } else {
-        http_response_code(500);
-        echo "Error al eliminar";
-    }
+     if ($stmt->execute()) {
+          echo "OK";
+     } else {
+          http_response_code(500);
+          echo "Error al eliminar";
+     }
 }
 ?>
 
@@ -48,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
      <!-- Theme Config js (Require in all Page) -->
      <script src="assets/js/config.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <script src="assets/js/listas-miembros.js"></script>
+
 
 </head>
 
@@ -532,7 +533,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                               </div>
                          </li>
 
-                       
+
                     </ul>
                </div>
           </div>
@@ -683,9 +684,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                                                        </tr>
                                                   </thead>
                                                   <tbody>
-<?php
-include('conexion.php');
-$sql = "SELECT 
+                                                       <?php
+                                                       include('conexion.php');
+                                                       $sql = "SELECT 
     m.id,
     m.nombre,
     m.apellido,
@@ -701,83 +702,83 @@ LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
 LEFT JOIN planes pl ON m.planes_id = pl.id
 ORDER BY m.id DESC";
 
-$result = $conn->query($sql);
+                                                       $result = $conn->query($sql);
 
-if ($result->num_rows > 0):
-    while ($miembro = $result->fetch_assoc()):
-        $estado = $miembro["estado"]; 
-        $metodoPago = $miembro["metodo_pago"] ?? 'N/A';
+                                                       if ($result->num_rows > 0):
+                                                            while ($miembro = $result->fetch_assoc()):
+                                                                 $estado = $miembro["estado"];
+                                                                 $metodoPago = $miembro["metodo_pago"] ?? 'N/A';
 
-        $avatar = ($miembro["sexo_id"] == 2)
-            ? 'assets/images/users/avatar-5.jpg' 
-            : 'assets/images/users/avatar-2.jpg'; 
-?>
-<tr>
-    <td>
-        <div class="form-check fs-16 ms-1">
-            <input type="checkbox" class="form-check-input" id="customCheck<?= $miembro['id'] ?>">
-            <label class="form-check-label" for="customCheck<?= $miembro['id'] ?>">&nbsp;</label>
-        </div>
-    </td>
+                                                                 $avatar = ($miembro["sexo_id"] == 2)
+                                                                      ? 'assets/images/users/avatar-5.jpg'
+                                                                      : 'assets/images/users/avatar-2.jpg';
+                                                       ?>
+                                                                 <tr>
+                                                                      <td>
+                                                                           <div class="form-check fs-16 ms-1">
+                                                                                <input type="checkbox" class="form-check-input" id="customCheck<?= $miembro['id'] ?>">
+                                                                                <label class="form-check-label" for="customCheck<?= $miembro['id'] ?>">&nbsp;</label>
+                                                                           </div>
+                                                                      </td>
 
-    <td><a href="javascript: void(0);" class="text-body">#<?= $miembro['id'] ?></a></td>
-    <td>
-        <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
-        <?= htmlspecialchars($miembro['nombre'] . ' ' . $miembro['apellido']) ?>
-    </td>
+                                                                      <td><a href="javascript: void(0);" class="text-body">#<?= $miembro['id'] ?></a></td>
+                                                                      <td>
+                                                                           <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
+                                                                           <?= htmlspecialchars($miembro['nombre'] . ' ' . $miembro['apellido']) ?>
+                                                                      </td>
 
-    <td><?= date("d M, Y", strtotime($miembro['fecha_registro'])) ?></td>
-<td><?= $miembro["nombre_plan"] ?? 'Sin plan' ?></td>
-    <td><?= $metodoPago ?></td>
-    <td>
-        <span class="badge <?= $estado === 'Activo' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?> py-1 px-2">
-            <?= $estado ?>
-        </span>
-    </td>
-    <td>
-        <div class="d-flex gap-2">
-            <form method="post" action="perfil.php">
-                <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
-                <button type="submit" class="btn btn-light btn-sm">
-                    <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
-                </button>
-            </form>
-
-
-
-<form method="post" action="cambiar_estado.php" class="d-flex align-items-center gap-1">
-
-<button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $miembro['id'] ?>)">
-    <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
-</button>
-
-</form>
+                                                                      <td><?= date("d M, Y", strtotime($miembro['fecha_registro'])) ?></td>
+                                                                      <td><?= $miembro["nombre_plan"] ?? 'Sin plan' ?></td>
+                                                                      <td><?= $metodoPago ?></td>
+                                                                      <td>
+                                                                           <span class="badge <?= $estado === 'Activo' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' ?> py-1 px-2">
+                                                                                <?= $estado ?>
+                                                                           </span>
+                                                                      </td>
+                                                                      <td>
+                                                                           <div class="d-flex gap-2">
+                                                                                <form method="post" action="perfil.php">
+                                                                                     <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                                                                                     <button type="submit" class="btn btn-light btn-sm">
+                                                                                          <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+                                                                                </form>
 
 
 
-<form method="post" action="eliminar_miembro.php" class="form-eliminar-miembro" id="form-eliminar-<?= $miembro['id'] ?>">
-    <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
-<button type="button" class="btn btn-soft-danger btn-sm btn-eliminar" data-id="<?= $miembro['id'] ?>">
-    <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
-</button>
+                                                                                <form method="post" action="cambiar_estado.php" class="d-flex align-items-center gap-1">
 
-</form>
+                                                                                     <button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $miembro['id'] ?>)">
+                                                                                          <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
 
-        </div>
-    </td>
-</tr>
-<?php
-    endwhile;
-else:
-?>
-<tr>
-    <td colspan="8" class="text-center">No hay miembros registrados.</td>
-</tr>
-<?php endif; ?>
-</tbody>
+                                                                                </form>
 
 
-<script>
+
+                                                                                <form method="post" action="eliminar_miembro.php" class="form-eliminar-miembro" id="form-eliminar-<?= $miembro['id'] ?>">
+                                                                                     <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                                                                                     <button type="button" class="btn btn-soft-danger btn-sm btn-eliminar" data-id="<?= $miembro['id'] ?>">
+                                                                                          <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+
+                                                                                </form>
+
+                                                                           </div>
+                                                                      </td>
+                                                                 </tr>
+                                                            <?php
+                                                            endwhile;
+                                                       else:
+                                                            ?>
+                                                            <tr>
+                                                                 <td colspan="8" class="text-center">No hay miembros registrados.</td>
+                                                            </tr>
+                                                       <?php endif; ?>
+                                                  </tbody>
+
+
+                                                  <!-- <script>
 document.addEventListener("DOMContentLoaded", function () {
     const botonesEliminar = document.querySelectorAll(".btn-eliminar");
 
@@ -881,7 +882,7 @@ function cambiarEstado(miembroId) {
         }
     });
 }
-</script>
+</script> -->
 
 
                                              </table>
@@ -947,4 +948,3 @@ function cambiarEstado(miembroId) {
 <!-- Mirrored from techzaa.in/venton/invoice-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
 
 </html>
-

@@ -221,3 +221,5 @@ function mostrarAlerta(titulo, mensaje) {
     buttonsStyling: false,
   });
 }
+
+console.log("hola")

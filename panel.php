@@ -31,11 +31,16 @@ if (!isset($_SESSION['admin'])) {
      <!-- App css (Require in all Page) -->
      <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
      <!-- Theme Config js (Require in all Page) -->
      <script src="assets/js/config.js"></script>
 
      <!--bwip-js-->
      <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+     <script src="assets/js/lector-usuarios.js"></script>
+
 
 </head>
 
@@ -549,13 +554,11 @@ if (!isset($_SESSION['admin'])) {
                     </div>
                     <!-- ========== Page Title End ========== -->
 
+
+
                     <!-- Start here.... -->
                     <div class="row">
-
-
-
-
-                         <div class="col-xxl-7">
+                         <div class="col-xxl-7 mx-auto">
                               <div class="card p-4 mb-4">
                                    <h5 class="mb-4">Gestión de Usuarios</h5>
 
@@ -563,27 +566,41 @@ if (!isset($_SESSION['admin'])) {
                                         <label for="buscar-usuario" class="form-label">Buscar / Escanear Usuario</label>
                                         <input type="text" id="buscar-usuario" class="form-control" placeholder="DNI, nombre o escanear código...">
                                    </div>
+                                   <div id="resultado-lector" class="alert fw-bold text-center mx-auto mt-4" style="max-width: 600px; font-size: 16px;"></div>
 
                                    <div class="mb-3 d-flex gap-2">
                                         <!-- <button type="button" id="btn-escanear" class="btn btn-success">
                                              <i class="bi bi-qr-code-scan"></i> Escanear
                                         </button> -->
-                                        <div id="resultado-lector" class="mt-2 fw-bold"></div>
-                                        <div id="detalle-miembro" class="mt-3" style="display: none;">
-                                             <div class="card p-3" style="max-width: 300px;">
-                                                  <div class="d-flex align-items-center">
-                                                       <img id="avatar-miembro" src="" alt="Avatar" class="rounded-circle me-3" width="64" height="64">
-                                                       <div>
-                                                            <h5 id="nombre-miembro" class="mb-0"></h5>
-                                                            <small id="plan-miembro" class="text-muted"></small>
-                                                            <!-- dentro de #detalle-miembro, debajo del <small id="plan-miembro"> -->
-                                                            <small id="cuota-miembro" class="d-block mt-1"></small>
-                                                            <small id="vto-miembro" class="text-muted"></small>
+                                        <!-- <div id="resultado-lector" class="mt-2 fw-bold"></div> -->
+                                        <div id="detalle-miembro" class="p-4 mt-4 mx-auto" style="max-width: 720px; display: none;">
 
+                                             <div class="row g-4 align-items-center">
+
+                                                  <!-- Avatar -->
+                                                  <div class="col-auto">
+                                                       <img id="avatar-miembro" src="" alt="Avatar" class="rounded-circle border border-2 " width="200" height="200">
+                                                  </div>
+
+                                                  <!-- Datos -->
+                                                  <div class="col">
+                                                       <h4 id="nombre-miembro" class="mb-2 text-dark fw-bold fs-2"></h4>
+
+                                                       <div class="mb-2">
+                                                            <span id="plan-miembro" class="badge bg-primary fs-5 px-3 py-2"></span>
+                                                       </div>
+
+                                                       <div class="mb-1">
+                                                            <span id="cuota-miembro" class="fw-semibold fs-5 text-success"></span>
+                                                       </div>
+
+                                                       <div>
+                                                            <small id="vto-miembro" class="text-muted fs-4"></small>
                                                        </div>
                                                   </div>
                                              </div>
                                         </div>
+
 
                                    </div>
 
@@ -594,8 +611,8 @@ if (!isset($_SESSION['admin'])) {
                          </div> <!-- end card -->
                     </div> <!-- end col -->
                </div> <!-- end row -->
-
-               <script>
+               
+               <!-- <script>
                     document.addEventListener("DOMContentLoaded", () => {
                          const inputBuscar = document.getElementById("buscar-usuario");
                          const botonEscanear = document.getElementById("btn-escanear");
@@ -678,7 +695,7 @@ if (!isset($_SESSION['admin'])) {
                               inputBuscar.focus();
                          });
                     });
-               </script>
+               </script> -->
 
 
                <!--                
@@ -804,7 +821,7 @@ if (!isset($_SESSION['admin'])) {
                                    <script>
                                         document.write(new Date().getFullYear())
                                    </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                                        href="#" class="fw-bold footer-text" target="_blank">Moto</a>
                               </div>
                          </div>
                     </div>
