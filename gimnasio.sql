@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-06-2025 a las 05:05:09
+-- Tiempo de generación: 08-07-2025 a las 03:51:27
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -95,23 +95,23 @@ CREATE TABLE `miembros` (
   `sexo_id` int(11) NOT NULL DEFAULT 1,
   `situacion_id` int(11) NOT NULL DEFAULT 1,
   `planes_id` int(11) DEFAULT NULL,
-  `monto` int(11) DEFAULT NULL
+  `monto` int(11) DEFAULT NULL,
+  `fecha_de_vencimiento` date DEFAULT NULL,
+  `recargo` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `miembros`
 --
 
-INSERT INTO `miembros` (`id`, `nombre`, `apellido`, `dni`, `telefono`, `telefono_emergencia`, `email`, `codigo`, `fecha_registro`, `estado_id`, `metodo_de_pagos_id`, `sexo_id`, `situacion_id`, `planes_id`, `monto`) VALUES
-(24, 'Guillermo', 'illanes', '44844220', '1231323123', 'asda', 'demo@evershop.io', 'illanes@Guillermo@1231323123@demo@evershop.io', '2025-06-16 23:59:29', 1, 1, 1, 1, NULL, NULL),
-(25, 'Guillermo', 'illanes', '123123123123223', '1231323123123', 'asda32', 'demo@evershop.io12', 'illanes@Guillermo@1231323123123@demo@evershop.io12', '2025-06-17 00:05:32', 1, 1, 1, 1, NULL, NULL),
-(26, 'Guillermo', 'illanes', '242524123', '1231323123', 'asdasdasd', 'demo@evershop.io343', 'illanes@Guillermo@1231323123@demo@evershop.io343', '2025-06-17 00:07:14', 1, 2, 1, 1, NULL, NULL),
-(32, 'Guillermo', 'illanes', '44844220123', '1231323123', 'asda', 'demo@evershop.io234', 'illanes@Guillermo@1231323123@demo@evershop.io234', '2025-06-17 00:17:07', 1, 2, 1, 1, NULL, NULL),
-(33, 'Guillermo', 'illanes', '4484422034', '1231323123', 'asda', 'demo@evershop.io34', 'illanes@Guillermo@1231323123@demo@evershop.io34', '2025-06-17 00:18:00', 1, 3, 1, 1, NULL, NULL),
-(34, 'Guillermo', 'illanes', '44844220545', '12313231232', 'asdasdasd', 'demo@evershop.io432', 'illanes@Guillermo@12313231232@demo@evershop.io432', '2025-06-17 02:15:55', 1, 3, 2, 1, NULL, NULL),
-(35, 'Guillermo', 'illanes', '4484422067', '1231323123', 'asdasdasd', 'demo@evershop.io67', 'illanes@Guillermo@1231323123@demo@evershop.io67', '2025-06-17 02:18:37', 1, 3, 2, 1, NULL, NULL),
-(47, 'Guillermo', 'illanes', '448442203434', '1231323123', 'asda', 'demo@evershop.io123', 'illanes@Guillermo@1231323123@demo@evershop.io123', '2025-06-19 22:50:15', 1, 2, 1, 1, 2, 0),
-(48, 'Guillermo', 'illanes', '4484422045345', '1231323123', 'asda', 'demo@evershop.io6745', 'illanes@Guillermo@1231323123@demo@evershop.io6745', '2025-06-19 22:53:53', 1, 3, 1, 1, 3, 312312);
+INSERT INTO `miembros` (`id`, `nombre`, `apellido`, `dni`, `telefono`, `telefono_emergencia`, `email`, `codigo`, `fecha_registro`, `estado_id`, `metodo_de_pagos_id`, `sexo_id`, `situacion_id`, `planes_id`, `monto`, `fecha_de_vencimiento`, `recargo`) VALUES
+(57, 'Guillermo', 'illanes', '12312312312346', '1231323123', 'asdasdasd', 'demo@evershop.io434', 'illanes@Guillermo@1231323123@demo@evershop.io434', '2025-06-20 23:45:12', 1, 2, 1, 1, 3, 35, '2025-07-20', 0),
+(58, 'Guillermo', 'illanes', '4484422056', '1231323123', 'asda', 'motsaa007@gmail.com23', 'illanes@Guillermo@1231323123@motsaa007@gmail.com23', '2025-06-20 23:51:39', 2, 2, 1, 1, 3, 35, '2025-07-20', 0),
+(60, 'Guillermo', 'illanes', '44844220568', '1231323123', 'asda', 'demo@evershop.io78', 'illanes@Guillermo@1231323123@demo@evershop.io78', '2025-06-21 00:13:15', 1, 0, 1, 1, 3, 0, '2025-07-21', 0),
+(62, 'Guillermo', 'illanes', '44844220', '1231323123', 'asda', 'demo@evershop.io23', 'illanes@Guillermo@1231323123@demo@evershop.io23', '2025-06-21 18:59:27', 1, 0, 1, 1, 3, 15, '2025-07-21', 15),
+(64, 'moto', 'arana', '448442205684', '1231323123', 'asda', 'demo@evershop.io234', '1826698582', '2025-06-22 01:56:53', 1, 2, 2, 1, 4, 15000, '2025-07-22', 20000),
+(65, 'Jonathan', 'Palma', '10927395', '2324456356456', 'no da', 'JonathanPalma@gmail.com', 'Palma@Jonathan @2324456356456@JonathanPalma@gmail.com', '2025-06-24 15:32:25', 1, 2, 1, 1, 4, 456, '2025-07-24', 0),
+(66, 'nora ', 'arana', '4484422065656', '2342345', '.', 'yella@gmail.com43243', 'arana@nora @2342345@yella@gmail.com43243', '2025-06-24 16:16:41', 1, 0, 2, 1, 4, 15000, '2025-07-24', 20000);
 
 -- --------------------------------------------------------
 
@@ -129,6 +129,7 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `nombre_metodo`) VALUES
+(0, 'transferencia'),
 (1, 'Efectivo'),
 (2, 'MercadoPago'),
 (3, 'Tarjeta');
@@ -141,18 +142,19 @@ INSERT INTO `pagos` (`id`, `nombre_metodo`) VALUES
 
 CREATE TABLE `planes` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL
+  `nombre` varchar(100) NOT NULL,
+  `precio` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `planes`
 --
 
-INSERT INTO `planes` (`id`, `nombre`) VALUES
-(1, 'plan1'),
-(2, 'plan2'),
-(3, 'plan3'),
-(4, 'plan4');
+INSERT INTO `planes` (`id`, `nombre`, `precio`) VALUES
+(1, 'dia libre', 555),
+(2, '1 mes pase libre', 20),
+(3, '2 Meses pase libre ', 30),
+(4, '3 Meses pase libre\n', 35000);
 
 -- --------------------------------------------------------
 
@@ -293,7 +295,7 @@ ALTER TABLE `caja`
 -- AUTO_INCREMENT de la tabla `miembros`
 --
 ALTER TABLE `miembros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `planes`
