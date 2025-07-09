@@ -702,7 +702,7 @@ LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
 LEFT JOIN planes pl ON m.planes_id = pl.id
 ORDER BY m.id DESC";
 
-                                                       $result = $conn->query($sql);
+                                                    $result = $conn->query($sql);
 
                                                        if ($result->num_rows > 0):
                                                             while ($miembro = $result->fetch_assoc()):

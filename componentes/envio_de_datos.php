@@ -50,8 +50,18 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     );
 
 
+ if ($stmt->execute()) {
+        $miembro_id = $conn->insert_id;
 
-    if ($stmt->execute()) {
+        $detalle = "Pago de inscripción del plan";
+        $tipo_operacion = "pago";
+        $sqlCaja = "INSERT INTO caja (miembro_id, monto, detalle, metodo_pago_id, tipo) 
+                    VALUES (?, ?, ?, ?, ?)";
+        $stmtCaja = $conn->prepare($sqlCaja);
+        $stmtCaja->bind_param("idsis", $miembro_id, $monto, $detalle, $metodo_de_pagos_id, $tipo_operacion);
+        $stmtCaja->execute();
+        $stmtCaja->close();
+
         echo json_encode(["ok" => true]);
     } else {
         echo json_encode([
@@ -59,6 +69,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             "error" => $stmt->error
         ]);
     }
+
     $stmt->close();
     $conn->close();
     exit;

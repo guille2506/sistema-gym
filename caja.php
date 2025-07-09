@@ -1,8 +1,25 @@
+<?php
+include('conexion.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+     $id = intval($_POST['id']);
+
+     $stmt = $conn->prepare("DELETE FROM miembros WHERE id = ?");
+     $stmt->bind_param("i", $id);
+
+     if ($stmt->execute()) {
+          echo "OK";
+     } else {
+          http_response_code(500);
+          echo "Error al eliminar";
+     }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
-
 <!-- Mirrored from techzaa.in/venton/purchase-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
+
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
@@ -66,7 +83,7 @@
                               <!-- Notification -->
                               <div class="dropdown topbar-item">
                                    <button type="button" class="topbar-button position-relative" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class='bx bx-bell fs-24 align-middle' ></i>
+                                        <i class='bx bx-bell fs-24 align-middle'></i>
                                         <span class="position-absolute topbar-badge fs-10 translate-middle badge bg-danger rounded-pill">3<span class="visually-hidden">unread messages</span></span>
                                    </button>
                                    <div class="dropdown-menu py-0 dropdown-lg dropdown-menu-end" aria-labelledby="page-header-notifications-dropdown">
@@ -164,7 +181,7 @@
                               <!-- Theme Setting -->
                               <div class="topbar-item d-none d-md-flex">
                                    <button type="button" class="topbar-button" id="theme-settings-btn" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-                                        <i class='bx bx-cog fs-24 align-middle' ></i>
+                                        <i class='bx bx-cog fs-24 align-middle'></i>
                                    </button>
                               </div>
 
@@ -494,7 +511,7 @@
                               <div class="collapse" id="sidebarProducts">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                                 <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
+                                             <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="listas-de-miembros.php">Lista de Miembos</a>
@@ -524,30 +541,48 @@
 
                     <!-- ========== Page Title Start ========== -->
                     <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box">
-                                <h4 class="mb-0 fw-semibold">Purchase List</h4>
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Purchase</a></li>
-                                    <li class="breadcrumb-item active">Purchase List</li>
-                                </ol>
-                            </div>
-                        </div>
+                         <div class="col-12">
+                              <div class="page-title-box">
+                                   <h4 class="mb-0 fw-semibold">Purchase List</h4>
+                                   <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Purchase</a></li>
+                                        <li class="breadcrumb-item active">Purchase List</li>
+                                   </ol>
+                              </div>
+                         </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
+                    <div class="col-lg-3">
+                         <div class="card">
+                              <div class="card-body">
+                                   <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                             <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
+                                             <p class="text-muted fw-medium fs-22 mb-0">2310</p>
+                                        </div>
+                                        <div>
+                                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                                                  <iconify-icon icon="solar:bill-list-bold-duotone"
+                                                       class="fs-32 text-primary avatar-title"></iconify-icon>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
 
-                    
                     <div class="row">
                          <div class="col-xl-12">
                               <div class="card">
                                    <div class="d-flex card-header justify-content-between align-items-center">
                                         <div>
-                             <form class="app-search d-none d-md-block ms-2">
-                                   <div class="position-relative">
-                                        
-                                        <input type="search" class="form-control" placeholder="Search..." autocomplete="off" value="">
-                                   </div>
-                              </form>                                        </div>
+                                             <form class="app-search d-none d-md-block ms-2">
+                                                  <div class="position-relative">
+
+                                                       <input type="search" class="form-control" placeholder="Search..." autocomplete="off" value="">
+                                                  </div>
+                                             </form>
+                                        </div>
                                         <div class="dropdown">
                                              <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                                   This Month
@@ -573,46 +608,133 @@
                                                                       <label class="form-check-label" for="customCheck1"></label>
                                                                  </div>
                                                             </th>
-                                                            <th>Autor</th>
-                                                            <th>Order By</th>
+                                                            <th>id</th>
+                                                            <th>Nombre y Apellido</th>
                                                             <th>Plan</th>
                                                             <!-- <th>Purchase Status</th> -->
-                                                            <th>fecha</th>
-                                                            <th>Total</th>
-                                                            <th>Metodo de pago</th>
+                                                            <th>Monto</th>
                                                             <th>Tipo de operación</th>
+                                                            <th>metodo de pago</th>
+                                                            <th>Actividad</th>
+                                                            <th>fecha</th>
                                                             <th>Action</th>
                                                        </tr>
                                                   </thead>
 
-                                                  
                                                   <tbody>
-                                                       <tr>
-                                                            <td>
-                                                                 <div class="form-check fs-16 ms-1">
-                                                                      <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                                      <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                                                 </div>
-                                                            </td>
-                                                            <td><a href="javascript: void(0);" class="text-body">#INV2540</a> </td>
-                                                            <td><img src="assets/images/users/avatar-2.jpg" class="avatar-sm rounded-circle me-2" alt="..."> Michael A. Miner</td>
-                                                            <td> T-shirt , Wallet</td>
-                                                            <td> 07 Jan, 2023</td>
-                                                            <td> $621 </td>
-                                                            <td> Mastercard </td>
-                                                            <td> <span class="badge bg-success-subtle text-success py-1 px-2">Completed</span> </td>
-                                                            <td>
-                                                                 
-                                                                 <div class="d-flex gap-2">
-                                                                      <a href="#!" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                                      <a href="#!" class="btn btn-soft-danger btn-sm"><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                                 </div>
-                                                            </td>
-                                                       </tr>
-                                                  </tbody>
+     <?php
+include('conexion.php');
+
+$sql = "SELECT 
+    caja.id AS caja_id,
+    m.id AS miembro_id,
+    m.nombre,
+    m.apellido,
+    m.sexo_id,
+    pl.nombre AS nombre_plan,
+    caja.monto,
+    caja.detalle,
+    caja.fecha,
+    caja.tipo,
+    pagos.nombre_metodo
+FROM caja
+LEFT JOIN miembros m ON caja.miembro_id = m.id
+LEFT JOIN planes pl ON m.planes_id = pl.id
+LEFT JOIN pagos ON caja.metodo_pago_id = pagos.id
+ORDER BY caja.fecha DESC";
+
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0):
+    while ($row = $result->fetch_assoc()):
+        $avatar = ($row["sexo_id"] == 2)
+            ? 'assets/images/users/avatar-5.jpg'
+            : 'assets/images/users/avatar-2.jpg';
+
+        $nombreCompleto = htmlspecialchars($row['nombre'] . ' ' . $row['apellido']);
+        $plan = $row['nombre_plan'] ?? 'Sin plan';
+        $monto = number_format($row['monto'], 2, ',', '.');
+        $tipo = ucfirst($row['tipo']);
+        $detalle = $row['detalle'] ?? 'N/A';
+        $fecha = date("d M, Y H:i", strtotime($row['fecha']));
+?>
+                                                                 <tr>
+        <td>
+            <div class="form-check fs-16 ms-1">
+                <input type="checkbox" class="form-check-input" id="customCheck<?= $row['caja_id'] ?>">
+                <label class="form-check-label" for="customCheck<?= $row['caja_id'] ?>">&nbsp;</label>
+            </div>
+        </td>
+
+<td><a href="javascript: void(0);" class="text-body">#<?= $row['miembro_id'] ?></a></td>
+
+        <td>
+<img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
+            <?= htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) ?>
+        </td>
+
+        <td><?= $row["nombre_plan"] ?? 'Sin plan' ?></td>
+
+        <td>$<?= number_format($row['monto'], 2, ',', '.') ?></td>
+
+        <td>
+            <span class="badge 
+                <?= $row['tipo'] === 'pago' ? 'bg-success-subtle text-success' : 
+                     ($row['tipo'] === 'ingreso' ? 'bg-info-subtle text-info' : 'bg-danger-subtle text-danger') ?>
+                py-1 px-2">
+                <?= ucfirst($row['tipo']) ?>
+            </span>
+        </td>
+
+        <td><?= $row['nombre_metodo'] ?? 'N/A' ?></td>
+        <td><?= $row['detalle'] ?? '-' ?></td>
+        <td><?= date("d M, Y H:i", strtotime($row['fecha'])) ?></td>
+
+                        <td>
+                                                                           <div class="d-flex gap-2">
+                                                                                <form method="post" action="perfil.php">
+                                                                                     <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                                                                                     <button type="submit" class="btn btn-light btn-sm">
+                                                                                          <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+                                                                                </form>
+
+
+
+                                                                                <form method="post" action="cambiar_estado.php" class="d-flex align-items-center gap-1">
+
+                                                                                     <button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $miembro['id'] ?>)">
+                                                                                          <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+
+                                                                                </form>
+
+
+
+                                                                                <form method="post" action="eliminar_miembro.php" class="form-eliminar-miembro" id="form-eliminar-<?= $miembro['id'] ?>">
+                                                                                     <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
+                                                                                     <button type="button" class="btn btn-soft-danger btn-sm btn-eliminar" data-id="<?= $miembro['id'] ?>">
+                                                                                          <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+
+                                                                                </form>
+
+                                                                           </div>
+                                                                      </td>
+    </tr>
+
+    
+<?php
+    endwhile;
+else:
+?>
+    <tr>
+        <td colspan="9" class="text-center">No hay movimientos en la caja.</td>
+    </tr>
+<?php endif; ?>
+</tbody>
                                              </table>
-                                             
+
                                         </div>
                                         <!-- end table-responsive -->
                                    </div>
@@ -629,7 +751,7 @@
                                    </div>
                               </div>
                          </div>
-     
+
                     </div>
 
                </div>
@@ -637,14 +759,16 @@
 
                <!-- ========== Footer Start ========== -->
                <footer class="footer">
-                   <div class="container-fluid">
-                       <div class="row">
-                           <div class="col-12 text-center">
-                               <script>document.write(new Date().getFullYear())</script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                   href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
-                           </div>
-                       </div>
-                   </div>
+                    <div class="container-fluid">
+                         <div class="row">
+                              <div class="col-12 text-center">
+                                   <script>
+                                        document.write(new Date().getFullYear())
+                                   </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
+                                        href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                              </div>
+                         </div>
+                    </div>
                </footer>
                <!-- ========== Footer End ========== -->
 
@@ -666,4 +790,5 @@
 
 
 <!-- Mirrored from techzaa.in/venton/purchase-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
+
 </html>
