@@ -49,7 +49,7 @@ if ($codigo !== '') {
                 ? 'assets/images/users/avatar-5.jpg'
                 : 'assets/images/users/avatar-2.jpg';
 
-            // Calcular estado de cuota
+            // Calcula el estado de cuota
             $estadoCuota = ($recargo > 0)
                 ? "Debe recargo \${$recargo} ❌"
                 : "Cuota al día ✅";

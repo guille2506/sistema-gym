@@ -1,21 +1,3 @@
-<?php
-include('conexion.php');
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-     $id = intval($_POST['id']);
-
-     $stmt = $conn->prepare("DELETE FROM miembros WHERE id = ?");
-     $stmt->bind_param("i", $id);
-
-     if ($stmt->execute()) {
-          echo "OK";
-     } else {
-          http_response_code(500);
-          echo "Error al eliminar";
-     }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <!-- Mirrored from techzaa.in/venton/purchase-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
@@ -43,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 
      <!-- Theme Config js (Require in all Page) -->
      <script src="assets/js/config.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <script src="./assets/js/operaciones-caja.js"></script>
+
 </head>
 
 <body>
@@ -552,18 +537,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                          </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
+                    <?php
+                    include('conexion.php');
+
+                    $sqlTotalCaja = "SELECT SUM(monto) AS total FROM caja WHERE tipo = 'pago'";
+                    $resultCaja = $conn->query($sqlTotalCaja);
+                    $totalCaja = 0;
+
+                    if ($resultCaja && $rowCaja = $resultCaja->fetch_assoc()) {
+                         $totalCaja = $rowCaja['total'] ?? 0;
+                    }
+                    ?>
+
+
+
                     <div class="col-lg-3">
                          <div class="card">
                               <div class="card-body">
                                    <div class="d-flex align-items-center justify-content-between">
                                         <div>
                                              <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
-                                             <p class="text-muted fw-medium fs-22 mb-0">2310</p>
+                                             <p class="text-muted fw-medium fs-22 mb-0">$<?= number_format($totalCaja, 0, ',', '.') ?></p>
                                         </div>
                                         <div>
                                              <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                  <iconify-icon icon="solar:bill-list-bold-duotone"
-                                                       class="fs-32 text-primary avatar-title"></iconify-icon>
+                                                  <iconify-icon icon="solar:bill-list-bold-duotone" class="fs-32 text-primary avatar-title"></iconify-icon>
                                              </div>
                                         </div>
                                    </div>
@@ -583,6 +581,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                                                   </div>
                                              </form>
                                         </div>
+
+                                        <button id="btnOperacion" class="btn btn-success">Generar nueva operación</button>
+
+
+
                                         <div class="dropdown">
                                              <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                                   This Month
@@ -615,17 +618,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                                                             <th>Monto</th>
                                                             <th>Tipo de operación</th>
                                                             <th>metodo de pago</th>
-                                                            <th>Actividad</th>
+                                                            <th>Detalle</th>
                                                             <th>fecha</th>
                                                             <th>Action</th>
                                                        </tr>
                                                   </thead>
 
                                                   <tbody>
-     <?php
-include('conexion.php');
+                                                       <?php
+                                                       include('conexion.php');
 
-$sql = "SELECT 
+                                                       $sql = "SELECT 
     caja.id AS caja_id,
     m.id AS miembro_id,
     m.nombre,
@@ -638,59 +641,58 @@ $sql = "SELECT
     caja.tipo,
     pagos.nombre_metodo
 FROM caja
-LEFT JOIN miembros m ON caja.miembro_id = m.id
+INNER JOIN miembros m ON caja.miembro_id = m.id
 LEFT JOIN planes pl ON m.planes_id = pl.id
 LEFT JOIN pagos ON caja.metodo_pago_id = pagos.id
 ORDER BY caja.fecha DESC";
 
-$result = $conn->query($sql);
+                                                       $result = $conn->query($sql);
 
-if ($result && $result->num_rows > 0):
-    while ($row = $result->fetch_assoc()):
-        $avatar = ($row["sexo_id"] == 2)
-            ? 'assets/images/users/avatar-5.jpg'
-            : 'assets/images/users/avatar-2.jpg';
+                                                       if ($result && $result->num_rows > 0):
+                                                            while ($row = $result->fetch_assoc()):
+                                                                 $avatar = ($row["sexo_id"] == 2)
+                                                                      ? 'assets/images/users/avatar-5.jpg'
+                                                                      : 'assets/images/users/avatar-2.jpg';
 
-        $nombreCompleto = htmlspecialchars($row['nombre'] . ' ' . $row['apellido']);
-        $plan = $row['nombre_plan'] ?? 'Sin plan';
-        $monto = number_format($row['monto'], 2, ',', '.');
-        $tipo = ucfirst($row['tipo']);
-        $detalle = $row['detalle'] ?? 'N/A';
-        $fecha = date("d M, Y H:i", strtotime($row['fecha']));
-?>
+                                                                 $nombreCompleto = htmlspecialchars($row['nombre'] . ' ' . $row['apellido']);
+                                                                 $plan = $row['nombre_plan'] ?? 'Sin plan';
+                                                                 $monto = number_format($row['monto'], 2, ',', '.');
+                                                                 $tipo = ucfirst($row['tipo']);
+                                                                 $detalle = $row['detalle'] ?? 'N/A';
+                                                                 $fecha = date("d M, Y H:i", strtotime($row['fecha']));
+                                                       ?>
                                                                  <tr>
-        <td>
-            <div class="form-check fs-16 ms-1">
-                <input type="checkbox" class="form-check-input" id="customCheck<?= $row['caja_id'] ?>">
-                <label class="form-check-label" for="customCheck<?= $row['caja_id'] ?>">&nbsp;</label>
-            </div>
-        </td>
+                                                                      <td>
+                                                                           <div class="form-check fs-16 ms-1">
+                                                                                <input type="checkbox" class="form-check-input" id="customCheck<?= $row['caja_id'] ?>">
+                                                                                <label class="form-check-label" for="customCheck<?= $row['caja_id'] ?>">&nbsp;</label>
+                                                                           </div>
+                                                                      </td>
 
-<td><a href="javascript: void(0);" class="text-body">#<?= $row['miembro_id'] ?></a></td>
+                                                                      <td><a href="javascript: void(0);" class="text-body">#<?= $row['miembro_id'] ?></a></td>
 
-        <td>
-<img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
-            <?= htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) ?>
-        </td>
+                                                                      <td>
+                                                                           <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="...">
+                                                                           <?= htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) ?>
+                                                                      </td>
 
-        <td><?= $row["nombre_plan"] ?? 'Sin plan' ?></td>
+                                                                      <td><?= $row["nombre_plan"] ?? 'Sin plan' ?></td>
 
-        <td>$<?= number_format($row['monto'], 2, ',', '.') ?></td>
+                                                                      <td>$<?= number_format($row['monto'], 2, ',', '.') ?></td>
 
-        <td>
-            <span class="badge 
-                <?= $row['tipo'] === 'pago' ? 'bg-success-subtle text-success' : 
-                     ($row['tipo'] === 'ingreso' ? 'bg-info-subtle text-info' : 'bg-danger-subtle text-danger') ?>
+                                                                      <td>
+                                                                           <span class="badge 
+                <?= $row['tipo'] === 'pago' ? 'bg-success-subtle text-success' : ($row['tipo'] === 'ingreso' ? 'bg-info-subtle text-info' : 'bg-danger-subtle text-danger') ?>
                 py-1 px-2">
-                <?= ucfirst($row['tipo']) ?>
-            </span>
-        </td>
+                                                                                <?= ucfirst($row['tipo']) ?>
+                                                                           </span>
+                                                                      </td>
 
-        <td><?= $row['nombre_metodo'] ?? 'N/A' ?></td>
-        <td><?= $row['detalle'] ?? '-' ?></td>
-        <td><?= date("d M, Y H:i", strtotime($row['fecha'])) ?></td>
+                                                                      <td><?= $row['nombre_metodo'] ?? 'N/A' ?></td>
+                                                                      <td><?= $row['detalle'] ?? '-' ?></td>
+                                                                      <td><?= date("d M, Y H:i", strtotime($row['fecha'])) ?></td>
 
-                        <td>
+                                                                      <td>
                                                                            <div class="d-flex gap-2">
                                                                                 <form method="post" action="perfil.php">
                                                                                      <input type="hidden" name="id" value="<?= $miembro['id'] ?>">
@@ -721,18 +723,18 @@ if ($result && $result->num_rows > 0):
 
                                                                            </div>
                                                                       </td>
-    </tr>
+                                                                 </tr>
 
-    
-<?php
-    endwhile;
-else:
-?>
-    <tr>
-        <td colspan="9" class="text-center">No hay movimientos en la caja.</td>
-    </tr>
-<?php endif; ?>
-</tbody>
+
+                                                            <?php
+                                                            endwhile;
+                                                       else:
+                                                            ?>
+                                                            <tr>
+                                                                 <td colspan="9" class="text-center">No hay movimientos en la caja.</td>
+                                                            </tr>
+                                                       <?php endif; ?>
+                                                  </tbody>
                                              </table>
 
                                         </div>

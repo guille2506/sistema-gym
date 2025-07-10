@@ -2,6 +2,8 @@
 header('Content-Type: application/json');
 include('../conexion.php');
 
+//form
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre               = $_POST['nombre']                ?? '';
     $apellido             = $_POST['apellido']              ?? '';
@@ -49,16 +51,18 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $recargo
     );
 
+    //caja
 
- if ($stmt->execute()) {
+    if ($stmt->execute()) {
         $miembro_id = $conn->insert_id;
 
         $detalle = "Pago de inscripción del plan";
         $tipo_operacion = "pago";
-        $sqlCaja = "INSERT INTO caja (miembro_id, monto, detalle, metodo_pago_id, tipo) 
-                    VALUES (?, ?, ?, ?, ?)";
+        $sqlCaja = "INSERT INTO caja (miembro_id, monto, detalle, metodo_pago_id, tipo, miembro_nombre, miembro_apellido) 
+VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmtCaja = $conn->prepare($sqlCaja);
-        $stmtCaja->bind_param("idsis", $miembro_id, $monto, $detalle, $metodo_de_pagos_id, $tipo_operacion);
+        $stmtCaja->bind_param("idsssss", $miembro_id, $monto, $detalle, $metodo_de_pagos_id, $tipo_operacion, $nombre, $apellido);
+
         $stmtCaja->execute();
         $stmtCaja->close();
 

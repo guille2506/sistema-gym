@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-07-2025 a las 03:51:27
+-- Tiempo de generación: 09-07-2025 a las 18:47:04
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -52,8 +52,28 @@ CREATE TABLE `caja` (
   `monto` decimal(10,2) NOT NULL,
   `detalle` varchar(255) DEFAULT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
-  `metodo_pago_id` int(11) NOT NULL
+  `metodo_pago_id` int(11) NOT NULL,
+  `tipo` enum('pago','ingreso','extraccion') NOT NULL DEFAULT 'pago',
+  `miembro_nombre` varchar(100) DEFAULT NULL,
+  `miembro_apellido` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `caja`
+--
+
+INSERT INTO `caja` (`id`, `miembro_id`, `monto`, `detalle`, `fecha`, `metodo_pago_id`, `tipo`, `miembro_nombre`, `miembro_apellido`) VALUES
+(1, 77, 4645.00, 'Pago de inscripción del plan', '2025-07-08 23:45:38', 2, 'extraccion', NULL, NULL),
+(2, 79, 4645.00, 'Pago de inscripción del plan', '2025-07-08 23:46:54', 2, 'pago', NULL, NULL),
+(3, 80, 4645.00, 'Pago de inscripción del plan', '2025-07-08 23:47:15', 2, 'pago', NULL, NULL),
+(4, NULL, 4645.00, 'Pago de inscripción del plan', '2025-07-08 23:51:20', 2, 'pago', NULL, NULL),
+(5, NULL, 67.00, 'Pago de inscripción del plan', '2025-07-08 23:56:53', 2, 'pago', NULL, NULL),
+(6, NULL, 67.00, 'Pago de inscripción del plan', '2025-07-08 23:58:18', 2, 'pago', NULL, NULL),
+(7, NULL, 67.00, 'Pago de inscripción del plan', '2025-07-08 23:58:58', 2, 'pago', NULL, NULL),
+(8, NULL, 67.00, 'Pago de inscripción del plan', '2025-07-08 23:59:30', 2, 'pago', NULL, NULL),
+(9, 87, 4565.00, 'Pago de inscripción del plan', '2025-07-09 16:27:35', 2, 'pago', NULL, NULL),
+(10, 88, 34534.00, 'Pago de inscripción del plan', '2025-07-09 16:29:41', 0, 'pago', 'ricardo', 'illanes'),
+(11, NULL, 34534.00, 'Pago de inscripción del plan', '2025-07-09 16:30:28', 0, 'pago', 'ricardo Merengue', 'illanes Arana');
 
 -- --------------------------------------------------------
 
@@ -106,12 +126,20 @@ CREATE TABLE `miembros` (
 
 INSERT INTO `miembros` (`id`, `nombre`, `apellido`, `dni`, `telefono`, `telefono_emergencia`, `email`, `codigo`, `fecha_registro`, `estado_id`, `metodo_de_pagos_id`, `sexo_id`, `situacion_id`, `planes_id`, `monto`, `fecha_de_vencimiento`, `recargo`) VALUES
 (57, 'Guillermo', 'illanes', '12312312312346', '1231323123', 'asdasdasd', 'demo@evershop.io434', 'illanes@Guillermo@1231323123@demo@evershop.io434', '2025-06-20 23:45:12', 1, 2, 1, 1, 3, 35, '2025-07-20', 0),
-(58, 'Guillermo', 'illanes', '4484422056', '1231323123', 'asda', 'motsaa007@gmail.com23', 'illanes@Guillermo@1231323123@motsaa007@gmail.com23', '2025-06-20 23:51:39', 2, 2, 1, 1, 3, 35, '2025-07-20', 0),
+(58, 'Guillermo', 'illanes', '4484422056', '1231323123', 'asda', 'motsaa007@gmail.com23', 'illanes@Guillermo@1231323123@motsaa007@gmail.com23', '2025-06-20 23:51:39', 1, 2, 1, 1, 3, 35, '2025-07-20', 0),
 (60, 'Guillermo', 'illanes', '44844220568', '1231323123', 'asda', 'demo@evershop.io78', 'illanes@Guillermo@1231323123@demo@evershop.io78', '2025-06-21 00:13:15', 1, 0, 1, 1, 3, 0, '2025-07-21', 0),
 (62, 'Guillermo', 'illanes', '44844220', '1231323123', 'asda', 'demo@evershop.io23', 'illanes@Guillermo@1231323123@demo@evershop.io23', '2025-06-21 18:59:27', 1, 0, 1, 1, 3, 15, '2025-07-21', 15),
-(64, 'moto', 'arana', '448442205684', '1231323123', 'asda', 'demo@evershop.io234', '1826698582', '2025-06-22 01:56:53', 1, 2, 2, 1, 4, 15000, '2025-07-22', 20000),
 (65, 'Jonathan', 'Palma', '10927395', '2324456356456', 'no da', 'JonathanPalma@gmail.com', 'Palma@Jonathan @2324456356456@JonathanPalma@gmail.com', '2025-06-24 15:32:25', 1, 2, 1, 1, 4, 456, '2025-07-24', 0),
-(66, 'nora ', 'arana', '4484422065656', '2342345', '.', 'yella@gmail.com43243', 'arana@nora @2342345@yella@gmail.com43243', '2025-06-24 16:16:41', 1, 0, 2, 1, 4, 15000, '2025-07-24', 20000);
+(66, 'nora ', 'arana', '4484422065656', '2342345', '.', 'yella@gmail.com43243', 'arana@nora @2342345@yella@gmail.com43243', '2025-06-24 16:16:41', 1, 0, 2, 1, 4, 15000, '2025-07-24', 20000),
+(73, 'Guillermo', 'illanes', '448442208989', '1231323123', 'asda', 'demo@minimals.cc77', 'illanes@Guillermo@1231323123@demo@minimals.cc77', '2025-07-08 23:27:03', 1, 1, 2, 1, 4, 35000, '2025-08-07', 0),
+(75, 'Guillermo', 'illanes', '123123123123', '4454589', 'asda', 'motsaa007@gmail.com2306', 'illanes@Guillermo@4454589@motsaa007@gmail.com2306', '2025-07-08 23:41:12', 1, 2, 2, 1, 4, 344, '2025-08-07', 0),
+(76, 'Guillermo', 'illanes', '1231231231236', '4454589', 'asda', 'motsaa007@gmail.com23065', 'illanes@Guillermo@4454589@motsaa007@gmail.com23065', '2025-07-08 23:42:54', 1, 2, 2, 1, 4, 344, '2025-08-07', 0),
+(77, 'Guillermo', 'illanes', '123123123123654', '1231323123', 'asda', 'motsaa007@gmail.com5324', 'illanes@Guillermo@1231323123@motsaa007@gmail.com5324', '2025-07-08 23:45:38', 1, 2, 2, 1, 3, 4645, '2025-08-07', 0),
+(79, 'Guillermo', 'illanes', '1231231231236548', '12313231237', 'asda', 'motsaa007@gmail.com53245', 'illanes@Guillermo@12313231237@motsaa007@gmail.com53245', '2025-07-08 23:46:54', 1, 2, 1, 1, 3, 4645, '2025-08-07', 0),
+(80, 'Guillermo', 'illanes', '12312312312365485', '12313231237', 'asda', 'motsaa007@gmail.com532456', 'illanes@Guillermo@12313231237@motsaa007@gmail.com532456', '2025-07-08 23:47:15', 1, 2, 2, 1, 3, 4645, '2025-08-07', 0),
+(83, 'Guillermo', 'moto moto ', '5667567', 'asdsa56', '75', 'motsaa007@gmail.com4356', 'moto moto @Guillermo@asdsa56@motsaa007@gmail.com4356', '2025-07-08 23:57:59', 1, 2, 2, 1, 4, 67, '2025-08-07', 0),
+(87, 'ricardo', 'illanes', '55676793', '43445', '45345', 'demo@evershop.io2357', 'illanes@ricardo@43445@demo@evershop.io2357', '2025-07-09 16:27:35', 1, 2, 2, 1, 3, 4565, '2025-08-08', 0),
+(88, 'ricardo', 'illanes', '4484422056778', '55656', 'asda5', 'demo@evershop.io4', 'illanes@ricardo@55656@demo@evershop.io4', '2025-07-09 16:29:41', 1, 0, 1, 1, 3, 34534, '2025-08-08', 0);
 
 -- --------------------------------------------------------
 
@@ -222,8 +250,8 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `caja`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_caja_miembro` (`miembro_id`),
-  ADD KEY `fk_caja_metodo_pago` (`metodo_pago_id`);
+  ADD KEY `miembro_id` (`miembro_id`),
+  ADD KEY `metodo_pago_id` (`metodo_pago_id`);
 
 --
 -- Indices de la tabla `estado`
@@ -289,13 +317,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT de la tabla `caja`
 --
 ALTER TABLE `caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `miembros`
 --
 ALTER TABLE `miembros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT de la tabla `planes`
@@ -317,8 +345,8 @@ ALTER TABLE `registro_ingreso`
 -- Filtros para la tabla `caja`
 --
 ALTER TABLE `caja`
-  ADD CONSTRAINT `fk_caja_metodo_pago` FOREIGN KEY (`metodo_pago_id`) REFERENCES `pagos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_caja_miembro` FOREIGN KEY (`miembro_id`) REFERENCES `miembros` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `caja_ibfk_1` FOREIGN KEY (`miembro_id`) REFERENCES `miembros` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `caja_ibfk_2` FOREIGN KEY (`metodo_pago_id`) REFERENCES `pagos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `miembros`

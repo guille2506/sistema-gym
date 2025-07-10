@@ -17,7 +17,7 @@
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('eliminar_miembro.php', {
+                    fetch('/admin-gym/componentes/eliminar_miembro.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
