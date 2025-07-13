@@ -1,3 +1,9 @@
+
+<?php
+include('componentes/TotalCaja.php');
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Mirrored from techzaa.in/venton/purchase-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
@@ -537,27 +543,17 @@
                          </div>
                     </div>
                     <!-- ========== Page Title End ========== -->
-                    <?php
-                    include('conexion.php');
-
-                    $sqlTotalCaja = "SELECT SUM(monto) AS total FROM caja WHERE tipo = 'pago'";
-                    $resultCaja = $conn->query($sqlTotalCaja);
-                    $totalCaja = 0;
-
-                    if ($resultCaja && $rowCaja = $resultCaja->fetch_assoc()) {
-                         $totalCaja = $rowCaja['total'] ?? 0;
-                    }
-                    ?>
-
-
-
                     <div class="col-lg-3">
                          <div class="card">
                               <div class="card-body">
                                    <div class="d-flex align-items-center justify-content-between">
                                         <div>
                                              <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
-                                             <p class="text-muted fw-medium fs-22 mb-0">$<?= number_format($totalCaja, 0, ',', '.') ?></p>
+                                             <p id="totalCaja" class="text-muted fw-medium fs-22 mb-0">
+                                                  $<?= number_format($totalCaja, 0, ',', '.') ?>
+                                             </p>
+
+
                                         </div>
                                         <div>
                                              <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -581,7 +577,12 @@
                                                   </div>
                                              </form>
                                         </div>
-
+                                        <!-- 
+                                        
+                                        <button id="btnOperacion" class="btn btn-success">Desde</button>
+                                        <button id="btnOperacio  n" class="btn btn-success">Hasta</button>
+                                        <button id="btnOperacion" class="btn btn-success">Filtros</button>
+                                        <button id="btnOperacion" class="btn btn-success">Mostrar</button> -->
                                         <button id="btnOperacion" class="btn btn-success">Generar nueva operación</button>
 
 
