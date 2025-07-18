@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 include('../conexion.php');
 
+
 //form
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

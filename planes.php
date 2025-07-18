@@ -1,4 +1,11 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin'])) {
+     header("Location: index.php");
+     exit;
+}
+?>
+<?php
 include('conexion.php');
 
 $sql = "SELECT id, nombre, precio FROM planes ORDER BY id ASC";
@@ -21,7 +28,7 @@ while ($row = $resultado->fetch_assoc()) {
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
-     <title>Pricing | Venton - Responsive Admin Dashboard Template</title>
+     <title>Gimnasio</title>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta name="description" content="A fully responsive premium admin dashboard template" />
      <meta name="author" content="Techzaa" />

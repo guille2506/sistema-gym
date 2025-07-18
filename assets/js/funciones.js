@@ -222,4 +222,3 @@ function mostrarAlerta(titulo, mensaje) {
   });
 }
 
-console.log("hola")

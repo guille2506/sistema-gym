@@ -1,9 +1,10 @@
-
 <?php
-include('componentes/TotalCaja.php');
-
+session_start();
+if (!isset($_SESSION['admin'])) {
+     header("Location: index.php");
+     exit;
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <!-- Mirrored from techzaa.in/venton/purchase-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:25 GMT -->
@@ -11,7 +12,7 @@ include('componentes/TotalCaja.php');
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
-     <title>Purchase List | Venton - Responsive Admin Dashboard Template</title>
+     <title>gimnasio</title>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta name="description" content="A fully responsive premium admin dashboard template" />
      <meta name="author" content="Techzaa" />
@@ -548,11 +549,11 @@ include('componentes/TotalCaja.php');
                               <div class="card-body">
                                    <div class="d-flex align-items-center justify-content-between">
                                         <div>
-                                             <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
-                                             <p id="totalCaja" class="text-muted fw-medium fs-22 mb-0">
-                                                  $<?= number_format($totalCaja, 0, ',', '.') ?>
-                                             </p>
-
+                                             <!-- Esto debe estar visible en la página -->
+                                             <div id="contenedorTotalCaja" style="display: none;">
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
+                                                  <p id="totalCaja" class="text-muted fw-medium fs-22 mb-0">Cargando...</p>
+                                             </div>
 
                                         </div>
                                         <div>
@@ -573,16 +574,35 @@ include('componentes/TotalCaja.php');
                                              <form class="app-search d-none d-md-block ms-2">
                                                   <div class="position-relative">
 
-                                                       <input type="search" class="form-control" placeholder="Search..." autocomplete="off" value="">
+                                                       <!-- <input type="search" class="form-control" placeholder="Search..." autocomplete="off" value=""> -->
                                                   </div>
                                              </form>
                                         </div>
-                                        <!-- 
-                                        
-                                        <button id="btnOperacion" class="btn btn-success">Desde</button>
-                                        <button id="btnOperacio  n" class="btn btn-success">Hasta</button>
-                                        <button id="btnOperacion" class="btn btn-success">Filtros</button>
-                                        <button id="btnOperacion" class="btn btn-success">Mostrar</button> -->
+                                        <!-- Filtros por tipo -->
+
+                                        <!-- Fechas -->
+                                        <form method="GET" class="d-flex gap-2 align-items-center" id="formFiltros">
+                                             <select name="tipo" class="form-select">
+                                                  <option value="">Todos</option>
+                                                  <option value="pago">Pago</option>
+                                                  <option value="ingreso">Ingreso</option>
+                                                  <option value="extraccion">Extracción</option>
+                                             </select>
+                                             <input type="date" name="desde" class="form-control" placeholder="Desde">
+                                             <input type="date" name="hasta" class="form-control" placeholder="Hasta">
+                                             <button type="submit" class="btn btn-primary" id="btnMostrar">Mostrar</button>
+                                        </form>
+
+                                        <!-- Total caja -->
+                                        <div id="contenedorTotalCaja" style="display:none; margin-top:10px;">
+                                             <strong>Total Caja:</strong> <span id="totalCaja">$0,00</span>
+                                        </div>
+
+
+                                        <button id="btnCerrarCaja" class="btn btn-danger">Cerrar Caja</button>
+
+
+
                                         <button id="btnOperacion" class="btn btn-success">Generar nueva operación</button>
 
 
@@ -603,7 +623,7 @@ include('componentes/TotalCaja.php');
                                    </div>
                                    <div class="card-body p-0">
                                         <div class="table-responsive">
-                                             <table class="table align-middle mb-0 table-hover table-centered">
+                                             <table id="tablaCaja" class="table align-middle mb-0 table-hover table-centered">
                                                   <thead class="bg-light-subtle">
                                                        <tr>
                                                             <th style="width: 20px;">
@@ -625,10 +645,16 @@ include('componentes/TotalCaja.php');
                                                        </tr>
                                                   </thead>
 
-                                                  <tbody>
+                                                  <tbody id="tbodyCaja">
                                                        <?php
                                                        include('conexion.php');
 
+                                                       // Obtenemos filtros
+                                                       $tipo = $_GET['tipo'] ?? '';
+                                                       $desde = $_GET['desde'] ?? '';
+                                                       $hasta = $_GET['hasta'] ?? '';
+
+                                                       // Base SQL
                                                        $sql = "SELECT 
     caja.id AS caja_id,
     m.id AS miembro_id,
@@ -645,9 +671,42 @@ FROM caja
 INNER JOIN miembros m ON caja.miembro_id = m.id
 LEFT JOIN planes pl ON m.planes_id = pl.id
 LEFT JOIN pagos ON caja.metodo_pago_id = pagos.id
-ORDER BY caja.fecha DESC";
+WHERE 1";
 
-                                                       $result = $conn->query($sql);
+
+                                                       // Aplicar filtros
+                                                       $params = [];
+                                                       $types = '';
+
+                                                       if ($tipo !== '') {
+                                                            $sql .= " AND caja.tipo = ?";
+                                                            $params[] = $tipo;
+                                                            $types .= 's';
+                                                       }
+
+                                                       if ($desde !== '') {
+                                                            $sql .= " AND caja.fecha >= ?";
+                                                            $params[] = $desde . ' 00:00:00';
+                                                            $types .= 's';
+                                                       }
+
+                                                       if ($hasta !== '') {
+                                                            $sql .= " AND caja.fecha <= ?";
+                                                            $params[] = $hasta . ' 23:59:59';
+                                                            $types .= 's';
+                                                       }
+
+                                                       $sql .= " ORDER BY caja.fecha DESC";
+
+                                                       $stmt = $conn->prepare($sql);
+
+                                                       if (!empty($params)) {
+                                                            $stmt->bind_param($types, ...$params);
+                                                       }
+
+                                                       $stmt->execute();
+                                                       $result = $stmt->get_result();
+
 
                                                        if ($result && $result->num_rows > 0):
                                                             while ($row = $result->fetch_assoc()):

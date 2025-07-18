@@ -1,78 +1,95 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const inputBuscar = document.getElementById("buscar-usuario");
-  const botonEscanear = document.getElementById("btn-escanear");
-  const resultadoDiv = document.getElementById("resultado-lector");
+  const inputBuscar   = document.getElementById("buscar-usuario");
+  const resultadoDiv  = document.getElementById("resultado-lector");
 
-  const detalleDiv = document.getElementById("detalle-miembro");
-  const avatarImg = document.getElementById("avatar-miembro");
-  const nombreH5 = document.getElementById("nombre-miembro");
-  const planSmall = document.getElementById("plan-miembro");
-  const cuotaSmall = document.getElementById("cuota-miembro");
-  const vtoSmall = document.getElementById("vto-miembro");
+  const detalleDiv    = document.getElementById("detalle-miembro");
+  const avatarImg     = document.getElementById("avatar-miembro");
+  const nombreH4      = document.getElementById("nombre-miembro");
+  const planBadge     = document.getElementById("plan-miembro");
+  const cuotaSpan     = document.getElementById("cuota-miembro");
+  const vtoSmall      = document.getElementById("vto-miembro");
 
-  inputBuscar.focus();
+  if (inputBuscar) inputBuscar.focus();
 
-  const validarCodigo = async (codigo) => {
+  function mostrarMensaje(texto, tipo = "info") {
+    if (!resultadoDiv) return;
+    resultadoDiv.textContent = texto;
+
+    resultadoDiv.classList.remove("alert-success", "alert-danger", "alert-info", "alert-warning");
+
+    switch (tipo) {
+      case "ok":     resultadoDiv.classList.add("alert-success"); break;
+      case "error":  resultadoDiv.classList.add("alert-danger");  break;
+      case "warn":   resultadoDiv.classList.add("alert-warning"); break;
+      default:       resultadoDiv.classList.add("alert-info");    break;
+    }
+  }
+
+  function mostrarDetalle(datos) {
+    if (!detalleDiv) return;
+    if (!datos) {
+      detalleDiv.style.display = "none";
+      return;
+    }
+
+    if (avatarImg)  avatarImg.src = datos.avatar || "assets/images/users/avatar-2.jpg";
+    if (nombreH4)   nombreH4.textContent = `${datos.nombre} ${datos.apellido}`;
+    if (planBadge)  planBadge.textContent = `Plan: ${datos.plan || "Sin plan"}`;
+    if (cuotaSpan)  cuotaSpan.textContent = datos.estadoCuota || "";
+    if (vtoSmall)   vtoSmall.textContent = datos.vencimiento ? `Vence: ${datos.vencimiento}` : "";
+
+    detalleDiv.style.display = "block";
+  }
+
+  async function validarCodigo(codigo) {
+    if (!codigo) return;
+
     try {
       const respuesta = await fetch("componentes/lector.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: "codigo=" + encodeURIComponent(codigo),
       });
 
       const datos = await respuesta.json();
-      resultadoDiv.textContent = datos.mensaje;
-      resultadoDiv.style.color = datos.status === "ok" ? "green" : "red";
 
       if (datos.status === "ok") {
-        avatarImg.src = datos.datos.avatar;
-        nombreH5.textContent = `${datos.datos.nombre} ${datos.datos.apellido}`;
-        planSmall.textContent = `Plan: ${datos.datos.plan}`;
-        detalleDiv.style.display = "block";
-        cuotaSmall.textContent = datos.datos.estadoCuota;
-        vtoSmall.textContent = `Vence: ${datos.datos.vencimiento}`;
+        mostrarMensaje(datos.mensaje || "Miembro encontrado.", "ok");
+        mostrarDetalle(datos.datos);
       } else {
-        detalleDiv.style.display = "none";
+        mostrarMensaje(datos.mensaje || "No encontrado.", "error");
+        mostrarDetalle(null);
       }
     } catch (error) {
-      resultadoDiv.textContent = "❌ Error de conexión con el servidor.";
-      resultadoDiv.style.color = "red";
-      detalleDiv.style.display = "none";
+      console.error("Error lector:", error);
+      mostrarMensaje("❌ Error de conexión con el servidor.", "error");
+      mostrarDetalle(null);
     }
-  };
+  }
 
-  inputBuscar.addEventListener("input", () => {
-    const valor = inputBuscar.value.trim();
-
-    if (valor.includes("@")) {
-      validarCodigo(valor);
-
-      setTimeout(() => (inputBuscar.value = ""), 100);
-    }
-  });
-
-  inputBuscar.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
+  if (inputBuscar) {
+    inputBuscar.addEventListener("input", () => {
       const valor = inputBuscar.value.trim();
-      if (valor.length >= 6) {
+
+      if (valor.includes("@")) {
+        validarCodigo(valor);
+        setTimeout(() => (inputBuscar.value = ""), 100);
+      }
+    });
+
+    inputBuscar.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const valor = inputBuscar.value.trim();
+
+        if (valor.length < 3) {
+          mostrarMensaje("Ingresá al menos 3 caracteres.", "warn");
+          return;
+        }
+
         validarCodigo(valor);
         inputBuscar.value = "";
       }
-    }
-  });
-
-  inputBuscar.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const valor = inputBuscar.value.trim();
-      validarCodigo(valor);
-    }
-  });
-
-  botonEscanear.addEventListener("click", () => {
-    inputBuscar.focus();
-  });
+    });
+  }
 });
