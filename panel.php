@@ -843,9 +843,9 @@ if (!isset($_SESSION['admin'])) {
      <script src="assets/js/app.js"></script>
 
      <!-- Vector Map Js -->
-     <script src="assets/vendor/jsvectormap/js/jsvectormap.min.js"></script>
-     <script src="assets/vendor/jsvectormap/maps/world-merc.js"></script>
-     <script src="assets/vendor/jsvectormap/maps/world.js"></script>
+     <!-- <script src="assets/vendor/jsvectormap/js/jsvectormap.min.js"></script> -->
+     <!-- <script src="assets/vendor/jsvectormap/maps/world-merc.js"></script> -->
+     <!-- <script src="assets/vendor/jsvectormap/maps/world.js"></script> -->
 
      <!-- Dashboard Js -->
      <script src="assets/js/pages/dashboard.js"></script>

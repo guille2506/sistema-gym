@@ -1,10 +1,31 @@
 <?php
+include('conexion.php');
 session_start();
-if (!isset($_SESSION['admin'])) {
-     header("Location: index.php");
-     exit;
+
+$usarTarjeta = 0;
+$admin_id = $_SESSION['admin'] ?? null;
+
+if ($admin_id) {
+     $stmt = $conn->prepare("SELECT usar_tarjeta FROM admin WHERE id = ?");
+     $stmt->bind_param("i", $admin_id);
+     $stmt->execute();
+     $stmt->bind_result($usarTarjeta);
+     $stmt->fetch();
+     $stmt->close();
+
+     $stmt = $conn->prepare("SELECT * FROM planes WHERE admin_id = ?");
+     $stmt->bind_param("i", $admin_id);
+     $stmt->execute();
+     $planes_result = $stmt->get_result();
+     $planes = [];
+     while ($row = $planes_result->fetch_assoc()) {
+          $planes[] = $row;
+     }
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -218,7 +239,7 @@ if (!isset($_SESSION['admin'])) {
 
                                         <div class="dropdown-divider my-1"></div>
 
-                                        <a class="dropdown-item text-danger" href="auth-signin.html">
+                                        <a class="dropdown-item text-danger" href="logout.php"><!-- auth-signin.html -->
                                              <i class="bx bx-log-out fs-18 align-middle me-1"></i><span class="align-middle">Logout</span>
                                         </a>
                                    </div>
@@ -542,7 +563,7 @@ if (!isset($_SESSION['admin'])) {
                               <div class="page-title-box">
                                    <h4 class="mb-0 fw-semibold">Agregar Miembros</h4>
                                    <ol class="breadcrumb mb-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Order</a></li>
+                                        <li class="breadcrumb-item"><a>Order</a></li>
                                         <li class="breadcrumb-item active">Order Checkout</li>
                                    </ol>
                               </div>
@@ -582,12 +603,12 @@ if (!isset($_SESSION['admin'])) {
                                                   </div>
 
 
-                                                  <div class="col-lg-6">
+                                                  <!-- <div class="col-lg-6">
                                                        <div class="mb-3">
-                                                            <label for="email" class="form-label">Gmail</label>
+                                                            <label for="email" class="form-label">Gmail SACARLO</label>
                                                             <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
                                                        </div>
-                                                  </div>
+                                                  </div> -->
 
                                                   <div class="col-lg-6">
                                                        <div class="mb-3">
@@ -596,22 +617,24 @@ if (!isset($_SESSION['admin'])) {
                                                        </div>
                                                   </div>
 
-                                                  <div class="col-lg-6">
+                                                  <!-- <div class="col-lg-6">
                                                        <div class="mb-3">
-                                                            <label for="telefono_emergencia" class="form-label">Número de emergencia</label>
+                                                            <label for="telefono_emergencia" class="form-label">Número de emergencia SACARLO</label>
                                                             <input type="text" id="telefono_emergencia" name="telefono_emergencia" class="form-control" placeholder="Opcional">
                                                        </div>
-                                                  </div>
+                                                  </div> -->
 
                                                   <div class="col-lg-6">
                                                        <div class="mb-3">
                                                             <label for="planes_id" class="form-label">Planes</label>
                                                             <select id="planes_id" name="planes_id" class="form-control" required>
                                                                  <option value="">Seleccionar</option>
-                                                                 <option value="1">dia libre</option>
-                                                                 <option value="2">Mes Pase Libre</option>
-                                                                 <option value="3">2 Meses Pase Libre</option>
-                                                                 <option value="4">3 Meses Pase Libre</option>
+                                                                 <?php foreach ($planes as $plan): ?>
+                                                                      <option value="<?= $plan['id'] ?>" data-precio="<?= $plan['precio'] ?>">
+                                                                           <?= htmlspecialchars($plan['nombre']) ?>
+                                                                      </option>
+
+                                                                 <?php endforeach; ?>
                                                             </select>
                                                        </div>
                                                   </div>
@@ -639,91 +662,37 @@ if (!isset($_SESSION['admin'])) {
                                                        </div>
                                                   </div>
 
+                                                  <?php if ($usarTarjeta): ?>
+                                                       <div class="col-lg-6">
+                                                            <div class="mb-3">
+                                                                 <label for="tarjeta_miembro" class="form-label">
+                                                                      Tarjeta del Miembro <small>(opcional)</small>
+                                                                 </label>
+                                                                 <input type="text" id="tarjeta_miembro" name="tarjeta_miembro" class="form-control" placeholder="553345">
+                                                            </div>
+                                                       </div>
+                                                  <?php endif; ?>
+                                                  <script>
+                                                       const usarTarjeta = <?= $usarTarjeta ? 'true' : 'false' ?>;
+                                                  </script>
+
+
                                              </div>
 
 
                                              <div class="mt-3">
                                                   <div class="row">
                                                        <div class="col-lg-3">
-                                                            <h4 class="card-title">Shipping Details</h4>
+                                                            <h4 class="card-title">Metodos de Pago</h4>
                                                        </div>
                                                        <div class="col-lg-9">
                                                             <div class="row">
-                                                                 <div class="col-lg-12">
-                                                                      <h5 class="mb-4">Shipping Address :</h5>
-                                                                      <form>
-                                                                           <div class="mb-3">
-                                                                                <label for="your-address" class="form-label">Full Address</label>
-                                                                                <textarea class="form-control" id="your-address" rows="3" placeholder="Enter address"></textarea>
-                                                                           </div>
-                                                                      </form>
-                                                                 </div>
 
-
-                                                                 <div class="col-lg-4">
-                                                                      <form>
-                                                                           <label for="choices-city" class="form-label">City</label>
-                                                                           <select class="form-control" id="choices-city" data-choices data-choices-groups data-placeholder="Select City" name="choices-city">
-                                                                                <option value="">Choose a city</option>
-                                                                                <optgroup label="UK">
-                                                                                     <option value="London">London</option>
-                                                                                     <option value="Manchester">Manchester</option>
-                                                                                     <option value="Liverpool">Liverpool</option>
-                                                                                </optgroup>
-                                                                                <optgroup label="FR">
-                                                                                     <option value="Paris">Paris</option>
-                                                                                     <option value="Lyon">Lyon</option>
-                                                                                     <option value="Marseille">Marseille</option>
-                                                                                </optgroup>
-                                                                                <optgroup label="DE" disabled>
-                                                                                     <option value="Hamburg">Hamburg</option>
-                                                                                     <option value="Munich">Munich</option>
-                                                                                     <option value="Berlin">Berlin</option>
-                                                                                </optgroup>
-                                                                                <optgroup label="US">
-                                                                                     <option value="New York">New York</option>
-                                                                                     <option value="Washington" disabled>
-                                                                                          Washington
-                                                                                     </option>
-                                                                                     <option value="Michigan">Michigan</option>
-                                                                                </optgroup>
-                                                                                <optgroup label="SP">
-                                                                                     <option value="Madrid">Madrid</option>
-                                                                                     <option value="Barcelona">Barcelona</option>
-                                                                                     <option value="Malaga">Malaga</option>
-                                                                                </optgroup>
-                                                                                <optgroup label="CA">
-                                                                                     <option value="Montreal">Montreal</option>
-                                                                                     <option value="Toronto">Toronto</option>
-                                                                                     <option value="Vancouver">Vancouver</option>
-                                                                                </optgroup>
-                                                                           </select>
-                                                                      </form>
-                                                                 </div>
-                                                                 <div class="col-lg-4">
-                                                                      <form>
-                                                                           <label for="choices-country" class="form-label">Country</label>
-                                                                           <select class="form-control" id="choices-country" data-choices data-choices-groups data-placeholder="Select Country" name="choices-country">
-                                                                                <option value="">Choose a country</option>
-                                                                                <optgroup label="">
-                                                                                     <option value="">United Kingdom</option>
-                                                                                     <option value="Fran">France</option>
-                                                                                     <option value="Netherlands">Netherlands</option>
-                                                                                     <option value="U.S.A">U.S.A</option>
-                                                                                     <option value="Denmark">Denmark</option>
-                                                                                     <option value="Canada">Canada</option>
-                                                                                     <option value="Australia">Australia</option>
-                                                                                     <option value="India">India</option>
-                                                                                     <option value="Germany">Germany</option>
-                                                                                     <option value="Spain">Spain</option>
-                                                                                     <option value="United Arab Emirates">United Arab Emirates</option>
-                                                                                </optgroup>
-                                                                           </select>
-                                                                      </form>
-                                                                 </div>
                                                             </div>
-
-                                                            <h5 class="my-4">Metodo de pagos:</h5>
+                                                            <br>
+                                                            <br>
+                                                            <br>
+                                                            <!-- <h5 class="my-4">Metodo de pagos:</h5> -->
                                                             <div class="row gy-2">
                                                                  <div class="col-lg-6">
                                                                       <div class="form-check form-checkbox-primary ps-0">
@@ -752,7 +721,7 @@ if (!isset($_SESSION['admin'])) {
                                                                       </div>
                                                                  </div>
 
-                                                                 <div class="col-lg-6">
+                                                                 <!-- <div class="col-lg-6">
                                                                       <div class="form-check form-checkbox-primary ps-0">
                                                                            <label for="shipping-2" class="w-100">
                                                                                 <div class="d-flex align-items-center p-2 rounded gap-2 border">
@@ -764,47 +733,22 @@ if (!isset($_SESSION['admin'])) {
                                                                                                <h5 class="text-dark fw-medium">
                                                                                                     Mercado Pago
                                                                                                </h5>
-                                                                                               <!-- <p class="mb-0 text-dark">
+                                                                                               <p class="mb-0 text-dark">
                                                                                                Delivery -
                                                                                                <span class="text-muted fw-normal">Today</span>
-                                                                                          </p> -->
+                                                                                          </p>
                                                                                           </div>
                                                                                      </div>
                                                                                      <div class="ms-auto">
-                                                                                          <!-- <p class="mb-2">$10.00</p> -->
+                                                                                          <p class="mb-2">$10.00</p>
                                                                                           <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo2" value="2" required>
                                                                                      </div>
                                                                                 </div>
                                                                            </label>
                                                                       </div>
-                                                                 </div>
+                                                                 </div> -->
 
-                                                                 <div class="col-lg-6">
-                                                                      <div class="form-check form-checkbox-primary ps-0">
-                                                                           <label for="shipping-3" class="w-100">
-                                                                                <div class="d-flex align-items-center p-2 rounded gap-2 border">
-                                                                                     <div class="d-flex align-items-center gap-2">
-                                                                                          <div class="rounded-3 bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                                                               <img src="assets/images/card/mastercard.svg" alt="" class="avatar rounded">
-                                                                                          </div>
-                                                                                          <div>
-                                                                                               <h5 class="text-dark fw-medium">
-                                                                                                    Tarjeta de Credito o Debito
-                                                                                               </h5>
-                                                                                               <!-- <p class="mb-0 text-dark">
-                                                                                               Delivery -
-                                                                                               <span class="text-muted fw-normal">Tomorrow</span>
-                                                                                          </p> -->
-                                                                                          </div>
-                                                                                     </div>
-                                                                                     <div class="ms-auto">
-                                                                                          <!-- <p class="mb-2">$8.00</p> -->
-                                                                                          <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo3" value="3" required>
-                                                                                     </div>
-                                                                                </div>
-                                                                           </label>
-                                                                      </div>
-                                                                 </div>
+
 
                                                                  <div class="col-lg-6">
                                                                       <div class="form-check form-checkbox-primary ps-0">
@@ -825,7 +769,34 @@ if (!isset($_SESSION['admin'])) {
                                                                                           </div>
                                                                                      </div>
                                                                                      <div class="ms-auto">
-                                                                                          <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo0" value="0" required>
+                                                                                          <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo2" value="2" required>
+                                                                                     </div>
+                                                                                </div>
+                                                                           </label>
+                                                                      </div>
+                                                                 </div>
+
+                                                                 <div class="col-lg-6">
+                                                                      <div class="form-check form-checkbox-primary ps-0">
+                                                                           <label for="shipping-3" class="w-100">
+                                                                                <div class="d-flex align-items-center p-2 rounded gap-2 border">
+                                                                                     <div class="d-flex align-items-center gap-2">
+                                                                                          <div class="rounded-3 bg-light avatar-md d-flex align-items-center justify-content-center">
+                                                                                               <img src="assets/images/card/mastercard.svg" alt="" class="avatar rounded">
+                                                                                          </div>
+                                                                                          <div>
+                                                                                               <h5 class="text-dark fw-medium">
+                                                                                                    Efectivo y MercadoPago
+                                                                                               </h5>
+                                                                                               <!-- <p class="mb-0 text-dark">
+                                                                                                    Delivery -
+                                                                                                    <span class="text-muted fw-normal">Tomorrow</span>
+                                                                                               </p> -->
+                                                                                          </div>
+                                                                                     </div>
+                                                                                     <div class="ms-auto">
+                                                                                          <!-- <p class="mb-2">$8.00</p> -->
+                                                                                          <input class="form-check-input" type="radio" name="metodo_de_pagos_id" id="metodo3" value="3" required>
                                                                                      </div>
                                                                                 </div>
                                                                            </label>
@@ -936,6 +907,7 @@ if (!isset($_SESSION['admin'])) {
                                              </div>
                                         </div>
 
+                                        <!-- Recargo -->
                                         <div class="col-xl-6 col-md-6">
                                              <div class="card">
                                                   <div class="card-body">
@@ -945,30 +917,24 @@ if (!isset($_SESSION['admin'])) {
                                                                  <iconify-icon icon="solar:user-plus-broken" class="fs-32 text-success avatar-title"></iconify-icon>
                                                             </div>
                                                             <h4 id="recargo_valor" class="text-dark fw-medium">0</h4>
-
                                                             <p id="recargo_porcentaje" class="text-muted">0%</p>
                                                             <input type="hidden" id="recargo" name="recargo">
-
                                                             <div class="progress mt-2" style="height: 10px;">
-                                                                 <div id="barra_recargo" class="progress-bar bg-danger progress-bar-striped progress-bar-animated"
-                                                                      role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                                 <div id="barra_recargo" class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                                                                  </div>
                                                             </div>
                                                        </div>
                                                   </div>
-                                                  <!-- <div class="card-footer border-top">
-                                                  <a href="#!" class="link-dark fw-medium">View More <i class="bx bx-right-arrow-alt"></i></a>
-                                             </div> -->
                                              </div>
                                         </div>
 
-                                        <div class="card text-center bg-primary overflow-hidden z-1">
+                                        <!-- <div class="card text-center bg-primary overflow-hidden z-1">
                                              <div class="card-body p-4">
                                                   <label class="form-label">Código PDF417 generado:</label><br>
                                                   <canvas id="codigoPdf417" style="border:1px solid #ccc;"></canvas>
                                              </div>
 
-                                        </div>
+                                        </div> -->
 
                                         <div class="main-btn my-4 text-center">
                                              <button type="button" class="btn btn-primary" id="btnEnviar">
@@ -1092,7 +1058,7 @@ if (!isset($_SESSION['admin'])) {
                     <!-- App Javascript (Require in all Page) -->
                     <script src="assets/js/app.js"></script>
 
-                    <script src="assets/js/pages/ecommerce-product-details.js"></script>
+                    <!-- <script src="assets/js/pages/ecommerce-product-details.js"></script> -->
 </body>
 
 

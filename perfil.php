@@ -607,9 +607,7 @@ switch (strtolower($estado)) {
                                              <div class="mt-4 pt-3">
                                                   <h4 class="mb-1"><?= htmlspecialchars($miembro['nombre'] . ' ' . $miembro['apellido']) ?><i class="bx bxs-badge-check text-success align-middle"></i></h4>
                                                   <div class="mt-2">
-                                                       <p class="fs-15 mb-1 mt-1"><span class="text-dark fw-semibold">Gmail : </span> <?= htmlspecialchars($miembro['email']) ?></p>
                                                        <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Número de telefono : </span> <?= htmlspecialchars($miembro['telefono']) ?></p>
-                                                       <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Número de emergencia : </span> <?= htmlspecialchars($miembro['telefono']) ?></p>
                                                   </div>
                                              </div>
                                         </div>

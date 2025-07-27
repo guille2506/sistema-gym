@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Elementos del DOM ---
   const form          = document.getElementById("formFiltros");
-  const btnMostrar    = document.getElementById("btnMostrar"); // no es obligatorio si usamos submit del form
+  const btnMostrar    = document.getElementById("btnMostrar");
   const btnOperacion  = document.getElementById("btnOperacion");
   const btnCerrarCaja = document.getElementById("btnCerrarCaja");
 
@@ -9,9 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const contenedorCaja = document.getElementById("contenedorTotalCaja");
   const tbodyCaja      = document.getElementById("tbodyCaja"); // <tbody id="tbodyCaja">
 
-  // --- Helpers para leer filtros ---
   function getFiltrosQS() {
-    // Usa el form real para no olvidarte de campos
     const fd = new FormData(form);
     return new URLSearchParams(fd).toString(); // tipo=...&desde=...&hasta=...
   }

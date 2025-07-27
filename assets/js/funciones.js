@@ -1,3 +1,5 @@
+let montoOriginalGlobal = 0; // Se usará como base para calcular recargo
+
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const montoUrl = urlParams.get("monto");
@@ -7,16 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectPlan = document.getElementById("planes_id");
   const inputFecha = document.getElementById("fecha_de_vencimiento");
 
-  let montoOriginal = montoUrl ? parseFloat(montoUrl) : 0;
-
-  if (montoOriginal && inputMonto) {
-    inputMonto.value = `${montoOriginal}`;
+  // ✅ Seteo inicial desde URL
+  if (montoUrl && !isNaN(montoUrl)) {
+    montoOriginalGlobal = parseFloat(montoUrl);
+    if (inputMonto) inputMonto.value = montoOriginalGlobal;
   }
 
   if (planIdUrl && selectPlan) {
     selectPlan.value = planIdUrl;
   }
 
+  // ✅ Fecha de vencimiento a 30 días
   if (inputFecha) {
     const hoy = new Date();
     const en30Dias = new Date(hoy);
@@ -24,171 +27,139 @@ document.addEventListener("DOMContentLoaded", () => {
     inputFecha.value = en30Dias.toISOString().split("T")[0];
   }
 
-  actualizarPagoYRecargo(montoOriginal);
-
-  inputMonto.addEventListener("input", () => {
-    const valor = parseFloat(inputMonto.value.replace(/\$/g, "") || 0);
-    actualizarPagoYRecargo(valor);
-  });
-
-  function actualizarPagoYRecargo(montoIngresado) {
-    const pagoValor = document.getElementById("pago_valor");
-    const pagoPorcentaje = document.getElementById("pago_porcentaje");
-    const barraPago = document.getElementById("barra_pago");
-
-    const recargoValor = document.getElementById("recargo_valor");
-    const recargoPorcentaje = document.getElementById("recargo_porcentaje");
-    const barraRecargo = document.getElementById("barra_recargo");
-
-    if (montoIngresado >= montoOriginal || montoOriginal === 0) {
-      if (pagoValor) pagoValor.textContent = montoIngresado;
-      if (pagoPorcentaje) pagoPorcentaje.textContent = "100%";
-      if (barraPago) {
-        barraPago.style.width = "100%";
-        barraPago.setAttribute("aria-valuenow", "100");
-      } else {
-        const porcentaje = Math.round((montoIngresado / montoOriginal) * 100);
-        const recargo = montoOriginal - montoIngresado;
-
-        document.getElementById("recargo").value = recargo;
+  // ✅ Actualiza montoOriginal al cambiar de plan
+  if (selectPlan) {
+    selectPlan.addEventListener("change", () => {
+      const selectedOption = selectPlan.options[selectPlan.selectedIndex];
+      const nuevoMonto = parseFloat(selectedOption.dataset.precio || 0);
+      if (!isNaN(nuevoMonto)) {
+        montoOriginalGlobal = nuevoMonto;
+        inputMonto.value = nuevoMonto;
+        actualizarPagoYRecargo(nuevoMonto);
       }
-
-      if (recargoValor) recargoValor.textContent = "0";
-      if (recargoPorcentaje) recargoPorcentaje.textContent = "0%";
-      if (barraRecargo) {
-        barraRecargo.style.width = "0%";
-        barraRecargo.setAttribute("aria-valuenow", "0");
-      }
-
-      document.getElementById("recargo").value = 0;
-    } else {
-      const porcentaje = Math.round((montoIngresado / montoOriginal) * 100);
-      const recargo = montoOriginal - montoIngresado;
-
-      if (pagoValor) pagoValor.textContent = montoIngresado;
-      if (pagoPorcentaje) pagoPorcentaje.textContent = `${porcentaje}%`;
-      if (barraPago) {
-        barraPago.style.width = `${porcentaje}%`;
-        barraPago.setAttribute("aria-valuenow", porcentaje);
-      }
-
-      if (recargoValor) recargoValor.textContent = recargo;
-      if (recargoPorcentaje)
-        recargoPorcentaje.textContent = `${100 - porcentaje}%`;
-      if (barraRecargo) {
-        barraRecargo.style.width = `${100 - porcentaje}%`;
-        barraRecargo.setAttribute("aria-valuenow", 100 - porcentaje);
-
-        document.getElementById("recargo").value = recargo;
-      }
-    }
+    });
   }
 
-  // --- Botón de envío ---
-  document
-    .getElementById("btnEnviar")
-    .addEventListener("click", manejarFormulario);
+  // ✅ Escucha cambios manuales del monto
+  if (inputMonto) {
+    inputMonto.addEventListener("input", () => {
+      const valor = parseFloat(inputMonto.value.replace(/\$/g, "") || 0);
+      actualizarPagoYRecargo(valor);
+    });
+  }
+
+  // ✅ Activa botón de enviar
+  const btnEnviar = document.getElementById("btnEnviar");
+  if (btnEnviar) {
+    btnEnviar.addEventListener("click", manejarFormulario);
+  }
+
+  // ✅ Inicializa valores visuales
+  actualizarPagoYRecargo(parseFloat(inputMonto?.value || 0));
 });
 
+function actualizarPagoYRecargo(montoIngresado) {
+  const pagoValor = document.getElementById("pago_valor");
+  const pagoPorcentaje = document.getElementById("pago_porcentaje");
+  const barraPago = document.getElementById("barra_pago");
+
+  const recargoValor = document.getElementById("recargo_valor");
+  const recargoPorcentaje = document.getElementById("recargo_porcentaje");
+  const barraRecargo = document.getElementById("barra_recargo");
+  const recargoInput = document.getElementById("recargo");
+
+  const montoOriginal = montoOriginalGlobal;
+
+  if (montoIngresado >= montoOriginal || montoOriginal === 0) {
+    if (pagoValor) pagoValor.textContent = montoIngresado;
+    if (pagoPorcentaje) pagoPorcentaje.textContent = "100%";
+    if (barraPago) {
+      barraPago.style.width = "100%";
+      barraPago.setAttribute("aria-valuenow", "100");
+    }
+
+    if (recargoValor) recargoValor.textContent = "0";
+    if (recargoPorcentaje) recargoPorcentaje.textContent = "0%";
+    if (barraRecargo) {
+      barraRecargo.style.width = "0%";
+      barraRecargo.setAttribute("aria-valuenow", "0");
+    }
+
+    if (recargoInput) recargoInput.value = 0;
+  } else {
+    const porcentaje = Math.round((montoIngresado / montoOriginal) * 100);
+    const recargoCalc = montoOriginal - montoIngresado;
+
+    if (pagoValor) pagoValor.textContent = montoIngresado;
+    if (pagoPorcentaje) pagoPorcentaje.textContent = `${porcentaje}%`;
+    if (barraPago) {
+      barraPago.style.width = `${porcentaje}%`;
+      barraPago.setAttribute("aria-valuenow", porcentaje);
+    }
+
+    if (recargoValor) recargoValor.textContent = recargoCalc;
+    if (recargoPorcentaje)
+      recargoPorcentaje.textContent = `${100 - porcentaje}%`;
+    if (barraRecargo) {
+      barraRecargo.style.width = `${100 - porcentaje}%`;
+      barraRecargo.setAttribute("aria-valuenow", 100 - porcentaje);
+    }
+
+    if (recargoInput) recargoInput.value = recargoCalc;
+  }
+}
+
 async function manejarFormulario() {
-  const nombre = document.getElementById("nombre").value;
-  const apellido = document.getElementById("apellido").value;
-  const telefono = document.getElementById("telefono").value;
-  const telEmergencia = document.getElementById("telefono_emergencia").value;
-  const email = document.getElementById("email").value;
-  const dni = document.getElementById("dni").value;
+  const nombre = document.getElementById("nombre").value.trim();
+  const apellido = document.getElementById("apellido").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const dniInput = document.getElementById("dni");
+  const dni = dniInput ? dniInput.value.trim() : "";
+
+  const tarjetaInput = document.getElementById("tarjeta_miembro");
+  const tarjetaValor = tarjetaInput ? tarjetaInput.value.trim() : "";
+
   const sexoId = document.getElementById("sexo_id").value;
   const planesId = document.getElementById("planes_id").value;
   const monto = document.getElementById("monto").value;
-  const fecha_de_vencimiento = document.getElementById(
-    "fecha_de_vencimiento"
-  ).value;
+  const fecha_vto = document.getElementById("fecha_de_vencimiento").value;
+  const recargo = document.getElementById("recargo").value;
   const metodoPago = document.querySelector(
     'input[name="metodo_de_pagos_id"]:checked'
   );
-  const recargo = document.getElementById("recargo").value;
 
-
-
-  // --- Validaciones ---
+  // Validaciones mínimas
   if (!sexoId)
-    return mostrarAlerta(
-      "Sexo no seleccionado",
-      "Por favor, seleccioná una opción en el campo sexo."
-    );
+    return mostrarAlerta("Sexo no seleccionado", "Por favor, seleccioná una opción.");
   if (!planesId)
-    return mostrarAlerta(
-      "Plan no seleccionado",
-      "Por favor, seleccioná un plan."
-    );
+    return mostrarAlerta("Plan no seleccionado", "Por favor, seleccioná un plan.");
   if (!monto)
-    return mostrarAlerta("Monto no ingresado", "Por favor, ingresá un monto.");
+    return mostrarAlerta("Monto no ingresado", "Ingresá un monto.");
   if (!metodoPago)
-    return mostrarAlerta(
-      "Método de pago no seleccionado",
-      "Por favor, seleccioná un método de pago."
-    );
-  if (!dni)
-    return mostrarAlerta(
-      "Oops...",
-      "No estás ingresando el DNI. Si no lo quiere dar, ingresá cualquier número!"
-    );
+    return mostrarAlerta("Método de pago no seleccionado", "Seleccioná un método.");
+  if (typeof usarTarjeta !== "undefined" && usarTarjeta) {
+    if (!tarjetaValor) {
+      return mostrarAlerta("Tarjeta faltante", "Ingresá el número de tarjeta del miembro.");
+    }
+  }
 
+  const dniFinal = dni || tarjetaValor;
 
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  formData.append("apellido", apellido);
+  formData.append("dni", dniFinal);
+  formData.append("telefono", telefono);
+  formData.append("metodo_de_pagos_id", metodoPago.value);
+  formData.append("sexo_id", sexoId);
+  formData.append("planes_id", planesId);
+  formData.append("monto", monto);
+  formData.append("fecha_de_vencimiento", fecha_vto);
+  formData.append("recargo", recargo);
+  formData.append("tarjeta_miembro", tarjetaValor); 
 
-  // --- Generación de código PDF417 ---
-  const contenido = `${apellido}@${nombre}@${telefono}@${email}`;
   try {
-    const canvas = document.getElementById("codigoPdf417");
-    bwipjs.toCanvas(canvas, {
-      bcid: "pdf417",
-      text: contenido,
-      scale: 4,
-      height: 12,
-      columns: 3,
-      rows: 12,
-      includetext: false,
-      compact: false,
-      paddingwidth: 3,
-      paddingheight: 3,
-      backgroundcolor: "FFFFFF",
-    });
-
-    setTimeout(() => {
-      const ctx = canvas.getContext("2d");
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.fillStyle = "#FFFFFF";
-      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-      tempCtx.putImageData(imageData, 0, 0);
-      const dataURL = tempCanvas.toDataURL("image/jpeg", 1.0);
-
-      const link = document.createElement("a");
-      link.href = dataURL;
-      link.download = "codigo-barra.jpg";
-      link.click();
-    }, 100);
-    
-
-    // --- Envío de datos ---
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("apellido", apellido);
-    formData.append("dni", dni);
-    formData.append("telefono", telefono);
-    formData.append("telefono_emergencia", telEmergencia);
-    formData.append("email", email);
-    formData.append("metodo_de_pagos_id", metodoPago.value);
-    formData.append("sexo_id", sexoId);
-    formData.append("planes_id", planesId);
-    formData.append("monto", monto);
-    formData.append("fecha_de_vencimiento", fecha_de_vencimiento);
-    formData.append("recargo", recargo);
-
-    const res = await fetch("/admin-gym/componentes/envio_de_datos.php", {
+    const res = await fetch("componentes/envio_de_datos.php", {
       method: "POST",
       body: formData,
     });
@@ -197,21 +168,21 @@ async function manejarFormulario() {
     if (json.ok) {
       Swal.fire({
         title: "¡Listo!",
-        text: "El usuario fue guardado y el código generado.",
+        text: "El usuario fue guardado.",
         icon: "success",
         confirmButtonText: "Aceptar",
         confirmButtonClass: "btn btn-primary",
         buttonsStyling: false,
       });
     } else {
-      mostrarAlerta("Oops...", "Error al enviar los datos.");
+      mostrarAlerta("Oops...", json.error || "Error al enviar los datos.");
     }
   } catch (err) {
-    mostrarAlerta("Oops...", "¡DNI o Email ya registrados!");
+    console.error("Error en la conexión o ejecución del fetch:", err);
+    mostrarAlerta("Oops...", "¡Error de conexión con el servidor o datos inválidos!");
   }
 }
 
-// --- Función reutilizable para alertas ---
 function mostrarAlerta(titulo, mensaje) {
   Swal.fire({
     title: titulo,
@@ -221,4 +192,3 @@ function mostrarAlerta(titulo, mensaje) {
     buttonsStyling: false,
   });
 }
-

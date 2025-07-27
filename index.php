@@ -5,21 +5,24 @@ include('conexion.php');
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-$usuario = $_POST['usuario'] ?? '';
-$contrasena = $_POST['contrasena'] ?? '';
+    $usuario = $_POST['usuario'] ?? '';
+    $contrasena = $_POST['contrasena'] ?? '';
 
-
-    $stmt = $conn->prepare("SELECT id, contrasena FROM admin WHERE usuario = ?");
+    $stmt = $conn->prepare("SELECT id, contrasena, plan_id, pais_id, provincia_id FROM admin WHERE usuario = ?");
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows === 1) {
-        $stmt->bind_result($id, $contrasena_db);
+        $stmt->bind_result($id, $contrasena_db, $plan_id, $pais_id, $provincia_id);
         $stmt->fetch();
 
         if ($contrasena === $contrasena_db) {
             $_SESSION['admin'] = $id;
+            $_SESSION['plan_id'] = $plan_id;
+            $_SESSION['pais_id'] = $pais_id;
+            $_SESSION['provincia_id'] = $provincia_id;
+
             header("Location: panel.php");
             exit;
         } else {
@@ -33,13 +36,15 @@ $contrasena = $_POST['contrasena'] ?? '';
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 <!-- Mirrored from techzaa.in/venton/auth-lock-screen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:18 GMT -->
+
 <head>
      <!-- Title Meta -->
      <meta charset="utf-8" />
-     <title>gimnasio Maxpower</title>
+     <title>gimnasio</title>
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta name="description" content="A fully responsive premium admin dashboard template" />
      <meta name="author" content="Techzaa" />
@@ -84,7 +89,7 @@ $contrasena = $_POST['contrasena'] ?? '';
                                         <p class="text-muted mt-1 mb-4">ingrese su usuario y contraseña para acceder</p>
 
                                         <div class="mb-3">
-                                                  <form action="index.php" class="authentication-form" method="POST">
+                                             <form action="index.php" class="authentication-form" method="POST">
                                                   <div class="mb-3">
                                                        <label class="form-label visually-hidden"
                                                             for="example-password">Password</label>
@@ -100,7 +105,7 @@ $contrasena = $_POST['contrasena'] ?? '';
                                                   <div class="mb-1 text-center d-grid">
                                                        <button class="btn btn-primary" type="submit">Ingresar</button>
                                                   </div>
-                                                      <p style="color:red;"><?= $error ?></p>
+                                                  <p style="color:red;"><?= $error ?></p>
                                              </form>
                                         </div>
 
@@ -128,4 +133,5 @@ $contrasena = $_POST['contrasena'] ?? '';
 
 
 <!-- Mirrored from techzaa.in/venton/auth-lock-screen.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 08 Jun 2025 20:43:18 GMT -->
+
 </html>
