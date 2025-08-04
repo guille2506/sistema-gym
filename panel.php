@@ -1,8 +1,26 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['admin'])) {
-     header("Location: index.php");
-     exit;
+    header("Location: index.php");
+    exit;
+}
+
+include('conexion.php');
+
+$admin_id = $_SESSION['admin'] ?? null;
+
+if ($admin_id) {
+    $stmt = $conn->prepare("
+        UPDATE miembros
+        SET estado_id = 2
+        WHERE estado_id = 1
+          AND fecha_de_vencimiento < CURDATE()
+          AND admin_id = ?
+    ");
+    $stmt->bind_param("i", $admin_id);
+    $stmt->execute();
+    $stmt->close();
 }
 ?>
 
@@ -566,7 +584,7 @@ if (!isset($_SESSION['admin'])) {
                                         <label for="buscar-usuario" class="form-label">Buscar / Escanear Usuario</label>
                                         <input type="text" id="buscar-usuario" class="form-control" placeholder="DNI, nombre o escanear código...">
                                    </div>
-                                   <div id="resultado-lector" class="alert fw-bold text-center mx-auto mt-4" style="max-width: 600px; font-size: 16px;"></div>
+                                   <div id="resultado-lector" class="alert fw-bold text-center mx-auto mt-4" style="max-width: 500px; font-size: 16px;"></div>
 
                                    <div class="mb-3 d-flex gap-2">
                                         <!-- <button type="button" id="btn-escanear" class="btn btn-success">
@@ -597,9 +615,14 @@ if (!isset($_SESSION['admin'])) {
                                                        <div>
                                                             <small id="vto-miembro" class="text-muted fs-4"></small>
                                                        </div>
+                                                       
+                                                       <div id="botones-renovacion" class="text-center mt-4"></div>
                                                   </div>
+
                                              </div>
                                         </div>
+                                        <!-- Sonido de error -->
+                                        <audio id="audio-error" src="assets/sounds/error.mp3" preload="auto"></audio>
 
 
                                    </div>
@@ -611,7 +634,7 @@ if (!isset($_SESSION['admin'])) {
                          </div> <!-- end card -->
                     </div> <!-- end col -->
                </div> <!-- end row -->
-               
+
                <!-- <script>
                     document.addEventListener("DOMContentLoaded", () => {
                          const inputBuscar = document.getElementById("buscar-usuario");

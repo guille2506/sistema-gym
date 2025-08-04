@@ -557,7 +557,7 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de miembros</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">2310</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -575,7 +575,7 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Miembros al dia</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1000</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -593,7 +593,7 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Deben cuota</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1310</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -612,7 +612,7 @@ if (!isset($_SESSION['admin'])) {
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Inactive
                                                        Invoice</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1243</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -668,6 +668,7 @@ if (!isset($_SESSION['admin'])) {
                                                             <th>plan</th>
                                                             <th>metodo de pago</th>
                                                             <th>Estado de cuenta</th>
+                                                            <th>Situacion</th>
                                                             <th>Action</th>
                                                        </tr>
                                                   </thead>
@@ -723,6 +724,7 @@ ORDER BY m.id DESC";
                                                                                 <?= $estado ?>
                                                                            </span>
                                                                       </td>
+                                                                      <td>proximamente</td>
                                                                       <td>
                                                                            <div class="d-flex gap-2">
                                                                                 <form method="post" action="perfil.php">

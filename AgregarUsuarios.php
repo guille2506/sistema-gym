@@ -6,6 +6,7 @@ $usarTarjeta = 0;
 $admin_id = $_SESSION['admin'] ?? null;
 
 if ($admin_id) {
+     // 🔹 Obtener si el admin usa tarjeta
      $stmt = $conn->prepare("SELECT usar_tarjeta FROM admin WHERE id = ?");
      $stmt->bind_param("i", $admin_id);
      $stmt->execute();
@@ -13,6 +14,7 @@ if ($admin_id) {
      $stmt->fetch();
      $stmt->close();
 
+     // 🔹 Obtener todos los planes del admin
      $stmt = $conn->prepare("SELECT * FROM planes WHERE admin_id = ?");
      $stmt->bind_param("i", $admin_id);
      $stmt->execute();
@@ -22,8 +24,20 @@ if ($admin_id) {
           $planes[] = $row;
      }
 }
-?>
 
+// 🔸 Leer el precio y descuento desde la URL
+$precioBase = isset($_GET['monto']) ? (int)$_GET['monto'] : 0;
+$descuento = isset($_GET['descuento']) ? (int)$_GET['descuento'] : 0;
+$cantidadClases = isset($_GET['clases']) ? (int)$_GET['clases'] : 0;
+
+
+// 🔸 Calcular monto final con descuento (si corresponde)
+$montoFinal = $precioBase;
+
+if ($descuento > 0) {
+     $montoFinal = $precioBase - ($precioBase * $descuento / 100);
+}
+?>
 
 
 
@@ -540,6 +554,9 @@ if ($admin_id) {
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -630,15 +647,18 @@ if ($admin_id) {
                                                             <select id="planes_id" name="planes_id" class="form-control" required>
                                                                  <option value="">Seleccionar</option>
                                                                  <?php foreach ($planes as $plan): ?>
-                                                                      <option value="<?= $plan['id'] ?>" data-precio="<?= $plan['precio'] ?>">
-                                                                           <?= htmlspecialchars($plan['nombre']) ?>
+                                                                      <option
+                                                                           value="<?= $plan['id'] ?>"
+                                                                           data-precio="<?= $plan['precio'] ?>"
+                                                                           data-descuento="<?= $plan['descuento_grupo'] ?>"
+                                                                           data-clases="<?= $plan['clases_totales'] ?>">
+                                                                           <?= htmlspecialchars($plan['nombre']) ?> - $<?= number_format($plan['precio'], 0, ',', '.') ?>
                                                                       </option>
 
                                                                  <?php endforeach; ?>
                                                             </select>
                                                        </div>
                                                   </div>
-
                                                   <div class="col-lg-6">
                                                        <div class="mb-3">
                                                             <label for="monto" class="form-label">Monto</label>
@@ -661,6 +681,24 @@ if ($admin_id) {
                                                             <input type="date" id="fecha_de_vencimiento" name="fecha_de_vencimiento" class="form-control" />
                                                        </div>
                                                   </div>
+
+                                                  <div class="col-lg-6">
+
+                                                       <div class="mb-3">
+                                                            <label for="cantidad_clases" class="form-label">Cantidad de Clases</label>
+                                                            <input type="number" class="form-control" name="cantidad_clases" id="cantidad_clases" min="0">
+                                                       </div>
+                                                  </div>
+
+
+                                                  <div class="col-lg-6">
+
+                                                       <div class="mb-3">
+                                                            <label for="grupo_familiar" class="form-label">Grupo Familiar</label>
+                                                            <input type="text" class="form-control" name="grupo_familiar" id="grupo_familiar">
+                                                       </div>
+                                                  </div>
+
 
                                                   <?php if ($usarTarjeta): ?>
                                                        <div class="col-lg-6">
@@ -720,6 +758,66 @@ if ($admin_id) {
                                                                            </label>
                                                                       </div>
                                                                  </div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    let buffer = "";
+
+    document.addEventListener("keypress", function (e) {
+        if (e.key.length === 1) {
+            buffer += e.key;
+        }
+
+        if (e.key === "Enter") {
+            buffer = buffer.trim();
+
+            let apellido = "";
+            let nombre = "";
+            let sexo = "";
+            let dni = "";
+
+            // Caso A: Formato con comillas dobles
+            if (buffer.includes('"')) {
+                const partes = buffer.split('"');
+                if (partes.length >= 5) {
+                    apellido = partes[1]?.trim();     // entre 1ras comillas
+                    nombre = partes[2]?.trim();      // fuera de comillas
+                    sexo = partes[3]?.trim();        // entre 3ras comillas
+                    dni = partes[4]?.trim();         // luego del sexo
+                }
+            }
+
+            // Caso B: Formato con @
+            else if (buffer.includes('@')) {
+                const partes = buffer.split('@');
+                if (partes.length >= 5) {
+                    apellido = partes[1]?.trim();
+                    nombre = partes[2]?.trim();
+                    sexo = partes[3]?.trim();
+                    dni = partes[4]?.trim();
+                }
+            }
+
+            // Rellenar campos si existen
+            if (apellido && nombre && dni) {
+                document.getElementById("apellido").value = apellido;
+                document.getElementById("nombre").value = nombre;
+                document.getElementById("dni").value = dni;
+
+                const sexo_id = document.getElementById("sexo_id");
+                if (sexo.toUpperCase() === "M") {
+                    sexo_id.value = "1";
+                } else if (sexo.toUpperCase() === "F") {
+                    sexo_id.value = "2";
+                }
+            }
+
+            buffer = ""; // Reset para el próximo escaneo
+        }
+    });
+});
+</script>
+
+
 
                                                                  <!-- <div class="col-lg-6">
                                                                       <div class="form-check form-checkbox-primary ps-0">

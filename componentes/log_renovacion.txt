@@ -1,0 +1,78 @@
+[2025-08-01 23:42:22] 🔍 Iniciando renovación...
+[2025-08-01 23:42:22] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"9","plan_nombre":"20% menos grupo familiar de 4 a 5 personas.","monto":"34000","fecha_de_vencimiento":"2025-08-02","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"12","grupo_familiar":""}
+[2025-08-01 23:42:22] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:42:22] ➡️ Plan ID: 9 - Nombre: 20% menos grupo familiar de 4 a 5 personas.
+[2025-08-01 23:42:22] ➡️ Fecha de vencimiento: 2025-08-02
+[2025-08-01 23:42:22] ➡️ Monto: 34000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:42:22] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:42:22] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:43:50] 🔍 Iniciando renovación...
+[2025-08-01 23:43:50] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"18","plan_nombre":"20% menos grupo familiar de 4 a 5 personas.","monto":"30000","fecha_de_vencimiento":"2025-08-02","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"8","grupo_familiar":""}
+[2025-08-01 23:43:50] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:43:50] ➡️ Plan ID: 18 - Nombre: 20% menos grupo familiar de 4 a 5 personas.
+[2025-08-01 23:43:50] ➡️ Fecha de vencimiento: 2025-08-02
+[2025-08-01 23:43:50] ➡️ Monto: 30000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:43:50] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:43:50] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:44:22] 🔍 Iniciando renovación...
+[2025-08-01 23:44:22] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"19","plan_nombre":"Clase Prueba","monto":"5000","fecha_de_vencimiento":"2025-08-02","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"1","grupo_familiar":""}
+[2025-08-01 23:44:22] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:44:22] ➡️ Plan ID: 19 - Nombre: Clase Prueba
+[2025-08-01 23:44:22] ➡️ Fecha de vencimiento: 2025-08-02
+[2025-08-01 23:44:22] ➡️ Monto: 5000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:44:22] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:44:22] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:45:16] 🔍 Iniciando renovación...
+[2025-08-01 23:45:16] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"19","plan_nombre":"Clase Prueba","monto":"5000","fecha_de_vencimiento":"2025-08-01","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Renovaci\u00f3n de plan","cantidad_clases":"1","grupo_familiar":""}
+[2025-08-01 23:45:16] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:45:16] ➡️ Plan ID: 19 - Nombre: Clase Prueba
+[2025-08-01 23:45:16] ➡️ Fecha de vencimiento: 2025-08-01
+[2025-08-01 23:45:16] ➡️ Monto: 5000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:45:16] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:45:16] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:45:16] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:45:30] 🔍 Iniciando renovación...
+[2025-08-01 23:45:30] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"15","plan_nombre":"20% menos grupo familiar de 4 a 5 personas.","monto":"32000","fecha_de_vencimiento":"2025-08-01","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Renovaci\u00f3n de plan","cantidad_clases":"8","grupo_familiar":""}
+[2025-08-01 23:45:30] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:45:30] ➡️ Plan ID: 15 - Nombre: 20% menos grupo familiar de 4 a 5 personas.
+[2025-08-01 23:45:30] ➡️ Fecha de vencimiento: 2025-08-01
+[2025-08-01 23:45:30] ➡️ Monto: 32000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:45:30] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:45:30] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:45:30] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:45:50] 🔍 Iniciando renovación...
+[2025-08-01 23:45:50] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"15","plan_nombre":"20% menos grupo familiar de 4 a 5 personas.","monto":"32000","fecha_de_vencimiento":"2025-08-02","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"8","grupo_familiar":""}
+[2025-08-01 23:45:50] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:45:50] ➡️ Plan ID: 15 - Nombre: 20% menos grupo familiar de 4 a 5 personas.
+[2025-08-01 23:45:50] ➡️ Fecha de vencimiento: 2025-08-02
+[2025-08-01 23:45:50] ➡️ Monto: 32000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:45:50] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:45:50] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:45:50] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:46:51] 🔍 Iniciando renovación...
+[2025-08-01 23:46:51] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"19","plan_nombre":"Clase Prueba","monto":"5000","fecha_de_vencimiento":"2025-08-01","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Renovaci\u00f3n de plan","cantidad_clases":"1","grupo_familiar":""}
+[2025-08-01 23:46:51] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:46:51] ➡️ Plan ID: 19 - Nombre: Clase Prueba
+[2025-08-01 23:46:51] ➡️ Fecha de vencimiento: 2025-08-01
+[2025-08-01 23:46:51] ➡️ Monto: 5000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:46:51] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:46:51] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:46:51] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:46:56] 🔍 Iniciando renovación...
+[2025-08-01 23:46:56] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"19","plan_nombre":"Clase Prueba","monto":"5000","fecha_de_vencimiento":"2025-08-02","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"1","grupo_familiar":""}
+[2025-08-01 23:46:56] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:46:56] ➡️ Plan ID: 19 - Nombre: Clase Prueba
+[2025-08-01 23:46:56] ➡️ Fecha de vencimiento: 2025-08-02
+[2025-08-01 23:46:56] ➡️ Monto: 5000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:46:56] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:46:56] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:46:56] 💰 Registro en caja insertado correctamente.
+[2025-08-01 23:47:20] 🔍 Iniciando renovación...
+[2025-08-01 23:47:20] 📥 JSON recibido: {"codigo":"ILLANES ARANA@GUILLERMO RICARDO@44844220","nombre":"GUILLERMO RICARDO","apellido":"ILLANES ARANA","telefono":"","dni":"44844220","sexo_id":"1","planes_id":"12","plan_nombre":"20% menos grupo familiar de 4 a 5 personas.","monto":"32000","fecha_de_vencimiento":"2025-08-03","recargo":"0","metodo_de_pagos_id":"2","tarjeta_miembro":"","tipo_renovacion":"Adelanto de cuota","cantidad_clases":"12","grupo_familiar":""}
+[2025-08-01 23:47:20] ➡️ Código: ILLANES ARANA@GUILLERMO RICARDO@44844220
+[2025-08-01 23:47:20] ➡️ Plan ID: 12 - Nombre: 20% menos grupo familiar de 4 a 5 personas.
+[2025-08-01 23:47:20] ➡️ Fecha de vencimiento: 2025-08-03
+[2025-08-01 23:47:20] ➡️ Monto: 32000 | Recargo: 0 | Método de pago: 2
+[2025-08-01 23:47:20] ✅ Miembro encontrado. ID: 129
+[2025-08-01 23:47:20] 📝 Miembro actualizado correctamente.
+[2025-08-01 23:47:20] 💰 Registro en caja insertado correctamente.

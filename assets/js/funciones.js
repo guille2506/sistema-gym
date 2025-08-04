@@ -2,24 +2,43 @@ let montoOriginalGlobal = 0; // Se usará como base para calcular recargo
 
 document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const montoUrl = urlParams.get("monto");
+  const montoUrl = parseFloat(urlParams.get("monto") || 0);
   const planIdUrl = urlParams.get("plan");
+  const descuentoUrl = parseFloat(urlParams.get("descuento") || 0);
+const clasesUrl = parseInt(urlParams.get("clases") || 0);
+const inputClases = document.getElementById("cantidad_clases");
+if (inputClases && !isNaN(clasesUrl)) {
+    inputClases.value = clasesUrl;
+}
 
   const inputMonto = document.getElementById("monto");
   const selectPlan = document.getElementById("planes_id");
   const inputFecha = document.getElementById("fecha_de_vencimiento");
 
   // ✅ Seteo inicial desde URL
-  if (montoUrl && !isNaN(montoUrl)) {
-    montoOriginalGlobal = parseFloat(montoUrl);
-    if (inputMonto) inputMonto.value = montoOriginalGlobal;
+  if (!isNaN(montoUrl) && montoUrl > 0) {
+    let montoConDescuento = montoUrl;
+
+    if (!isNaN(descuentoUrl) && descuentoUrl > 0) {
+      montoConDescuento = Math.round(montoUrl * (1 - descuentoUrl / 100));
+    }
+
+    montoOriginalGlobal = montoConDescuento;
+    if (inputMonto) inputMonto.value = montoConDescuento;
+    actualizarPagoYRecargo(montoConDescuento);
   }
 
+  // ✅ Seleccionar plan
   if (planIdUrl && selectPlan) {
-    selectPlan.value = planIdUrl;
+    for (let i = 0; i < selectPlan.options.length; i++) {
+      if (selectPlan.options[i].value == planIdUrl) {
+        selectPlan.selectedIndex = i;
+        break;
+      }
+    }
   }
 
-  // ✅ Fecha de vencimiento a 30 días
+  // ✅ Fecha de vencimiento
   if (inputFecha) {
     const hoy = new Date();
     const en30Dias = new Date(hoy);
@@ -28,17 +47,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ✅ Actualiza montoOriginal al cambiar de plan
-  if (selectPlan) {
-    selectPlan.addEventListener("change", () => {
-      const selectedOption = selectPlan.options[selectPlan.selectedIndex];
-      const nuevoMonto = parseFloat(selectedOption.dataset.precio || 0);
-      if (!isNaN(nuevoMonto)) {
-        montoOriginalGlobal = nuevoMonto;
-        inputMonto.value = nuevoMonto;
-        actualizarPagoYRecargo(nuevoMonto);
-      }
-    });
-  }
+selectPlan.addEventListener("change", () => {
+    const selectedOption = selectPlan.options[selectPlan.selectedIndex];
+
+    const nuevoMonto = parseFloat(selectedOption.dataset.precio || 0);
+    const descuentoSelect = parseFloat(selectedOption.dataset.descuento || 0);
+    const clasesTotales = parseInt(selectedOption.dataset.clases || 0);
+
+    let montoConDescuento = nuevoMonto;
+    if (!isNaN(descuentoSelect) && descuentoSelect > 0) {
+        montoConDescuento = Math.round(nuevoMonto * (1 - descuentoSelect / 100));
+    }
+
+    montoOriginalGlobal = montoConDescuento;
+    if (inputMonto) inputMonto.value = montoConDescuento;
+    actualizarPagoYRecargo(montoConDescuento);
+
+    // ✅ Actualizar automáticamente cantidad de clases
+    const inputClases = document.getElementById("cantidad_clases");
+    if (inputClases && !isNaN(clasesTotales)) {
+        inputClases.value = clasesTotales;
+    }
+});
 
   // ✅ Escucha cambios manuales del monto
   if (inputMonto) {
@@ -118,6 +148,9 @@ async function manejarFormulario() {
 
   const tarjetaInput = document.getElementById("tarjeta_miembro");
   const tarjetaValor = tarjetaInput ? tarjetaInput.value.trim() : "";
+const cantidadClasesInput = document.getElementById("cantidad_clases");
+const grupoFamiliar = document.getElementById("grupo_familiar").value.trim();
+const cantidadClases = cantidadClasesInput ? cantidadClasesInput.value : 0;
 
   const sexoId = document.getElementById("sexo_id").value;
   const planesId = document.getElementById("planes_id").value;
@@ -130,22 +163,34 @@ async function manejarFormulario() {
 
   // Validaciones mínimas
   if (!sexoId)
-    return mostrarAlerta("Sexo no seleccionado", "Por favor, seleccioná una opción.");
+    return mostrarAlerta(
+      "Sexo no seleccionado",
+      "Por favor, seleccioná una opción."
+    );
   if (!planesId)
-    return mostrarAlerta("Plan no seleccionado", "Por favor, seleccioná un plan.");
-  if (!monto)
-    return mostrarAlerta("Monto no ingresado", "Ingresá un monto.");
+    return mostrarAlerta(
+      "Plan no seleccionado",
+      "Por favor, seleccioná un plan."
+    );
+  if (!monto) return mostrarAlerta("Monto no ingresado", "Ingresá un monto.");
   if (!metodoPago)
-    return mostrarAlerta("Método de pago no seleccionado", "Seleccioná un método.");
+    return mostrarAlerta(
+      "Método de pago no seleccionado",
+      "Seleccioná un método."
+    );
   if (typeof usarTarjeta !== "undefined" && usarTarjeta) {
     if (!tarjetaValor) {
-      return mostrarAlerta("Tarjeta faltante", "Ingresá el número de tarjeta del miembro.");
+      return mostrarAlerta(
+        "Tarjeta faltante",
+        "Ingresá el número de tarjeta del miembro."
+      );
     }
   }
 
   const dniFinal = dni || tarjetaValor;
 
   const formData = new FormData();
+  formData.append("grupo_familiar", grupoFamiliar !== "" ? grupoFamiliar : null);
   formData.append("nombre", nombre);
   formData.append("apellido", apellido);
   formData.append("dni", dniFinal);
@@ -156,7 +201,9 @@ async function manejarFormulario() {
   formData.append("monto", monto);
   formData.append("fecha_de_vencimiento", fecha_vto);
   formData.append("recargo", recargo);
-  formData.append("tarjeta_miembro", tarjetaValor); 
+  formData.append("tarjeta_miembro", tarjetaValor);
+  formData.append("cantidad_clases", cantidadClases);
+
 
   try {
     const res = await fetch("componentes/envio_de_datos.php", {
@@ -179,7 +226,10 @@ async function manejarFormulario() {
     }
   } catch (err) {
     console.error("Error en la conexión o ejecución del fetch:", err);
-    mostrarAlerta("Oops...", "¡Error de conexión con el servidor o datos inválidos!");
+    mostrarAlerta(
+      "Oops...",
+      "¡Error de conexión con el servidor o datos inválidos!"
+    );
   }
 }
 

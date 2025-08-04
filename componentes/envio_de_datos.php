@@ -20,14 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $monto                = (isset($_POST['monto']) && is_numeric($_POST['monto'])) ? (int)$_POST['monto'] : 0;
     $fecha_de_vencimiento = $_POST['fecha_de_vencimiento']  ?? null;
     $recargo              = (isset($_POST['recargo']) && is_numeric($_POST['recargo'])) ? (int)$_POST['recargo'] : 0;
+    $situacion_id = ($recargo > 0) ? 2 : 1; // 2 = Debe cuota, 1 = Al día
     $metodo_de_pagos_id   = $_POST['metodo_de_pagos_id']    ?? 1;
     $codigo_input = $_POST['tarjeta_miembro'] ?? '';
-    $codigo = trim($codigo_input) !== '' ? $codigo_input : "$apellido@$nombre@$telefono";
+    $cantidad_clases = isset($_POST['cantidad_clases']) ? (int)$_POST['cantidad_clases'] : null;
+    if ($cantidad_clases !== null && $cantidad_clases < 0) {
+        $cantidad_clases = 0;
+    }
+
+    $grupo_familiar = isset($_POST['grupo_familiar']) && $_POST['grupo_familiar'] !== '' ? $_POST['grupo_familiar'] : null;
+
+
+
+    $codigo = trim($codigo_input) !== '' ? $codigo_input : "$apellido@$nombre@$dni";
     $estado_id = 1;
 
-    $sql = "INSERT INTO miembros 
-        (admin_id, nombre, apellido, dni, telefono, codigo, estado_id, metodo_de_pagos_id, sexo_id, planes_id, monto, fecha_de_vencimiento, recargo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO miembros (
+    admin_id, nombre, apellido, dni, telefono, codigo, estado_id, metodo_de_pagos_id,
+    sexo_id, planes_id, monto, fecha_de_vencimiento, recargo, situacion_id,
+    clases_disponibles, grupo_familiar_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -36,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->bind_param(
-        "isssssiiiiisi",
+        "isssssiiiiisiiis",
         $admin_id,
         $nombre,
         $apellido,
@@ -49,8 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $planes_id,
         $monto,
         $fecha_de_vencimiento,
-        $recargo
+        $recargo,
+        $situacion_id,
+        $cantidad_clases,
+        $grupo_familiar
     );
+
+
+
 
     if ($stmt->execute()) {
         $miembro_id = $conn->insert_id;

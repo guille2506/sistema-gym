@@ -567,42 +567,82 @@ while ($row = $resultado->fetch_assoc()) {
                               <div class="row justify-content-center">
                                    <div class="row justify-content-center">
                                         <?php foreach ($planes as $plan): ?>
-                                             <div class="col-lg-3 mb-4">
+                                             <div class="col-lg-4 mb-4">
                                                   <div class="card card-pricing position-relative">
                                                        <div class="card-body">
-
-                                                            <!-- Botón editar en la esquina -->
-                                                            <button type="button"
-                                                                 class="btn btn-soft-primary btn-sm btn-editar-plan position-absolute top-0 end-0 m-2"
+                                                            <!-- Botón editar -->
+                                                            <button type="button" class="btn btn-soft-primary btn-sm btn-editar-plan position-absolute top-0 end-0 m-2"
                                                                  data-id="<?= $plan['id'] ?>"
                                                                  data-nombre="<?= htmlspecialchars($plan['nombre']) ?>"
                                                                  data-precio="<?= htmlspecialchars($plan['precio']) ?>">
                                                                  <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                                             </button>
 
-
+                                                            <!-- Nombre del plan -->
                                                             <h5 class="mt-0 mb-3 fs-14 text-uppercase fw-semibold">
                                                                  <?= htmlspecialchars($plan['nombre']) ?>
                                                             </h5>
+
+                                                            <!-- Precio -->
                                                             <h2 class="mt-0 mb-3 fw-bold">
-                                                                 $<?= htmlspecialchars($plan['precio']) ?>
-                                                                 <span class="fs-14 fw-medium text-muted">/ Month</span>
+                                                                 $<?= number_format($plan['precio'], 0, ',', '.') ?>
+                                                                 <span class="fs-14 fw-medium text-muted">/ mes</span>
                                                             </h2>
+
+                                                            <!-- Detalles dinámicos -->
                                                             <ul class="card-pricing-features text-muted border-top pt-2 mt-2 ps-0 list-unstyled">
-                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>5 GB Storage</li>
-                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>100 GB Bandwidth</li>
-                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>1 Domain</li>
-                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>No Support</li>
+                                                                 <?php if (!is_null($plan['clases_totales'])): ?>
+                                                                      <li class="text-dark">
+                                                                           <i class='bx bx-check-circle text-primary fs-15 me-1'></i>
+                                                                           <?= $plan['clases_totales'] ?> clases totales
+                                                                      </li>
+                                                                 <?php else: ?>
+                                                                      <li class="text-dark">
+                                                                           <i class='bx bx-check-circle text-primary fs-15 me-1'></i>
+                                                                           Acceso ilimitado
+                                                                      </li>
+                                                                 <?php endif; ?>
+
+                                                                 <?php if ($plan['descuento_grupo'] > 0): ?>
+                                                                      <li class="text-dark">
+                                                                           <i class='bx bx-check-circle text-primary fs-15 me-1'></i>
+                                                                           <?= $plan['descuento_grupo'] ?>% de descuento para grupos
+                                                                      </li>
+                                                                 <?php else: ?>
+                                                                      <li class="text-muted">
+                                                                           <i class='bx bx-info-circle text-secondary fs-15 me-1'></i>
+                                                                           Sin descuentos por grupo
+                                                                      </li>
+                                                                 <?php endif; ?>
+
+
+                                                                 <li class="text-dark">
+                                                                      <i class='bx bx-check-circle text-primary fs-15 me-1'></i>
+                                                                      Duración: 30 días
+                                                                 </li>
+
+                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>Atencion Personalizada</li>
+                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>Planes de Nutricion</li>
+                                                                 <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>Couchin</li>
                                                                  <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>24x7 Support</li>
                                                                  <li class="text-dark"><i class='bx bx-check-circle text-primary fs-15 me-1'></i>1 User</li>
                                                             </ul>
+
+                                                            <!-- Botón de acción -->
                                                             <div class="mt-4 text-center">
-                                                                 <a href="AgregarUsuarios.php?monto=<?= $plan['precio'] ?>&plan=<?= $plan['id'] ?>" class="btn btn-primary px-sm-4 w-100">Comenzar</a>
+                                                                 <a href="AgregarUsuarios.php?monto=<?= $plan['precio'] ?>&plan=<?= $plan['id'] ?>&descuento=<?= $plan['descuento_grupo'] ?>&clases=<?= $plan['clases_totales'] ?>" class="btn btn-primary px-sm-4 w-100">
+                                                                      Comenzar
+                                                                 </a>           
+
                                                             </div>
+
+
+
                                                        </div>
                                                   </div>
                                              </div>
                                         <?php endforeach; ?>
+
                                    </div>
 
                               </div> <!-- end row -->

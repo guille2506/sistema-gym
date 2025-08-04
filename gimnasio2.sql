@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-07-2025 a las 05:18:02
+-- Tiempo de generación: 04-08-2025 a las 03:43:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -44,7 +44,7 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `usuario`, `contrasena`, `estado`, `plan_id`, `pais_id`, `provincia_id`, `usar_tarjeta`) VALUES
 (1, 'admin1', '1', 'activo', 1, NULL, NULL, 0),
-(2, 'admin2', '2', 'inactivo', 4, NULL, NULL, 1);
+(2, 'admin2', '2', 'inactivo', 4, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -88,40 +88,14 @@ CREATE TABLE `caja` (
   `metodo_pago_id` int(11) NOT NULL,
   `tipo` enum('pago','ingreso','extraccion') DEFAULT 'pago',
   `miembro_nombre` varchar(100) DEFAULT NULL,
-  `miembro_apellido` varchar(100) DEFAULT NULL
+  `miembro_apellido` varchar(100) DEFAULT NULL,
+  `estado` enum('abierto','cerrado') DEFAULT 'abierto'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `caja`
 --
 
-INSERT INTO `caja` (`id`, `admin_id`, `miembro_id`, `monto`, `detalle`, `fecha`, `metodo_pago_id`, `tipo`, `miembro_nombre`, `miembro_apellido`) VALUES
-(4, 1, 73, 4.00, 'Pago de inscripción del plan', '2025-07-25 22:47:32', 2, 'pago', 'moto', 'illanes'),
-(5, 1, 75, 1.00, 'Pago de inscripción del plan', '2025-07-26 00:28:22', 2, 'pago', 'moto', 'arana'),
-(6, 1, 76, 1.00, 'Pago de inscripción del plan', '2025-07-26 00:42:04', 2, 'pago', 'Jonathan', 'Palma'),
-(7, 1, 77, 10.00, 'Pago de inscripción del plan', '2025-07-26 00:51:17', 1, 'pago', 'nora', 'arana'),
-(8, 1, 78, 10.00, 'Pago de inscripción del plan', '2025-07-26 01:15:30', 1, 'pago', 'maria', 'alaria'),
-(9, 1, 78, 10.00, 'Pago de inscripción del plan', '2025-07-26 01:15:30', 2, 'pago', 'maria', 'alaria'),
-(10, 1, 80, 10.00, 'Pago de inscripción del plan', '2025-07-26 01:16:10', 1, 'pago', 'maria', 'alaria'),
-(11, 1, 80, 10.00, 'Pago de inscripción del plan', '2025-07-26 01:16:10', 2, 'pago', 'maria', 'alaria'),
-(12, 1, 82, 10.00, 'Pago de inscripción del plan', '2025-07-26 01:30:03', 3, 'pago', 'maria', 'alaria'),
-(13, 1, 83, 2500.00, 'Pago de inscripción del plan', '2025-07-26 20:44:22', 3, 'pago', 'moto', 'illanes'),
-(14, 2, 85, 500.00, 'Pago de inscripción del plan', '2025-07-26 20:57:28', 3, 'pago', 'holi', 'las'),
-(15, 1, 86, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:23:17', 3, 'pago', 'qlia', 'qlio'),
-(16, 1, 87, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:23:28', 3, 'pago', 'qlia', 'qlio'),
-(17, 1, 88, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:23:36', 3, 'pago', 'qlia', 'qlio'),
-(18, 1, 89, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:23:45', 3, 'pago', 'qlia', 'qlio'),
-(19, 1, 90, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:23:55', 3, 'pago', 'qlia', 'qlio'),
-(20, 1, 91, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:04', 3, 'pago', 'qlia', 'qlio'),
-(21, 1, 92, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:22', 3, 'pago', 'qlia', 'qlio'),
-(22, 1, 93, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:29', 3, 'pago', 'qlia', 'qlio'),
-(23, 1, 94, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:34', 3, 'pago', 'qlia', 'qlio'),
-(24, 1, 95, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:40', 3, 'pago', 'qlia', 'qlio'),
-(25, 1, 96, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:47', 3, 'pago', 'qlia', 'qlio'),
-(26, 1, 97, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:24:56', 3, 'pago', 'qlia', 'qlio'),
-(27, 1, 98, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:25:05', 3, 'pago', 'qlia', 'qlio'),
-(28, 1, 99, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:25:19', 3, 'pago', 'qlia', 'qlio'),
-(29, 1, 100, 5000.00, 'Pago de inscripción del plan', '2025-07-27 01:25:36', 3, 'pago', 'qlia', 'qlio');
 
 -- --------------------------------------------------------
 
@@ -184,41 +158,16 @@ CREATE TABLE `miembros` (
   `fecha_de_vencimiento` date DEFAULT NULL,
   `recargo` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `clases_disponibles` int(11) DEFAULT NULL,
+  `clases_usadas` int(11) DEFAULT 0,
+  `grupo_familiar_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `miembros`
 --
 
-INSERT INTO `miembros` (`id`, `admin_id`, `nombre`, `apellido`, `dni`, `telefono`, `codigo`, `fecha_registro`, `estado_id`, `metodo_de_pagos_id`, `sexo_id`, `situacion_id`, `planes_id`, `monto`, `fecha_de_vencimiento`, `recargo`, `created_at`, `updated_at`) VALUES
-(70, 1, 'moto', 'illanes', '2', '1', '2', '2025-07-25 22:38:42', 1, 2, 1, NULL, 4, 4, '2025-08-24', 0, '2025-07-25 22:38:42', '2025-07-25 22:39:25'),
-(71, 1, 'moto', 'illaens', '3', '1', '3', '2025-07-25 22:39:27', 1, 2, 1, NULL, 4, 4, '2025-08-24', 0, '2025-07-25 22:39:27', '2025-07-25 22:39:27'),
-(72, 1, 'hoal', 'illanes', '4', '1', '4', '2025-07-25 22:42:15', 1, 2, 1, NULL, 4, 4, '2025-08-24', 0, '2025-07-25 22:42:15', '2025-07-25 22:42:15'),
-(73, 1, 'moto', 'illanes', '5', '1', '5', '2025-07-25 22:47:32', 2, 2, 1, NULL, 4, 4, '2025-08-24', 0, '2025-07-25 22:47:32', '2025-07-25 22:57:02'),
-(75, 1, 'moto', 'arana', '6', '1', '1', '2025-07-26 00:28:22', 1, 2, 2, NULL, 3, 1, '2025-08-25', 0, '2025-07-26 00:28:22', '2025-07-26 00:28:22'),
-(76, 1, 'Jonathan', 'Palma', '7', '1', 'Palma@Jonathan@1', '2025-07-26 00:42:04', 1, 2, 2, NULL, 2, 1, '2025-08-25', 0, '2025-07-26 00:42:04', '2025-07-26 00:42:04'),
-(77, 1, 'nora', 'arana', '8', '1', 'arana@nora@1', '2025-07-26 00:51:17', 1, 1, 2, NULL, 3, 10, '2025-08-25', 0, '2025-07-26 00:51:17', '2025-07-26 00:51:17'),
-(78, 1, 'maria', 'alaria', '9', '1', 'alaria@maria@1', '2025-07-26 01:15:30', 1, 2, 2, NULL, 1, 10, '2025-08-25', 0, '2025-07-26 01:15:30', '2025-07-26 01:30:33'),
-(80, 1, 'maria', 'alaria', '10', '1', 'alaria@maria@1', '2025-07-26 01:16:10', 1, 1, 2, NULL, 1, 10, '2025-08-25', 0, '2025-07-26 01:16:10', '2025-07-26 01:30:30'),
-(82, 1, 'maria', 'alaria', '11', '1', 'alaria@maria@1', '2025-07-26 01:30:03', 1, 3, 2, NULL, 2, 10, '2025-08-25', 0, '2025-07-26 01:30:03', '2025-07-26 01:30:03'),
-(83, 1, 'moto', 'illanes', '12345', '1', 'illanes@moto@1', '2025-07-26 20:44:22', 1, 3, 2, NULL, 1, 2500, '2025-08-25', 2500, '2025-07-26 20:44:22', '2025-07-26 20:44:22'),
-(85, 2, 'holi', 'las', '12', '1', '1', '2025-07-26 20:57:28', 1, 3, 2, NULL, 3, 500, '2025-08-25', 500, '2025-07-26 20:57:28', '2025-07-26 20:57:28'),
-(86, 1, 'qlia', 'qlio', '13', '1', 'qlio@qlia@1', '2025-07-27 01:23:17', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:23:17', '2025-07-27 01:23:17'),
-(87, 1, 'qlia', 'qlio', '14', '1', 'qlio@qlia@1', '2025-07-27 01:23:28', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:23:28', '2025-07-27 01:23:28'),
-(88, 1, 'qlia', 'qlio', '15', '1', 'qlio@qlia@1', '2025-07-27 01:23:36', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:23:36', '2025-07-27 01:23:36'),
-(89, 1, 'qlia', 'qlio', '16', '1', 'qlio@qlia@1', '2025-07-27 01:23:45', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:23:45', '2025-07-27 01:23:45'),
-(90, 1, 'qlia', 'qlio', '17', '1', 'qlio@qlia@1', '2025-07-27 01:23:55', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:23:55', '2025-07-27 01:23:55'),
-(91, 1, 'qlia', 'qlio', '18', '1', 'qlio@qlia@1', '2025-07-27 01:24:04', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:04', '2025-07-27 01:24:04'),
-(92, 1, 'qlia', 'qlio', '19', '1', 'qlio@qlia@1', '2025-07-27 01:24:22', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:22', '2025-07-27 01:24:22'),
-(93, 1, 'qlia', 'qlio', '20', '1', 'qlio@qlia@1', '2025-07-27 01:24:29', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:29', '2025-07-27 01:24:29'),
-(94, 1, 'qlia', 'qlio', '21', '1', 'qlio@qlia@1', '2025-07-27 01:24:34', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:34', '2025-07-27 01:24:34'),
-(95, 1, 'qlia', 'qlio', '22', '1', 'qlio@qlia@1', '2025-07-27 01:24:40', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:40', '2025-07-27 01:24:40'),
-(96, 1, 'qlia', 'qlio', '23', '1', 'qlio@qlia@1', '2025-07-27 01:24:47', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:47', '2025-07-27 01:24:47'),
-(97, 1, 'qlia', 'qlio', '24', '1', 'qlio@qlia@1', '2025-07-27 01:24:56', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:24:56', '2025-07-27 01:24:56'),
-(98, 1, 'qlia', 'qlio', '25', '1', 'qlio@qlia@1', '2025-07-27 01:25:05', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:25:05', '2025-07-27 01:25:05'),
-(99, 1, 'qlia', 'qlio', '26', '1', 'qlio@qlia@1', '2025-07-27 01:25:19', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:25:19', '2025-07-27 01:25:19'),
-(100, 1, 'qlia', 'qlio', '27', '1', 'qlio@qlia@1', '2025-07-27 01:25:36', 1, 3, 1, NULL, 1, 5000, '2025-07-27', 0, '2025-07-27 01:25:36', '2025-07-27 01:25:36');
 
 -- --------------------------------------------------------
 
@@ -275,20 +224,35 @@ CREATE TABLE `planes` (
   `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
   `nombre` varchar(100) DEFAULT NULL,
-  `precio` int(11) DEFAULT NULL
+  `precio` int(11) DEFAULT NULL,
+  `clases_totales` int(11) DEFAULT NULL,
+  `descuento_grupo` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `planes`
 --
 
-INSERT INTO `planes` (`id`, `admin_id`, `nombre`, `precio`) VALUES
-(1, 1, 'Clase Prueba', 5000),
-(2, 1, 'Full Pass o pase libre', 37000),
-(3, 1, 'Plan Básico A', 1000),
-(4, 1, 'Full Pass  (descuento efectivo)', 35000),
-(5, 1, 'Pase 12 clases (precio lista)', 34000),
-(6, 1, 'Plan Básico B', 1000);
+INSERT INTO `planes` (`id`, `admin_id`, `nombre`, `precio`, `clases_totales`, `descuento_grupo`) VALUES
+(1, 1, 'Full Pass o pase libre (precio Lista)', 37000, NULL, 0),
+(2, 1, '10% menos en grupo familiar de 3 personas', 37000, NULL, 10),
+(3, 1, '20% menos grupo familiar de 4 a 5 personas.', 37000, NULL, 20),
+(4, 1, 'Full Pass o pase libre (descuento efectivo)', 35000, NULL, 0),
+(5, 1, '10% menos en grupo familiar de 3 personas', 35000, NULL, 10),
+(6, 1, '20% menos grupo familiar de 4 a 5 personas.', 35000, NULL, 20),
+(7, 1, 'Pase 12 clases (precio lista)\n', 34000, 12, 0),
+(8, 1, '10% menos en grupo familiar de 3 personas', 34000, 12, 10),
+(9, 1, '20% menos grupo familiar de 4 a 5 personas.', 34000, 12, 20),
+(10, 1, 'Pase 12 clases (efectivo 💴)\n', 32000, 12, 0),
+(11, 1, '10% menos en grupo familiar de 3 personas', 32000, 12, 10),
+(12, 1, '20% menos grupo familiar de 4 a 5 personas.', 32000, 12, 20),
+(13, 1, 'Pase 8 clases (precio lista)\n', 32000, 8, 0),
+(14, 1, '10% menos en grupo familiar de 3 personas', 32000, 8, 10),
+(15, 1, '20% menos grupo familiar de 4 a 5 personas.', 32000, 8, 20),
+(16, 1, 'Pase 8 clases (efectivo)\n', 30000, 8, 0),
+(17, 1, '10% menos en grupo familiar de 3 personas', 30000, 8, 10),
+(18, 1, '20% menos grupo familiar de 4 a 5 personas.', 30000, 8, 20),
+(19, 1, 'Clase Prueba', 5000, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -314,6 +278,10 @@ CREATE TABLE `registro_ingreso` (
   `miembro_id` int(11) NOT NULL,
   `fecha_ingreso` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `registro_ingreso`
+--
 
 -- --------------------------------------------------------
 
@@ -508,7 +476,7 @@ ALTER TABLE `admin_planes`
 -- AUTO_INCREMENT de la tabla `caja`
 --
 ALTER TABLE `caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT de la tabla `facturas`
@@ -520,7 +488,7 @@ ALTER TABLE `facturas`
 -- AUTO_INCREMENT de la tabla `miembros`
 --
 ALTER TABLE `miembros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT de la tabla `notificaciones`
@@ -538,7 +506,7 @@ ALTER TABLE `paises`
 -- AUTO_INCREMENT de la tabla `planes`
 --
 ALTER TABLE `planes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `provincias`
@@ -550,7 +518,7 @@ ALTER TABLE `provincias`
 -- AUTO_INCREMENT de la tabla `registro_ingreso`
 --
 ALTER TABLE `registro_ingreso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
 
 --
 -- AUTO_INCREMENT de la tabla `suscripciones`

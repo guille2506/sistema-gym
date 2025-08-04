@@ -4,56 +4,61 @@ include('conexion.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
      $id = $_POST['id'];
 
-     $stmt = $conn->prepare("SELECT m.*, e.nombre_estado, p.nombre_metodo 
-        FROM miembros m 
-        LEFT JOIN estado e ON m.estado_id = e.id 
-        LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id 
-        WHERE m.id = ?");
+     // Traer datos del miembro
+     $sql = "
+ SELECT m.*, e.nombre_estado, p.nombre_metodo, pl.nombre AS nombre_plan
+FROM miembros m
+LEFT JOIN estado e ON m.estado_id = e.id
+LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
+LEFT JOIN planes pl ON m.planes_id = pl.id
+WHERE m.id = ?
+
+    ";
+     $stmt = $conn->prepare($sql);
+     if (!$stmt) {
+          die("Error en la preparación: " . $conn->error);
+     }
+
      $stmt->bind_param("i", $id);
      $stmt->execute();
      $resultado = $stmt->get_result();
 
      if ($resultado->num_rows > 0) {
           $miembro = $resultado->fetch_assoc();
-
-          $avatar = ($miembro["sexo_id"] == 2)
-               ? 'assets/images/users/avatar-5.jpg'
-               : 'assets/images/users/avatar-2.jpg';
+          $avatar = ($miembro["sexo_id"] == 2) ? 'assets/images/users/avatar-5.jpg' : 'assets/images/users/avatar-2.jpg';
      } else {
           echo "Miembro no encontrado.";
           exit;
      }
-
      $stmt->close();
-     $conn->close();
+
+     // Consulta historial de pagos (de tabla caja)
+     $sqlPagos = "
+        SELECT monto, detalle, fecha, tipo, estado
+        FROM caja
+        WHERE miembro_id = ?
+        ORDER BY fecha DESC
+        LIMIT 10
+    ";
+     $stmtPagos = $conn->prepare($sqlPagos);
+     $stmtPagos->bind_param("i", $id);
+     $stmtPagos->execute();
+     $historialPagos = $stmtPagos->get_result();
+     $stmtPagos->close();
 } else {
      echo "Acceso inválido.";
      exit;
 }
-?>
 
-<?php
+// Preparar clases de estado
 $estado = $miembro['nombre_estado'] ?? '';
-$claseEstado = '';
-
-switch (strtolower($estado)) {
-     case 'activo':
-          $claseEstado = 'bg-success-subtle text-success';
-          break;
-     case 'inactivo':
-     case 'desactivado':
-     case 'baja':
-          $claseEstado = 'bg-danger-subtle text-danger';
-          break;
-     case 'pendiente':
-          $claseEstado = 'bg-warning-subtle text-warning';
-          break;
-     default:
-          $claseEstado = 'bg-secondary-subtle text-muted';
-          break;
-}
+$claseEstado = match (strtolower($estado)) {
+     'activo' => 'bg-success-subtle text-success',
+     'inactivo', 'desactivado', 'baja' => 'bg-danger-subtle text-danger',
+     'pendiente' => 'bg-warning-subtle text-warning',
+     default => 'bg-secondary-subtle text-muted'
+};
 ?>
-
 
 
 
@@ -263,7 +268,7 @@ switch (strtolower($estado)) {
 
                                         <div class="dropdown-divider my-1"></div>
 
-                                        <a class="dropdown-item text-danger" href="auth-signin.html">
+                                        <a class="dropdown-item text-danger" href="logout.php">
                                              <i class="bx bx-log-out fs-18 align-middle me-1"></i><span class="align-middle">Logout</span>
                                         </a>
                                    </div>
@@ -535,7 +540,7 @@ switch (strtolower($estado)) {
                          <li class="menu-title">General</li>
 
                          <li class="nav-item">
-                              <a class="nav-link" href="index.html">
+                              <a class="nav-link" href="panel.php">
                                    <span class="nav-icon">
                                         <iconify-icon icon="solar:widget-5-broken"></iconify-icon>
                                    </span>
@@ -553,7 +558,7 @@ switch (strtolower($estado)) {
                               <div class="collapse" id="sidebarProducts">
                                    <ul class="nav sub-navbar-nav">
                                         <li class="sub-nav-item">
-                                              <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
+                                             <a class="sub-nav-link" href="AgregarUsuarios.php">Agregar Usuarios</a>
                                         </li>
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="listas-de-miembros.php">Lista de Miembos</a>
@@ -609,6 +614,18 @@ switch (strtolower($estado)) {
                                                   <div class="mt-2">
                                                        <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Número de telefono : </span> <?= htmlspecialchars($miembro['telefono']) ?></p>
                                                   </div>
+                                                  <div class="mt-2">
+                                                       <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Plan Actual : </span> <?= htmlspecialchars($miembro['nombre_plan'] ?? '—') ?></p>
+                                                  </div>
+                                                  <div class="mt-2">
+                                                       <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Fecha de vencimiento : </span> <?= htmlspecialchars($miembro['fecha_de_vencimiento'] ?? '—') ?></p>
+                                                  </div>
+                                                  <div class="mt-2">
+                                                       <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Clases : </span> <?= htmlspecialchars($miembro['clases_disponibles']) ?></p>
+                                                  </div>
+                                                  <div class="mt-2">
+                                                       <p class="fs-15 mb-0 mt-1"><span class="text-dark fw-semibold">Cantidad que debe : </span> <?= htmlspecialchars($miembro['recargo']) ?></p>
+                                                  </div>
                                              </div>
                                         </div>
                                         <div class="card-footer border-top gap-1 hstack">
@@ -646,24 +663,24 @@ switch (strtolower($estado)) {
                                                                  </td>
                                                                  <td class="text-dark fw-medium px-0"><?= htmlspecialchars($miembro['dni']) ?></td>
                                                             </tr>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                  <td class="px-0">
                                                                       <p class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"> Direccción : </p>
                                                                  </td>
                                                                  <td class="text-dark fw-medium px-0">62, rue des Nations Unies 22000 SAINT-BRIEUC</td>
-                                                            </tr>
+                                                            </tr> -->
                                                             <tr>
                                                                  <td class="px-0">
                                                                       <p class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"> Metodo de pago : </p>
                                                                  </td>
                                                                  <td class="text-dark fw-medium px-0"><?= htmlspecialchars($miembro['nombre_metodo']) ?></td>
                                                             </tr>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                  <td class="px-0">
                                                                       <p class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"> Latest Invoice Id : </p>
                                                                  </td>
                                                                  <td class="text-dark fw-medium px-0">#INV2540</td>
-                                                            </tr>
+                                                            </tr> -->
 
                                                        </tbody>
                                                   </table>
@@ -674,125 +691,130 @@ switch (strtolower($estado)) {
 
                               <div class="col-lg-8">
                                    <div class="row">
-                                   <div class="card">
-                                        <div class="card-header">
-                                             <h4 class="card-title">Historial de pagos</h4>
-                                        </div>
-                                        <div class="card-body">
-                                             <div class="table-responsive">
-                                                  <table class="table align-middle mb-0 table-hover table-centered">
-                                                       <thead class="bg-light-subtle">
-                                                            <tr>
-                                                                 <th>Invoice ID</th>
-                                                                 <th>Status</th>
-                                                                 <th>Total Amount</th>
-                                                                 <th>Due Date</th>
-                                                                 <th>Payment Method</th>
-                                                            </tr>
-                                                       </thead>
-                                                       <tbody>
-                                                            <tr>
-                                                                 <td><a href="javascript: void(0);" class="text-body">#INV2540</a> </td>
-                                                                 <td> <span class="badge bg-success-subtle text-success py-1 px-2">Completed</span> </td>
-                                                                 <td> $421.00 </td>
-                                                                 <td> 07 Jan, 2023</td>
-                                                                 <td> Mastercard </td>
-                                                            </tr>
+                                        <div class="card">
+                                             <div class="card-header">
+                                                  <h4 class="card-title">Historial de pagos</h4>
+                                             </div>
 
-                                                            <tr>
-                                                                 <td><a href="javascript: void(0);" class="text-body">#INV3924</a> </td>
-                                                                 <td> <span class="badge bg-danger-subtle text-danger px-2 py-1">Cancel</span> </td>
-                                                                 <td> $736.00 </td>
-                                                                 <td> 03 Dec, 2023</td>
-                                                                 <td> Visa </td>
-                                                            </tr>
+                                             <div class="card-body">
+                                                  <div class="table-responsive">
+                                                       <table class="table align-middle mb-0 table-hover table-centered">
+                                                            <thead class="bg-light-subtle">
+                                                                 <tr>
+                                                                      <th>ID Miembro</th>
+                                                                      <th>Estado</th>
+                                                                      <th>Monto</th>
+                                                                      <th>Fecha</th>
+                                                                      <th>Método</th>
+                                                                      <th>Detalle</th>
+                                                                 </tr
+                                                                      </thead>
+                                                            <tbody>
+                                                                 <?php
+                                                                 // Reutilizamos la conexión y el $id ya existente
+                                                                 $stmtPagos = $conn->prepare("
+    SELECT c.id, c.miembro_id, c.monto, c.fecha, c.tipo, p.nombre_metodo
+    FROM caja c
+    LEFT JOIN pagos p ON c.metodo_pago_id = p.id
+    WHERE c.miembro_id = ?
+    ORDER BY c.fecha DESC
+    LIMIT 10
+");
 
-                                                            <tr>
-                                                                 <td><a href="javascript: void(0);" class="text-body">#INV5032</a> </td>
-                                                                 <td>
-                                                                      <span class="badge bg-success-subtle text-success py-1 px-2">Completed</span>
-                                                                 </td>
-                                                                 <td> $347.00</td>
-                                                                 <td> 28 Sep, 2023 </td>
-                                                                 <td> Paypal </td>
-                                                            </tr>
-                                                            <tr>
-                                                                 <td><a href="javascript: void(0);" class="text-body">#INV1695</a> </td>
-                                                                 <td><span class="badge bg-primary-subtle text-primary py-1 px-2">Pending</span></td>
-                                                                 <td> $457.00 </td>
-                                                                 <td>10 Aug, 2023</td>
-                                                                 <td> Mastercard</td>
-                                                            </tr>
-                                                            <tr>
-                                                                 <td><a href="javascript: void(0);" class="text-body">#INV8473</a> </td>
-                                                                 <td> <span class="badge bg-success-subtle text-success px-2 py-1 ">Completed</span></td>
-                                                                 <td> $414.00</td>
-                                                                 <td> 22 May, 2023 </td>
-                                                                 <td> Visa</td>
-                                                            </tr>
-                                                       </tbody>
-                                                  </table>
+                                                                 $stmtPagos->bind_param("i", $id);
+                                                                 $stmtPagos->execute();
+                                                                 $resultPagos = $stmtPagos->get_result();
+
+                                                                 if ($resultPagos->num_rows > 0) {
+                                                                      while ($pago = $resultPagos->fetch_assoc()) {
+                                                                           $tipo = strtolower($pago['tipo']);
+                                                                           switch ($tipo) {
+                                                                                case 'pago':
+                                                                                     $badge = 'bg-success-subtle text-success';
+                                                                                     $estado = 'Pago';
+                                                                                     break;
+                                                                                case 'ingreso':
+                                                                                     $badge = 'bg-primary-subtle text-primary';
+                                                                                     $estado = 'Ingreso';
+                                                                                     break;
+                                                                                case 'extraccion':
+                                                                                     $badge = 'bg-danger-subtle text-danger';
+                                                                                     $estado = 'Extracción';
+                                                                                     break;
+                                                                                default:
+                                                                                     $badge = 'bg-secondary-subtle text-muted';
+                                                                                     $estado = ucfirst($tipo);
+                                                                                     break;
+                                                                           }
+
+                                                                           echo '<tr>';
+                                                                           echo '<td>' . $pago['miembro_id'] . '</td>';
+                                                                           echo '<td><span class="badge ' . $badge . ' py-1 px-2 text-capitalize">' . $estado . '</span></td>';
+                                                                           echo '<td>$' . number_format($pago['monto'], 2, ',', '.') . '</td>';
+                                                                           echo '<td>' . date("d M, Y H:i", strtotime($pago['fecha'])) . '</td>';
+                                                                           echo '<td>' . ($pago['nombre_metodo'] ?? 'Sin método') . '</td>';
+                                                                           echo '</tr>';
+                                                                      }
+                                                                 } else {
+                                                                      echo '<tr><td colspan="5" class="text-center text-muted">No hay pagos registrados.</td></tr>';
+                                                                 }
+
+                                                                 $stmtPagos->close();
+                                                                 ?>
+                                                            </tbody>
+                                                       </table>
+                                                  </div>
+                                             </div>
+
+                                             <div class="card-footer border-top">
+                                                  <ul class="pagination pagination-rounded m-0 justify-content-end">
+                                                       <li class="page-item disabled"><a href="#" class="page-link"><i class="bx bx-left-arrow-alt"></i></a></li>
+                                                       <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                                                       <li class="page-item disabled"><a href="#" class="page-link"><i class="bx bx-right-arrow-alt"></i></a></li>
+                                                  </ul>
                                              </div>
                                         </div>
-                                        <div class="card-footer border-top">
-                                             <ul class="pagination pagination-rounded m-0 justify-content-end">
-                                                  <li class="page-item">
-                                                       <a href="#" class="page-link"><i class="bx bx-left-arrow-alt"></i></a>
-                                                  </li>
-                                                  <li class="page-item active">
-                                                       <a href="#" class="page-link">1</a>
-                                                  </li>
-                                                  <li class="page-item">
-                                                       <a href="#" class="page-link">2</a>
-                                                  </li>
-                                                  <li class="page-item">
-                                                       <a href="#" class="page-link">3</a>
-                                                  </li>
-                                                  <li class="page-item">
-                                                       <a href="#" class="page-link"><i class="bx bx-right-arrow-alt"></i></a>
-                                                  </li>
-                                             </ul>
+                                   </div>
+                              </div>
+                              <!-- <?
+                                   $conn->close();
+                                   ?>
+
+                         </div> -->
+                              <!-- End Container Fluid -->
+
+                              <!-- ========== Footer Start ========== -->
+                              <!-- <footer class="footer">
+                                   <div class="container-fluid">
+                                        <div class="row">
+                                             <div class="col-12 text-center">
+                                                  <script>
+                                                       document.write(new Date().getFullYear())
+                                                  </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
+                                                       href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
+                                             </div>
                                         </div>
                                    </div>
-                              </div>
-                         </div>
+                              </footer> -->
+                              <!-- ========== Footer End ========== -->
 
+                         </div>
+                         <!-- ==================================================== -->
+                         <!-- End Page Content -->
+                         <!-- ==================================================== -->
 
                     </div>
-                    <!-- End Container Fluid -->
-
-                    <!-- ========== Footer Start ========== -->
-                    <footer class="footer">
-                         <div class="container-fluid">
-                              <div class="row">
-                                   <div class="col-12 text-center">
-                                        <script>
-                                             document.write(new Date().getFullYear())
-                                        </script> &copy; Venton. Crafted by <iconify-icon icon="iconamoon:heart-duotone" class="fs-18 align-middle text-danger"></iconify-icon> <a
-                                             href="#" class="fw-bold footer-text" target="_blank">Techzaa</a>
-                                   </div>
-                              </div>
-                         </div>
-                    </footer>
-                    <!-- ========== Footer End ========== -->
 
                </div>
-               <!-- ==================================================== -->
-               <!-- End Page Content -->
-               <!-- ==================================================== -->
+               <!-- END Wrapper -->
 
-          </div>
+               <!-- Vendor Javascript (Require in all Page) -->
+               <script src="assets/js/vendor.js"></script>
 
-     </div>
-     <!-- END Wrapper -->
+               <!-- App Javascript (Require in all Page) -->
+               <script src="assets/js/app.js"></script>
 
-     <!-- Vendor Javascript (Require in all Page) -->
-     <script src="assets/js/vendor.js"></script>
-
-     <!-- App Javascript (Require in all Page) -->
-     <script src="assets/js/app.js"></script>
-
-     <script src="assets/js/pages/customer-details.js"></script>
+               <script src="assets/js/pages/customer-details.js"></script>
 
 
 </body>
