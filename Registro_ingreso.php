@@ -1,28 +1,100 @@
 <?php
 session_start();
-date_default_timezone_set('America/Argentina/Buenos_Aires'); // 👈 zona horaria correcta
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 include('conexion.php');
 
+// Verificación de sesión
 if (!isset($_SESSION['admin'])) {
-    header("Location: index.php");
-    exit;
+     header("Location: index.php");
+     exit;
 }
 
 $admin_id = $_SESSION['admin'];
-$fecha_hoy = date('Y-m-d');
 
-// ✅ Filtramos por fecha exacta, sin depender de hora
-$stmt = $conn->prepare("
-    SELECT r.id, r.fecha_ingreso, m.nombre, m.apellido, m.dni, m.sexo_id
-    FROM registro_ingreso r
-    JOIN miembros m ON r.miembro_id = m.id
-    WHERE r.admin_id = ? AND DATE(r.fecha_ingreso) = ?
-    ORDER BY r.fecha_ingreso DESC
-");
+$desde = $_GET['desde'] ?? '';
+$hasta = $_GET['hasta'] ?? '';
+$condiciones = "r.admin_id = ?";
+$parametros = [$admin_id];
+$tipos = "i";
 
-$stmt->bind_param("is", $admin_id, $fecha_hoy);
+if (!empty($desde)) {
+     $condiciones .= " AND DATE(r.fecha_ingreso) >= ?";
+     $parametros[] = $desde;
+     $tipos .= "s";
+}
+if (!empty($hasta)) {
+     $condiciones .= " AND DATE(r.fecha_ingreso) <= ?";
+     $parametros[] = $hasta;
+     $tipos .= "s";
+}
+
+if (empty($desde) && empty($hasta)) {
+     $fecha_hoy = date('Y-m-d');
+     $condiciones .= " AND DATE(r.fecha_ingreso) = ?";
+     $parametros[] = $fecha_hoy;
+     $tipos .= "s";
+}
+
+
+$sqlRegistros = "SELECT 
+    r.id AS registro_id, 
+    r.fecha_ingreso, 
+    m.id AS miembro_id, 
+    m.nombre, 
+    m.apellido, 
+    m.dni, 
+    m.sexo_id
+FROM registro_ingreso r
+JOIN miembros m ON r.miembro_id = m.id
+WHERE $condiciones
+ORDER BY r.fecha_ingreso DESC
+";
+
+$stmt = $conn->prepare($sqlRegistros);
+$stmt->bind_param($tipos, ...$parametros);
 $stmt->execute();
 $registros = $stmt->get_result();
+$stmt->close();
+
+
+
+// Total de miembros
+$total_miembros = 0;
+$sqlTotal = "SELECT COUNT(*) AS total FROM miembros WHERE admin_id = ?";
+$stmt = $conn->prepare($sqlTotal);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$stmt->bind_result($total_miembros);
+$stmt->fetch();
+$stmt->close();
+
+// Miembros por situación
+$al_dia = 0;
+$debe_cuota = 0;
+$no_pago_cuota = 0;
+
+$sqlSituacion = "SELECT situacion_id, COUNT(*) AS cantidad 
+                 FROM miembros 
+                 WHERE admin_id = ?
+                 GROUP BY situacion_id";
+$stmt = $conn->prepare($sqlSituacion);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+     switch ($row['situacion_id']) {
+          case 1:
+               $al_dia = $row['cantidad'];
+               break;
+          case 2:
+               $debe_cuota = $row['cantidad'];
+               break;
+          case 3:
+               $no_pago_cuota = $row['cantidad'];
+               break;
+     }
+}
+$stmt->close();
 ?>
 
 
@@ -539,6 +611,9 @@ $registros = $stmt->get_result();
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -579,7 +654,9 @@ $registros = $stmt->get_result();
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de miembros</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">2310</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">
+                                                       <?= $total_miembros ?>
+                                                  </p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -597,17 +674,19 @@ $registros = $stmt->get_result();
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Miembros al dia</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1000</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $al_dia ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-cross-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/Miembros-Al-Dia.php">
+                                                       <div class="avatar-md bg-success bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-check-bold-duotone" class="fs-32 text-success avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
                               </div>
+
                          </div>
                          <div class="col-lg-3">
                               <div class="card">
@@ -615,13 +694,15 @@ $registros = $stmt->get_result();
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Deben cuota</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1310</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $debe_cuota ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-check-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/Deben-cuota.php">
+                                                       <div class="avatar-md bg-warning bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-cross-bold-duotone"
+                                                                 class="fs-32 text-warning avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
@@ -632,20 +713,22 @@ $registros = $stmt->get_result();
                                    <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
-                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Inactive
-                                                       Invoice</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">1243</p>
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">No pago cuota</h4>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $no_pago_cuota ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/No-Pago-Cuota.php">
+                                                       <div class="avatar-md bg-danger bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-bold-duotone"
+                                                                 class="fs-32 text-danger  avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
                               </div>
                          </div>
+
 
                     </div>
 
@@ -654,8 +737,20 @@ $registros = $stmt->get_result();
                               <div class="card">
                                    <div class="d-flex card-header justify-content-between align-items-center">
                                         <div>
-                                             <h4 class="card-title">All Invoices List</h4>
                                         </div>
+                                        <form method="GET" class="row g-2 align-items-center justify-content-center" id="formFiltros">
+                                             <div class="col-12 col-sm-6 col-md-4 col-lg-auto">
+                                                  <input type="date" name="desde" class="form-control" placeholder="Desde">
+                                             </div>
+                                             <div class="col-12 col-sm-6 col-md-4 col-lg-auto">
+                                                  <input type="date" name="hasta" class="form-control" placeholder="Hasta">
+                                             </div>
+                                             <div class="col-12 col-md-4 col-lg-auto">
+                                                  <button type="submit" class="btn btn-primary w-100" id="btnMostrar">Mostrar</button>
+                                             </div>
+                                        </form>
+
+
                                         <div class="dropdown">
                                              <a href="#" class="dropdown-toggle btn btn-sm btn-outline-light rounded"
                                                   data-bs-toggle="dropdown" aria-expanded="false">
@@ -688,145 +783,62 @@ $registros = $stmt->get_result();
                                                             <th>Nombre y Apellido</th>
                                                             <th>Hora de ingreso</th>
                                                             <th>Dni</th>
+                                                            <th>Action</th>
                                                        </tr>
                                                   </thead>
                                                   <tbody>
                                                        <?php if ($registros->num_rows > 0): ?>
                                                             <?php while ($row = $registros->fetch_assoc()):
-                                                                 $avatar = ($row['sexo_id'] == 2)
-                                                                      ? 'assets/images/users/avatar-5.jpg'
-                                                                      : 'assets/images/users/avatar-2.jpg';
+                                                                 $avatar = ($row['sexo_id'] == 2) ? 'assets/images/users/avatar-5.jpg' : 'assets/images/users/avatar-2.jpg';
                                                             ?>
                                                                  <tr>
                                                                       <td>
                                                                            <div class="form-check fs-16 ms-1">
-                                                                                <input type="checkbox" class="form-check-input" id="customCheck<?= $row['id'] ?>">
-                                                                                <label class="form-check-label" for="customCheck<?= $row['id'] ?>">&nbsp;</label>
+                                                                                <input type="checkbox" class="form-check-input" id="customCheck<?= $row['registro_id'] ?>">
+                                                                                <label class="form-check-label" for="customCheck<?= $row['registro_id'] ?>">&nbsp;</label>
                                                                            </div>
                                                                       </td>
-                                                                      <td>#<?= $row['id'] ?></td>
+                                                                      <td>#<?= $row['registro_id'] ?></td>
                                                                       <td>
                                                                            <img src="<?= $avatar ?>" class="avatar-sm rounded-circle me-2" alt="avatar">
                                                                            <?= htmlspecialchars($row['nombre'] . ' ' . $row['apellido']) ?>
                                                                       </td>
                                                                       <td><?= date("d M, Y H:i", strtotime($row['fecha_ingreso'])) ?></td>
                                                                       <td><?= htmlspecialchars($row['dni']) ?></td>
+                                                                      <td style="width:140px;">
+                                                                           <div class="d-flex gap-1">
+                                                                                <!-- Botón para ver perfil -->
+                                                                                <form method="post" action="perfil.php" class="m-0">
+                                                                                     <input type="hidden" name="id" value="<?= $row['miembro_id'] ?>">
+                                                                                     <button type="submit" class="btn btn-light btn-sm">
+                                                                                          <iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+                                                                                </form>
+
+                                                                                <!-- Botón para cambiar estado -->
+                                                                                <form method="post" action="cambiar_estado.php" class="m-0">
+                                                                                     <button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $row['miembro_id'] ?>)">
+                                                                                          <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+                                                                                </form>
+
+                                                                                <!-- Botón para eliminar -->
+                                                                                <form method="post" action="eliminar_miembro.php" class="m-0 form-eliminar-miembro" id="form-eliminar-<?= $row['miembro_id'] ?>">
+                                                                                     <input type="hidden" name="id" value="<?= $row['miembro_id'] ?>">
+                                                                                     <button type="button" class="btn btn-soft-danger btn-sm btn-eliminar" data-id="<?= $row['miembro_id'] ?>">
+                                                                                          <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                                                                     </button>
+                                                                                </form>
+                                                                           </div>
+                                                                      </td>
                                                                  </tr>
                                                             <?php endwhile; ?>
                                                        <?php else: ?>
                                                             <tr>
-                                                                 <td colspan="5" class="text-center">No hay miembros registrados.</td>
+                                                                 <td colspan="6" class="text-center text-muted">No hay registros.</td>
                                                             </tr>
                                                        <?php endif; ?>
                                                   </tbody>
-
-
-                                                  <!-- <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const botonesEliminar = document.querySelectorAll(".btn-eliminar");
-
-    botonesEliminar.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            const id = btn.dataset.id;
-
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-primary w-xs me-2 mt-2',
-                cancelButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Enviamos la petición a eliminar_miembro.php por fetch
-                    fetch('eliminar_miembro.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'id=' + encodeURIComponent(id)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        // Mostramos mensaje de éxito
-                        Swal.fire({
-                            title: 'Eliminado',
-                            text: 'El miembro ha sido eliminado.',
-                            icon: 'success',
-                            confirmButtonClass: 'btn btn-primary mt-2',
-                            buttonsStyling: false
-                        }).then(() => {
-                            // Opcional: recargamos la página o eliminamos la fila del DOM
-                            location.reload(); // o eliminar la fila con JS
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Hubo un problema al eliminar.',
-                            icon: 'error',
-                            confirmButtonClass: 'btn btn-primary mt-2',
-                            buttonsStyling: false
-                        });
-                    });
-                }
-            });
-        });
-    });
-});
-</script>
-
-<script>
-function cambiarEstado(miembroId) {
-    Swal.fire({
-        title: 'Cambiar estado',
-        input: 'select',
-        inputOptions: {
-            1: 'Activo',
-            2: 'Inactivo'
-        },
-        inputPlaceholder: 'Seleccionar estado',
-        showCancelButton: true,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-        preConfirm: (nuevoEstado) => {
-            return fetch('cambiar_estado.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'id=' + miembroId + '&nuevo_estado=' + nuevoEstado
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al cambiar el estado');
-                }
-                return response.text();
-            })
-            .catch(error => {
-                Swal.showValidationMessage(
-                    `Error: ${error}`
-                );
-            });
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Estado actualizado',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                location.reload(); // Recarga para ver el cambio en la tabla
-            });
-        }
-    });
-}
-</script> -->
-
 
                                              </table>
                                         </div>

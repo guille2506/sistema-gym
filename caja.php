@@ -514,6 +514,9 @@ if (!isset($_SESSION['admin'])) {
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -549,8 +552,8 @@ if (!isset($_SESSION['admin'])) {
                               <div class="card-body">
                                    <div class="d-flex align-items-center justify-content-between">
                                         <div>
-                                             <!-- Esto debe estar visible en la página -->
                                              <div id="contenedorTotalCaja" style="display: none;">
+                                                  <!-- Esto debe estar visible en la página -->
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de caja</h4>
                                                   <p id="totalCaja" class="text-muted fw-medium fs-22 mb-0">Cargando...</p>
                                              </div>

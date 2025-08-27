@@ -4,7 +4,52 @@ if (!isset($_SESSION['admin'])) {
      header("Location: index.php");
      exit;
 }
+
+include("conexion.php");
+$admin_id = $_SESSION['admin'];
+
+// valores por defecto
+$total_miembros = 0;
+$al_dia = 0;
+$debe_cuota = 0;
+$no_pago_cuota = 0;
+
+// total de miembros
+$sql = "SELECT COUNT(*) AS total FROM miembros WHERE admin_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$stmt->bind_result($total_miembros);
+$stmt->fetch();
+$stmt->close();
+
+// miembros por situacion
+$sql = "SELECT situacion_id, COUNT(*) AS cantidad 
+        FROM miembros 
+        WHERE admin_id = ?
+        GROUP BY situacion_id";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+     switch ($row['situacion_id']) {
+          case 1:
+               $al_dia = $row['cantidad'];
+               break;
+          case 2:
+               $debe_cuota = $row['cantidad'];
+               break;
+          case 3:
+               $no_pago_cuota = $row['cantidad'];
+               break;
+     }
+}
+$stmt->close();
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -517,6 +562,9 @@ if (!isset($_SESSION['admin'])) {
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -557,7 +605,9 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Total de miembros</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0">
+                                                       <?= $total_miembros ?>
+                                                  </p>
                                              </div>
                                              <div>
                                                   <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -575,17 +625,19 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Miembros al dia</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $al_dia ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-cross-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/Miembros-Al-Dia.php">
+                                                       <div class="avatar-md bg-success bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-check-bold-duotone" class="fs-32 text-success avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
                               </div>
+
                          </div>
                          <div class="col-lg-3">
                               <div class="card">
@@ -593,13 +645,15 @@ if (!isset($_SESSION['admin'])) {
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
                                                   <h4 class="card-title mb-2 d-flex align-items-center gap-2">Deben cuota</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $debe_cuota ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-check-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/Deben-cuota.php">
+                                                       <div class="avatar-md bg-warning bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-cross-bold-duotone"
+                                                                 class="fs-32 text-warning avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
@@ -610,15 +664,16 @@ if (!isset($_SESSION['admin'])) {
                                    <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                              <div>
-                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">Inactive
-                                                       Invoice</h4>
-                                                  <p class="text-muted fw-medium fs-22 mb-0">proximamente</p>
+                                                  <h4 class="card-title mb-2 d-flex align-items-center gap-2">No pago cuota</h4>
+                                                  <p class="text-muted fw-medium fs-22 mb-0"><?= $no_pago_cuota ?></p>
                                              </div>
                                              <div>
-                                                  <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                                                       <iconify-icon icon="solar:bill-bold-duotone"
-                                                            class="fs-32 text-primary avatar-title"></iconify-icon>
-                                                  </div>
+                                                  <a href="./paginas_situacion/No-Pago-Cuota.php">
+                                                       <div class="avatar-md bg-danger bg-opacity-10 rounded">
+                                                            <iconify-icon icon="solar:bill-bold-duotone"
+                                                                 class="fs-32 text-danger  avatar-title"></iconify-icon>
+                                                       </div>
+                                                  </a>
                                              </div>
                                         </div>
                                    </div>
@@ -674,24 +729,40 @@ if (!isset($_SESSION['admin'])) {
                                                   </thead>
                                                   <tbody>
                                                        <?php
-                                                       include('conexion.php');
-                                                       $sql = "SELECT 
-    m.id,
-    m.nombre,
-    m.apellido,
-    m.fecha_registro,
-    m.sexo_id,
-    m.planes_id,
-    e.nombre_estado AS estado,
-    p.nombre_metodo AS metodo_pago,
-    pl.nombre AS nombre_plan
-FROM miembros m
-LEFT JOIN estado e ON m.estado_id = e.id
-LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
-LEFT JOIN planes pl ON m.planes_id = pl.id
-ORDER BY m.id DESC";
+                                                       $porPagina = 10;
+                                                       $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+                                                       if ($pagina < 1) $pagina = 1;
 
-                                                    $result = $conn->query($sql);
+                                                       $offset = ($pagina - 1) * $porPagina;
+
+                                                       // Contar total para paginación
+                                                       $sqlCount = "SELECT COUNT(*) AS total FROM miembros WHERE admin_id = ?";
+                                                       $stmtCount = $conn->prepare($sqlCount);
+                                                       $stmtCount->bind_param("i", $admin_id);
+                                                       $stmtCount->execute();
+                                                       $totalRegistros = $stmtCount->get_result()->fetch_assoc()['total'];
+                                                       $stmtCount->close();
+
+                                                       $totalPaginas = ceil($totalRegistros / $porPagina);
+
+                                                       // Consulta paginada
+                                                       $sql = "SELECT m.id, m.nombre, m.apellido, m.fecha_registro, m.sexo_id, m.planes_id,
+               e.nombre_estado AS estado, p.nombre_metodo AS metodo_pago, 
+               pl.nombre AS nombre_plan, s.nombre_situacion
+        FROM miembros m
+        LEFT JOIN estado e ON m.estado_id = e.id
+        LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
+        LEFT JOIN planes pl ON m.planes_id = pl.id
+        LEFT JOIN situacion s ON m.situacion_id = s.id
+        WHERE m.admin_id = ?
+        ORDER BY m.id DESC
+        LIMIT ? OFFSET ?";
+
+                                                       $stmt = $conn->prepare($sql);
+                                                       $stmt->bind_param("iii", $admin_id, $porPagina, $offset);
+                                                       $stmt->execute();
+                                                       $result = $stmt->get_result();
+
 
                                                        if ($result->num_rows > 0):
                                                             while ($miembro = $result->fetch_assoc()):
@@ -724,7 +795,31 @@ ORDER BY m.id DESC";
                                                                                 <?= $estado ?>
                                                                            </span>
                                                                       </td>
-                                                                      <td>proximamente</td>
+                                                                      <?php
+                                                                      $situacion = $miembro['nombre_situacion'] ?? 'Sin situación';
+
+                                                                      $badgeClass = '';
+                                                                      switch ($situacion) {
+                                                                           case 'Al día':
+                                                                                $badgeClass = 'bg-success-subtle text-success';
+                                                                                break;
+                                                                           case 'Debe cuota':
+                                                                                $badgeClass = 'bg-warning-subtle text-warning';
+                                                                                break;
+                                                                           case 'No pago cuota':
+                                                                                $badgeClass = 'bg-danger-subtle text-danger';
+                                                                                break;
+                                                                           default:
+                                                                                $badgeClass = 'bg-secondary-subtle text-secondary';
+                                                                                break;
+                                                                      }
+                                                                      ?>
+
+                                                                      <td>
+                                                                           <span class="badge <?= $badgeClass ?> py-1 px-2">
+                                                                                <?= htmlspecialchars($situacion) ?>
+                                                                           </span>
+                                                                      </td>
                                                                       <td>
                                                                            <div class="d-flex gap-2">
                                                                                 <form method="post" action="perfil.php">
@@ -736,7 +831,7 @@ ORDER BY m.id DESC";
 
 
 
-                                                                                <form method="post" action="cambiar_estado.php" class="d-flex align-items-center gap-1">
+                                                                                <form method="post" action="./cambiar_estado.php" class="d-flex align-items-center gap-1">
 
                                                                                      <button type="button" class="btn btn-soft-primary btn-sm" onclick="cambiarEstado(<?= $miembro['id'] ?>)">
                                                                                           <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
@@ -766,115 +861,6 @@ ORDER BY m.id DESC";
                                                             </tr>
                                                        <?php endif; ?>
                                                   </tbody>
-
-
-                                                  <!-- <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const botonesEliminar = document.querySelectorAll(".btn-eliminar");
-
-    botonesEliminar.forEach(function (btn) {
-        btn.addEventListener("click", function () {
-            const id = btn.dataset.id;
-
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡No podrás revertir esto!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-primary w-xs me-2 mt-2',
-                cancelButtonClass: 'btn btn-danger w-xs mt-2',
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Enviamos la petición a eliminar_miembro.php por fetch
-                    fetch('eliminar_miembro.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'id=' + encodeURIComponent(id)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        // Mostramos mensaje de éxito
-                        Swal.fire({
-                            title: 'Eliminado',
-                            text: 'El miembro ha sido eliminado.',
-                            icon: 'success',
-                            confirmButtonClass: 'btn btn-primary mt-2',
-                            buttonsStyling: false
-                        }).then(() => {
-                            // Opcional: recargamos la página o eliminamos la fila del DOM
-                            location.reload(); // o eliminar la fila con JS
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Hubo un problema al eliminar.',
-                            icon: 'error',
-                            confirmButtonClass: 'btn btn-primary mt-2',
-                            buttonsStyling: false
-                        });
-                    });
-                }
-            });
-        });
-    });
-});
-</script>
-
-<script>
-function cambiarEstado(miembroId) {
-    Swal.fire({
-        title: 'Cambiar estado',
-        input: 'select',
-        inputOptions: {
-            1: 'Activo',
-            2: 'Inactivo'
-        },
-        inputPlaceholder: 'Seleccionar estado',
-        showCancelButton: true,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-        preConfirm: (nuevoEstado) => {
-            return fetch('cambiar_estado.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'id=' + miembroId + '&nuevo_estado=' + nuevoEstado
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al cambiar el estado');
-                }
-                return response.text();
-            })
-            .catch(error => {
-                Swal.showValidationMessage(
-                    `Error: ${error}`
-                );
-            });
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: 'Estado actualizado',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
-                location.reload(); // Recarga para ver el cambio en la tabla
-            });
-        }
-    });
-}
-</script> -->
-
-
                                              </table>
                                         </div>
                                         <!-- end table-responsive -->
@@ -882,19 +868,27 @@ function cambiarEstado(miembroId) {
                                    <div class="card-footer border-top">
                                         <nav aria-label="Page navigation example">
                                              <ul class="pagination justify-content-end mb-0">
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">Previous</a></li>
-                                                  <li class="page-item active"><a class="page-link"
-                                                            href="javascript:void(0);">1</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">2</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">3</a></li>
-                                                  <li class="page-item"><a class="page-link"
-                                                            href="javascript:void(0);">Next</a></li>
+                                                  <?php if ($pagina > 1): ?>
+                                                       <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina - 1 ?>">Anterior</a></li>
+                                                  <?php else: ?>
+                                                       <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                                                  <?php endif; ?>
+
+                                                  <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                                                       <li class="page-item <?= $i == $pagina ? 'active' : '' ?>">
+                                                            <a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+                                                       </li>
+                                                  <?php endfor; ?>
+
+                                                  <?php if ($pagina < $totalPaginas): ?>
+                                                       <li class="page-item"><a class="page-link" href="?pagina=<?= $pagina + 1 ?>">Siguiente</a></li>
+                                                  <?php else: ?>
+                                                       <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                                                  <?php endif; ?>
                                              </ul>
                                         </nav>
                                    </div>
+
                               </div>
                          </div>
 

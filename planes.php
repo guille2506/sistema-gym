@@ -525,6 +525,9 @@ while ($row = $resultado->fetch_assoc()) {
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
                                    </ul>
                               </div>
                          </li>
@@ -632,7 +635,7 @@ while ($row = $resultado->fetch_assoc()) {
                                                             <div class="mt-4 text-center">
                                                                  <a href="AgregarUsuarios.php?monto=<?= $plan['precio'] ?>&plan=<?= $plan['id'] ?>&descuento=<?= $plan['descuento_grupo'] ?>&clases=<?= $plan['clases_totales'] ?>" class="btn btn-primary px-sm-4 w-100">
                                                                       Comenzar
-                                                                 </a>           
+                                                                 </a>
 
                                                             </div>
 

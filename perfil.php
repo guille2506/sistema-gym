@@ -1,54 +1,62 @@
 <?php
 include('conexion.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-     $id = $_POST['id'];
+$id = null;
 
-     // Traer datos del miembro
-     $sql = "
- SELECT m.*, e.nombre_estado, p.nombre_metodo, pl.nombre AS nombre_plan
-FROM miembros m
-LEFT JOIN estado e ON m.estado_id = e.id
-LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
-LEFT JOIN planes pl ON m.planes_id = pl.id
-WHERE m.id = ?
-
-    ";
-     $stmt = $conn->prepare($sql);
-     if (!$stmt) {
-          die("Error en la preparación: " . $conn->error);
-     }
-
-     $stmt->bind_param("i", $id);
-     $stmt->execute();
-     $resultado = $stmt->get_result();
-
-     if ($resultado->num_rows > 0) {
-          $miembro = $resultado->fetch_assoc();
-          $avatar = ($miembro["sexo_id"] == 2) ? 'assets/images/users/avatar-5.jpg' : 'assets/images/users/avatar-2.jpg';
-     } else {
-          echo "Miembro no encontrado.";
-          exit;
-     }
-     $stmt->close();
-
-     // Consulta historial de pagos (de tabla caja)
-     $sqlPagos = "
-        SELECT monto, detalle, fecha, tipo, estado
-        FROM caja
-        WHERE miembro_id = ?
-        ORDER BY fecha DESC
-        LIMIT 10
-    ";
-     $stmtPagos = $conn->prepare($sqlPagos);
-     $stmtPagos->bind_param("i", $id);
-     $stmtPagos->execute();
-     $historialPagos = $stmtPagos->get_result();
-     $stmtPagos->close();
-} else {
-     echo "Acceso inválido.";
-     exit;
+// Tomamos el ID tanto de POST como de GET
+if (isset($_POST['id'])) {
+    $id = (int)$_POST['id'];
+} elseif (isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
 }
+
+// Si no hay ID, error
+if (!$id) {
+    echo "Acceso inválido.";
+    exit;
+}
+
+// Traer datos del miembro
+$sql = "
+ SELECT m.*, e.nombre_estado, p.nombre_metodo, pl.nombre AS nombre_plan
+ FROM miembros m
+ LEFT JOIN estado e ON m.estado_id = e.id
+ LEFT JOIN pagos p ON m.metodo_de_pagos_id = p.id
+ LEFT JOIN planes pl ON m.planes_id = pl.id
+ WHERE m.id = ?
+";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$resultado = $stmt->get_result();
+
+if ($resultado->num_rows > 0) {
+    $miembro = $resultado->fetch_assoc();
+    $avatar = ($miembro["sexo_id"] == 2) ? 'assets/images/users/avatar-5.jpg' : 'assets/images/users/avatar-2.jpg';
+} else {
+    echo "Miembro no encontrado.";
+    exit;
+}
+$stmt->close();
+
+
+     //      // Consulta historial de pagos (de tabla caja)
+     //      $sqlPagos = "
+     //         SELECT monto, detalle, fecha, tipo, estado
+     //         FROM caja
+     //         WHERE miembro_id = ?
+     //         ORDER BY fecha DESC
+     //         LIMIT 10
+     //     ";
+     //      $stmtPagos = $conn->prepare($sqlPagos);
+     //      $stmtPagos->bind_param("i", $id);
+     //      $stmtPagos->execute();
+     //      $historialPagos = $stmtPagos->get_result();
+     //      $stmtPagos->close();
+     // } else {
+     //      echo "Acceso inválido.";
+     //      exit;
+// }
 
 // Preparar clases de estado
 $estado = $miembro['nombre_estado'] ?? '';
@@ -711,17 +719,32 @@ $claseEstado = match (strtolower($estado)) {
                                                                       </thead>
                                                             <tbody>
                                                                  <?php
+
+                                                                 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+                                                                 $por_pagina = 10; // cantidad de registros por página
+                                                                 $offset = ($pagina - 1) * $por_pagina;
+
+                                                                 $sqlTotal = "SELECT COUNT(*) as total FROM caja WHERE miembro_id = ?";
+                                                                 $stmtTotal = $conn->prepare($sqlTotal);
+                                                                 $stmtTotal->bind_param("i", $id);
+                                                                 $stmtTotal->execute();
+                                                                 $resultTotal = $stmtTotal->get_result();
+                                                                 $totalRegistros = $resultTotal->fetch_assoc()['total'];
+                                                                 $totalPaginas = ceil($totalRegistros / $por_pagina);
+                                                                 $stmtTotal->close();
+
+
                                                                  // Reutilizamos la conexión y el $id ya existente
                                                                  $stmtPagos = $conn->prepare("
-    SELECT c.id, c.miembro_id, c.monto, c.fecha, c.tipo, p.nombre_metodo
+    SELECT c.id, c.miembro_id, c.monto, c.detalle, c.fecha, c.tipo, p.nombre_metodo
     FROM caja c
     LEFT JOIN pagos p ON c.metodo_pago_id = p.id
     WHERE c.miembro_id = ?
     ORDER BY c.fecha DESC
-    LIMIT 10
+    LIMIT ? OFFSET ?
 ");
+                                                                 $stmtPagos->bind_param("iii", $id, $por_pagina, $offset);
 
-                                                                 $stmtPagos->bind_param("i", $id);
                                                                  $stmtPagos->execute();
                                                                  $resultPagos = $stmtPagos->get_result();
 
@@ -753,6 +776,7 @@ $claseEstado = match (strtolower($estado)) {
                                                                            echo '<td>$' . number_format($pago['monto'], 2, ',', '.') . '</td>';
                                                                            echo '<td>' . date("d M, Y H:i", strtotime($pago['fecha'])) . '</td>';
                                                                            echo '<td>' . ($pago['nombre_metodo'] ?? 'Sin método') . '</td>';
+                                                                           echo '<td>' . (!empty($pago['detalle']) ? htmlspecialchars($pago['detalle']) : 'Sin detalle') . '</td>';
                                                                            echo '</tr>';
                                                                       }
                                                                  } else {
@@ -768,11 +792,34 @@ $claseEstado = match (strtolower($estado)) {
 
                                              <div class="card-footer border-top">
                                                   <ul class="pagination pagination-rounded m-0 justify-content-end">
-                                                       <li class="page-item disabled"><a href="#" class="page-link"><i class="bx bx-left-arrow-alt"></i></a></li>
-                                                       <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                                                       <li class="page-item disabled"><a href="#" class="page-link"><i class="bx bx-right-arrow-alt"></i></a></li>
+                                                       <?php if ($pagina > 1): ?>
+                                                            <li class="page-item">
+                                                                 <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $pagina - 1 ?>">
+                                                                      <i class="bx bx-left-arrow-alt"></i>
+                                                                 </a>
+                                                            </li>
+                                                       <?php else: ?>
+                                                            <li class="page-item disabled"><a class="page-link"><i class="bx bx-left-arrow-alt"></i></a></li>
+                                                       <?php endif; ?>
+                                                            
+                                                       <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                                                            <li class="page-item <?= $pagina == $i ? 'active' : '' ?>">
+                                                                 <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $i ?>"><?= $i ?></a>
+                                                            </li>
+                                                       <?php endfor; ?>
+
+                                                       <?php if ($pagina < $totalPaginas): ?>
+                                                            <li class="page-item">
+                                                                 <a class="page-link" href="?id=<?= $id ?>&pagina=<?= $pagina + 1 ?>">
+                                                                      <i class="bx bx-right-arrow-alt"></i>
+                                                                 </a>
+                                                            </li>
+                                                       <?php else: ?>
+                                                            <li class="page-item disabled"><a class="page-link"><i class="bx bx-right-arrow-alt"></i></a></li>
+                                                       <?php endif; ?>
                                                   </ul>
                                              </div>
+
                                         </div>
                                    </div>
                               </div>

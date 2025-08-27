@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['admin'])) {
-    header("Location: index.php");
-    exit;
+     header("Location: index.php");
+     exit;
 }
 
 include('conexion.php');
@@ -11,16 +11,16 @@ include('conexion.php');
 $admin_id = $_SESSION['admin'] ?? null;
 
 if ($admin_id) {
-    $stmt = $conn->prepare("
+     $stmt = $conn->prepare("
         UPDATE miembros
         SET estado_id = 2
         WHERE estado_id = 1
           AND fecha_de_vencimiento < CURDATE()
           AND admin_id = ?
     ");
-    $stmt->bind_param("i", $admin_id);
-    $stmt->execute();
-    $stmt->close();
+     $stmt->bind_param("i", $admin_id);
+     $stmt->execute();
+     $stmt->close();
 }
 ?>
 
@@ -540,7 +540,10 @@ if ($admin_id) {
                                         <li class="sub-nav-item">
                                              <a class="sub-nav-link" href="planes.php">Planes</a>
                                         </li>
-                                   </ul>
+                                        <li class="sub-nav-item">
+                                             <a class="sub-nav-link" href="Registro_ingreso.php">Registro de ingreso</a>
+                                        </li>
+                                   </ul>     
                               </div>
                          </li>
 
@@ -615,7 +618,7 @@ if ($admin_id) {
                                                        <div>
                                                             <small id="vto-miembro" class="text-muted fs-4"></small>
                                                        </div>
-                                                       
+
                                                        <div id="botones-renovacion" class="text-center mt-4"></div>
                                                   </div>
 

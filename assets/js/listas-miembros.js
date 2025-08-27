@@ -65,7 +65,7 @@ function cambiarEstado(miembroId) {
         confirmButtonText: 'Guardar',
         cancelButtonText: 'Cancelar',
         preConfirm: (nuevoEstado) => {
-            return fetch('cambiar_estado.php', {
+            return fetch('/admin-gym/componentes/cambiar_estado.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
